@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleFMS.DriverStation.Base
+namespace SimpleFMS.DriverStation.Base.Interfaces
 {
-    public class Class1
+    class IDriverStationRobotConnectionResponder
     {
     }
 }
