@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation.UdpControllers;
 using SimpleFMS.DriverStation.UdpData;
 

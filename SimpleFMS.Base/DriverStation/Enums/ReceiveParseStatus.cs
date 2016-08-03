@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.DriverStation.Base.Enums
+﻿namespace SimpleFMS.Base.DriverStation.Enums
 {
     /// <summary>
     /// Represents the status of a Receive Parse

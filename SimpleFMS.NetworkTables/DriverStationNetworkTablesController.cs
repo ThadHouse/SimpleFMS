@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetworkTables;
 using NetworkTables.Tables;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
-using SimpleFMS.DriverStation.Base.Tuples;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Tuples;
 
 namespace SimpleFMS.NetworkTables
 {
@@ -17,10 +17,10 @@ namespace SimpleFMS.NetworkTables
         public const int NetworkTablePort = 1755;
         public const string NetworkTablePersistentFileName = "FMSPersistentData";
 
-        private IReadOnlyList<ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>>
+        private IReadOnlyList<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>>
             m_connectedDriverStationData = null;
 
-        private IReadOnlyDictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int>
+        private IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
             m_requestedDriverStations = null;
 
         private readonly ITable m_networkTable;
@@ -44,8 +44,8 @@ namespace SimpleFMS.NetworkTables
 
         private void NetworkTableUpdateTimer(object state)
         {
-            IReadOnlyList<ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> connected;
-            IReadOnlyDictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int> requested;
+            IReadOnlyList<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> connected;
+            IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int> requested;
             lock (m_lockObject)
             {
                 connected = m_connectedDriverStationData;
@@ -85,7 +85,7 @@ namespace SimpleFMS.NetworkTables
             }
         }
 
-        public void UpdateDriverStationNeworkData(IReadOnlyList<ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> driverStationData)
+        public void UpdateDriverStationNeworkData(IReadOnlyList<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> driverStationData)
         {
             lock (m_lockObject)
             {
@@ -93,7 +93,7 @@ namespace SimpleFMS.NetworkTables
             }
         }
 
-        public void UpdateRequestedDriverStations(IReadOnlyDictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int>
+        public void UpdateRequestedDriverStations(IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
             requestedDriverStations)
         {
             lock (m_lockObject)

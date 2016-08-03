@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace SimpleFMS.DriverStation.Base.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     public interface IDriverStationConnectionResponder
     {

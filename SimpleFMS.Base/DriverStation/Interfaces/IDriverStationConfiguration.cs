@@ -1,6 +1,6 @@
-﻿using SimpleFMS.DriverStation.Base.Enums;
+﻿using SimpleFMS.Base.DriverStation.Enums;
 
-namespace SimpleFMS.DriverStation.Base.Interfaces
+namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// Interface for supplying Driver Station Configurations to the 

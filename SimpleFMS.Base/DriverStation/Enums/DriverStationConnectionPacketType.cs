@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.DriverStation.Base.Enums
+﻿namespace SimpleFMS.Base.DriverStation.Enums
 {
     /// <summary>
     /// The packet type send over the TCP connection to the 

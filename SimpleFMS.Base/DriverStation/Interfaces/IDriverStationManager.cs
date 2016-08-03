@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Tuples;
+﻿using System.Collections.Generic;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.Tuples;
 
-namespace SimpleFMS.DriverStation.Base.Interfaces
+namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// An interface for dealing with all driver stations connected
@@ -12,7 +11,7 @@ namespace SimpleFMS.DriverStation.Base.Interfaces
     public interface IDriverStationManager
     {
         IReadOnlyList<IDriverStationConfiguration> ConnectedDriverStations { get; }
-        IReadOnlyDictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int> RequestedDriverStations
+        IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int> RequestedDriverStations
         { get; }
 
         /// <summary>

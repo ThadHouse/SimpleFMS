@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
+using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
 using SimpleFMS.NetworkTables;
 using SimpleFMS.WinForms.Panels;
 

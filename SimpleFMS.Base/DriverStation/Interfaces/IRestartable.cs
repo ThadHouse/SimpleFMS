@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleFMS.DriverStation.Base.Interfaces
+namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// Interface stating a service can be externally restarted and disposed

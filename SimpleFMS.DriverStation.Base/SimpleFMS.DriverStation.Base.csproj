@@ -40,24 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\AllianceStationSide.cs" />
-    <Compile Include="Enums\DriverStationConnectionPacketType.cs" />
-    <Compile Include="Enums\MatchType.cs" />
-    <Compile Include="Enums\ReceiveParseStatus.cs" />
-    <Compile Include="Enums\AllianceStationNumber.cs" />
-    <Compile Include="Enums\AllianceStationStatus.cs" />
-    <Compile Include="Interfaces\IDriverStationConnectionResponder.cs" />
-    <Compile Include="Interfaces\IDriverStationIncomingData.cs" />
-    <Compile Include="Interfaces\IDriverStationNetworkSender.cs" />
-    <Compile Include="Interfaces\IDriverStationOutgoingData.cs" />
-    <Compile Include="Interfaces\IDriverStationConfiguration.cs" />
-    <Compile Include="Interfaces\IDriverStationManager.cs" />
-    <Compile Include="Interfaces\IDriverStationRobotConnectionResponder.cs" />
-    <Compile Include="Interfaces\IReceiveParser.cs" />
-    <Compile Include="Interfaces\IRestartable.cs" />
-    <Compile Include="Interfaces\ISendPacker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tuples\ImmutableStructTuple.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleFMS.Base\SimpleFMS.Base.csproj">
+      <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>
+      <Name>SimpleFMS.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

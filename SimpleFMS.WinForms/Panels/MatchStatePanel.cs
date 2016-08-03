@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.DriverStation.Base.Interfaces;
+using SimpleFMS.Base.DriverStation.Interfaces;
 using Timer = System.Threading.Timer;
 
 namespace SimpleFMS.WinForms.Panels

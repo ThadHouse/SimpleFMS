@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SimpleFMS.DriverStation.Base.Enums;
+using SimpleFMS.Base.DriverStation.Enums;
 using SimpleFMS.DriverStation.Extensions;
 using SimpleFMS.DriverStation.Test.TcpDataTests;
 using SimpleFMS.DriverStation.UdpData;

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
 
 namespace SimpleFMS.DriverStation
 {

@@ -4,8 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation.TcpData;
 
 namespace SimpleFMS.DriverStation.TcpControllers
@@ -24,7 +24,9 @@ namespace SimpleFMS.DriverStation.TcpControllers
 
         private CancellationTokenSource m_cancellationTokenSource;
 
-        private Task m_listenerTask;
+        private Thread m_listenerThread;
+
+        private volatile bool m_active = false;
 
         private readonly object m_lockObject = new object();
 
@@ -37,8 +39,10 @@ namespace SimpleFMS.DriverStation.TcpControllers
             {
                 m_cancellationTokenSource.Cancel();
 
-                if (m_listenerTask != null && m_listenerTask.Status == TaskStatus.Running)
-                    m_listenerTask.Wait();
+                m_active = false;
+
+                if (m_listenerThread != null && m_listenerThread.IsAlive)
+                    m_listenerThread.Join();
 
                 // Wait for our task list to finish and 
                 // empty itself out
@@ -69,8 +73,10 @@ namespace SimpleFMS.DriverStation.TcpControllers
                 {
                     m_cancellationTokenSource.Cancel();
 
-                    if (m_listenerTask != null && m_listenerTask.Status == TaskStatus.Running)
-                        m_listenerTask.Wait();
+                    m_active = false;
+
+                    if (m_listenerThread != null && m_listenerThread.IsAlive)
+                        m_listenerThread.Join();
 
                     // Wait for our task list to finish and 
                     // empty itself out
@@ -91,7 +97,9 @@ namespace SimpleFMS.DriverStation.TcpControllers
                 m_clientTasks.Clear();
 
                 m_cancellationTokenSource = new CancellationTokenSource();
-                m_listenerTask = TcpClientAcceptor(m_cancellationTokenSource.Token);
+                m_listenerThread = new Thread(TcpClientAcceptor);
+                m_listenerThread.Name = "Driver Station Connection Listener";
+                m_listenerThread.Start(m_cancellationTokenSource.Token);
             }
         }
 
@@ -100,33 +108,36 @@ namespace SimpleFMS.DriverStation.TcpControllers
             m_port = port;
         }
 
-        private Task TcpClientAcceptor(CancellationToken token)
+        private void TcpClientAcceptor(object tokenObject)
         {
-            return Task.Factory.StartNew(() =>
+            if (m_cancellationTokenSource == null) return;
+
+            CancellationToken token = m_cancellationTokenSource.Token;
+            if (token.IsCancellationRequested) return;
+            m_active = true;
+
+            TcpListener listener = new TcpListener(IPAddress.Any, m_port);
+            listener.Start();
+            try
             {
-                TcpListener listener = new TcpListener(IPAddress.Any, m_port);
-                listener.Start();
-                try
+                while (m_active)
                 {
-                    while (!token.IsCancellationRequested)
+                    Task<TcpClient> clientTask = listener.AcceptTcpClientAsync();
+                    clientTask.Wait(token);
+                    if (clientTask.IsCompleted)
                     {
-                        Task<TcpClient> clientTask = listener.AcceptTcpClientAsync();
-                        clientTask.Wait(token);
-                        if (clientTask.IsCompleted)
-                        {
-                            StartTcpClientLoop(clientTask.Result, token);
-                        }
+                        StartTcpClientLoop(clientTask.Result, token);
                     }
                 }
-                catch (OperationCanceledException)
-                {
-                    // Do nothing on a canceled operation
-                }
-                finally
-                {
-                    listener.Stop();
-                }
-            }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing on a canceled operation
+            }
+            finally
+            {
+                listener.Stop();
+            }
         }
 
         private class TcpClientTaskParameters

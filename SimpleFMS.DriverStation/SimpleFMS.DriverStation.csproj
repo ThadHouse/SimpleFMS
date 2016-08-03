@@ -61,9 +61,9 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleFMS.DriverStation.Base\SimpleFMS.DriverStation.Base.csproj">
-      <Project>{247016bd-7e37-402b-b0f8-560ce18cf700}</Project>
-      <Name>SimpleFMS.DriverStation.Base</Name>
+    <ProjectReference Include="..\SimpleFMS.Base\SimpleFMS.Base.csproj">
+      <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>
+      <Name>SimpleFMS.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

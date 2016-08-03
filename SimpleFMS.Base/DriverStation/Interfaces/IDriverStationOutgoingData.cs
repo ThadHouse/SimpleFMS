@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using SimpleFMS.DriverStation.Base.Enums;
+using SimpleFMS.Base.DriverStation.Enums;
 
-namespace SimpleFMS.DriverStation.Base.Interfaces
+namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     public interface IDriverStationOutgoingData
     {

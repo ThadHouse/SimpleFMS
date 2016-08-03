@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
-using SimpleFMS.DriverStation.Base.Tuples;
+using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Tuples;
 using SimpleFMS.DriverStation.TcpControllers;
 using SimpleFMS.DriverStation.UdpControllers;
 using SimpleFMS.DriverStation.UdpData;
@@ -15,14 +15,14 @@ namespace SimpleFMS.DriverStation
     public class DriverStationManager : IDriverStationManager, IDisposable
     {
         // Dictionaries to hold our team values
-        private readonly Dictionary<int, ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>>
+        private readonly Dictionary<int, ValueTuple<AllianceStationSide, AllianceStationNumber>>
             m_allianceStationsByTeam =
-                new Dictionary<int, ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>>(
+                new Dictionary<int, ValueTuple<AllianceStationSide, AllianceStationNumber>>(
                     GlobalDriverStationSettings.MaxNumDriverStations);
 
-        private readonly Dictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int>
+        private readonly Dictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
             m_teamsByAllianceStations =
-                new Dictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int>(
+                new Dictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>(
                     GlobalDriverStationSettings.MaxNumDriverStations);
 
         private readonly Dictionary<int, DriverStation> m_driverStationByTeam =
@@ -30,7 +30,7 @@ namespace SimpleFMS.DriverStation
 
         public IReadOnlyList<IDriverStationConfiguration> ConnectedDriverStations => m_driverStationByTeam.Values.ToList();
 
-        public IReadOnlyDictionary<ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>, int>
+        public IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
             RequestedDriverStations => m_teamsByAllianceStations;
 
         private readonly object m_lockObject = new object();
@@ -67,13 +67,13 @@ namespace SimpleFMS.DriverStation
             m_updateNetworkTimer = new Timer(state =>
             {
                 var stationLists =
-                    new List<ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>>();
+                    new List<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>>();
                 lock (m_lockObject)
                 {
                     foreach (var driverStation in m_driverStationByTeam)
                     {
                         var value = driverStation.Value;
-                        var ds = new ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>(
+                        var ds = new ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>(
                             value.StatusResult, value.ControlData);
                         stationLists.Add(ds);
                     }
@@ -111,7 +111,7 @@ namespace SimpleFMS.DriverStation
             lock (m_lockObject)
             {
                 DriverStation existingDs = null;
-                ImmutableStructTuple<AllianceStationSide, AllianceStationNumber> existingLocation;
+                ValueTuple<AllianceStationSide, AllianceStationNumber> existingLocation;
                 if (m_driverStationByTeam.TryGetValue(teamNumber, out existingDs))
                 {
                     // Already contains DS
@@ -184,7 +184,7 @@ namespace SimpleFMS.DriverStation
                 {
                     if (driverStationConfiguration.IsBypassed) continue;
                     var configData =
-                        new ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>(
+                        new ValueTuple<AllianceStationSide, AllianceStationNumber>(
                             driverStationConfiguration.AllianceSide, driverStationConfiguration.StationNumber);
 
                     m_teamsByAllianceStations.Add(configData, driverStationConfiguration.TeamNumber);
@@ -221,7 +221,7 @@ namespace SimpleFMS.DriverStation
 
         public void SetBypass(AllianceStationSide alliance, AllianceStationNumber station, bool bypassed)
         {
-            var configData = new ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
+            var configData = new ValueTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
             int teamNumber = 0;
             lock (m_lockObject)
             {
@@ -238,7 +238,7 @@ namespace SimpleFMS.DriverStation
 
         public void SetEStop(AllianceStationSide alliance, AllianceStationNumber station, bool eStopped)
         {
-            var configData = new ImmutableStructTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
+            var configData = new ValueTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
             int teamNumber = 0;
             lock (m_lockObject)
             {

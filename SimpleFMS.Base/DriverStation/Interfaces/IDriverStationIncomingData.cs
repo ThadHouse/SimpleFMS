@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.DriverStation.Base.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// Data associated with an incoming data connection from a Driver Station

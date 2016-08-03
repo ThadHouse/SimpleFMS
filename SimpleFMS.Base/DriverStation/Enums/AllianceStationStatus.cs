@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.DriverStation.Base.Enums
+﻿namespace SimpleFMS.Base.DriverStation.Enums
 {
     /// <summary>
     /// The connection of a driver station

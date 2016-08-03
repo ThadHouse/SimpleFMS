@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SimpleFMS.DriverStation.Base.Enums;
+using SimpleFMS.Base.DriverStation.Enums;
 using SimpleFMS.DriverStation.TcpData;
 
 namespace SimpleFMS.DriverStation.Test.TcpDataTests

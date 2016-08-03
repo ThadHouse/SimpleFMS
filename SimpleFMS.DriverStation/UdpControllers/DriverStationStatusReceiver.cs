@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using SimpleFMS.DriverStation.Base.Interfaces;
+using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation.UdpData;
 
 namespace SimpleFMS.DriverStation.UdpControllers

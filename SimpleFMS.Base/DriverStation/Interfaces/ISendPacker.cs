@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.DriverStation.Base.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// An interface to pack internal variable into a byte array

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.DriverStation.Base", "SimpleFMS.DriverStation.Base\SimpleFMS.DriverStation.Base.csproj", "{247016BD-7E37-402B-B0F8-560CE18CF700}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.DriverStation", "SimpleFMS.DriverStation\SimpleFMS.DriverStation.csproj", "{4561F270-76EE-4062-A154-13AD9D1DF58C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.DriverStation.Test", "SimpleFMS.DriverStation.Test\SimpleFMS.DriverStation.Test.csproj", "{6F8FAC9D-4C55-45C4-9D4C-4F9A7A762D4B}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.WinForms", "Simpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.NetworkTables", "SimpleFMS.NetworkTables\SimpleFMS.NetworkTables.csproj", "{665A751B-F2AD-48AC-BAF5-1A7EF99BD33D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.Base", "SimpleFMS.Base\SimpleFMS.Base.csproj", "{CBCE2F79-4A6F-410A-A5B9-32788D5918C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{247016BD-7E37-402B-B0F8-560CE18CF700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{247016BD-7E37-402B-B0F8-560CE18CF700}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{247016BD-7E37-402B-B0F8-560CE18CF700}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{247016BD-7E37-402B-B0F8-560CE18CF700}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4561F270-76EE-4062-A154-13AD9D1DF58C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4561F270-76EE-4062-A154-13AD9D1DF58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4561F270-76EE-4062-A154-13AD9D1DF58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{665A751B-F2AD-48AC-BAF5-1A7EF99BD33D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{665A751B-F2AD-48AC-BAF5-1A7EF99BD33D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{665A751B-F2AD-48AC-BAF5-1A7EF99BD33D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBCE2F79-4A6F-410A-A5B9-32788D5918C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCE2F79-4A6F-410A-A5B9-32788D5918C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCE2F79-4A6F-410A-A5B9-32788D5918C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCE2F79-4A6F-410A-A5B9-32788D5918C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

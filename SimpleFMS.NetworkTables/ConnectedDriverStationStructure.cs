@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkTables.Wire;
-using SimpleFMS.DriverStation.Base.Interfaces;
-using SimpleFMS.DriverStation.Base.Tuples;
+using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Tuples;
 
 namespace SimpleFMS.NetworkTables
 {
@@ -22,11 +22,11 @@ namespace SimpleFMS.NetworkTables
 
     public class ConnectedDriverStationStructure : ISendPacker
     {
-        public IReadOnlyList<ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> DriverStationData
+        public IReadOnlyList<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>> DriverStationData
         { get; set; }
 
         
-        private byte[] PackIndividualStructure(ImmutableStructTuple<IDriverStationIncomingData, IDriverStationOutgoingData> data)
+        private byte[] PackIndividualStructure(ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData> data)
         {
             WireEncoder encoder = new WireEncoder(0x0300);
             var outgoing = data.Second;

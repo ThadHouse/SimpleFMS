@@ -1,5 +1,5 @@
-﻿using SimpleFMS.DriverStation.Base.Enums;
-using SimpleFMS.DriverStation.Base.Interfaces;
+﻿using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation.Interfaces;
 
 namespace SimpleFMS.DriverStation.TcpData
 {
