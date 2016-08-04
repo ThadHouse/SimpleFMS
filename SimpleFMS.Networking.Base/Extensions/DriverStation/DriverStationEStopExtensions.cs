@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SimpleFMS.Base.DriverStation;
 
 namespace SimpleFMS.Networking.Base.Extensions.DriverStation

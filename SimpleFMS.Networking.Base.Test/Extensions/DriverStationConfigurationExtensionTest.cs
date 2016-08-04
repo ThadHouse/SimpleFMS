@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkTables.Wire;
 using NUnit.Framework;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.Networking;
-using SimpleFMS.Networking.Base.Extensions;
 using SimpleFMS.Networking.Base.Extensions.DriverStation;
 
 namespace SimpleFMS.Networking.Base.Test.Extensions

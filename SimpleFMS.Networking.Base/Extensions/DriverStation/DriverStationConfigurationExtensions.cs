@@ -17,6 +17,15 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             return new [] {(byte) CustomNetworkTableType.DriverStationConfiguration, (byte) (set ? 1 : 0)};
         }
 
+        public static bool UnpackDriverStationSetConfigurationResponse(this byte[] value)
+        {
+            if (value.Length < 2)
+                return false;
+            if (value[0] != (byte)CustomNetworkTableType.DriverStationConfiguration)
+                return false;
+            return value[1] != 0;
+        }
+
         public static byte[] PackDriverStationConfigurationData(
             this IReadOnlyList<IDriverStationConfiguration> configurations, int matchNumber, MatchType matchType)
         {

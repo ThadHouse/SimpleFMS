@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NetworkTables;
 using NetworkTables.Tables;
-using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.MatchTiming;
-using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base.Extensions.MatchTiming;
 using static SimpleFMS.Base.Networking.NetworkingConstants.MatchTimingConstatns;
 
@@ -15,10 +10,12 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
     internal class MatchTimingUpdater : NetworkTableUpdaterBase
     {
         private readonly IMatchTimingManager m_matchTimingManager;
+        private readonly StandaloneRemoteProcedureCall m_rpc;
 
-        public MatchTimingUpdater(ITable root, IMatchTimingManager timingManager) 
+        public MatchTimingUpdater(ITable root, StandaloneRemoteProcedureCall rpc, IMatchTimingManager timingManager) 
             : base(root, MatchTimingTableName)
         {
+            m_rpc = rpc;
             m_matchTimingManager = timingManager;
         }
 

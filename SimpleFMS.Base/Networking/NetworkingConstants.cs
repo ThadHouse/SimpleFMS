@@ -5,6 +5,7 @@
         public const int NetworkTablesPort = 1755;
         public const uint NetworkTablesVersion = 0x0300;
         public const string ServerRemoteName = "SimpleFMS Server";
+        public const string PersistentFilename = "SimpleFMSPersistence.txt";
 
         public const string RootTableName = "FMS";
 

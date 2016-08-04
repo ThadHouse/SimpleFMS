@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using NetworkTables;
-using NetworkTables.Tables;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.MatchTiming;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Server.NetworkTableUpdaters;
+using static SimpleFMS.Base.Networking.NetworkingConstants;
 
 namespace SimpleFMS.Networking.Server
 {
@@ -18,23 +17,23 @@ namespace SimpleFMS.Networking.Server
 
         private const int TableUpdatePeriod = 500;
 
-        private readonly ITable m_networkTableRoot;
+        private readonly StandaloneNetworkTable m_networkTableRoot;
+        private readonly StandaloneNtCore m_standaloneNtCore;
+        private readonly StandaloneRemoteProcedureCall m_standaloneRpc;
 
         private readonly Timer m_updateTimer;
 
         public NetworkServerManager(IDriverStationManager driverStationManager, IMatchTimingManager matchTimingManager)
         {
+            m_standaloneNtCore = new StandaloneNtCore();
+            m_standaloneNtCore.UpdateRate = 1.0;
+            m_standaloneNtCore.RemoteName = ServerRemoteName;
+            m_standaloneNtCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
+            m_standaloneRpc = new StandaloneRemoteProcedureCall(m_standaloneNtCore);
+            m_networkTableRoot = new StandaloneNetworkTable(m_standaloneNtCore, RootTableName);
 
-            NetworkTable.SetServerMode();
-            NetworkTable.SetPort(NetworkingConstants.NetworkTablesPort);
-            NetworkTable.SetNetworkIdentity(NetworkingConstants.ServerRemoteName);
-            NetworkTable.SetUpdateRate(1.0);
-            NetworkTable.Initialize();
-
-            m_networkTableRoot = NetworkTable.GetTable(NetworkingConstants.RootTableName);
-
-            m_networkTableUpdaters.Add(new DriverStationUpdater(m_networkTableRoot, driverStationManager));
-            m_networkTableUpdaters.Add(new MatchTimingUpdater(m_networkTableRoot, matchTimingManager));
+            m_networkTableUpdaters.Add(new DriverStationUpdater(m_networkTableRoot,m_standaloneRpc, driverStationManager));
+            m_networkTableUpdaters.Add(new MatchTimingUpdater(m_networkTableRoot, m_standaloneRpc, matchTimingManager));
 
             m_updateTimer = new Timer(OnTimerUpdate);
             m_updateTimer.Change(TableUpdatePeriod, TableUpdatePeriod);

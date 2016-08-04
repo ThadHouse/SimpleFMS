@@ -161,8 +161,19 @@ namespace SimpleFMS.DriverStation
                         Station = driverStationConfiguration.Station,
                         TeamNumber = driverStationConfiguration.TeamNumber
                     };
-                    m_driverStationsByAllianceStation.Add(driverStationConfiguration.Station, ds);
-                    m_driverStationsByTeam.Add(driverStationConfiguration.TeamNumber, ds);
+                    try
+                    {
+                        m_driverStationsByAllianceStation.Add(driverStationConfiguration.Station, ds);
+                        m_driverStationsByTeam.Add(driverStationConfiguration.TeamNumber, ds);
+                    }
+                    catch (ArgumentException)
+                    {
+                        //TODO: Log
+                        // Key was already attempted to be added.
+                        m_driverStationsByAllianceStation?.Clear();
+                        m_driverStationsByTeam?.Clear();
+                        return false;
+                    }
                 }
                 return true;
             }

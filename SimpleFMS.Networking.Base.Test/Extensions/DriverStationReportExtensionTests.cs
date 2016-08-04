@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using NetworkTables;
 using NetworkTables.Wire;
 using NUnit.Framework;
 using SimpleFMS.Base.DriverStation;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.MatchTiming;
-using SimpleFMS.MatchTiming;
 
 namespace SimpleFMS.WinForms.Panels
 {

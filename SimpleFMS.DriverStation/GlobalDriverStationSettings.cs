@@ -1,7 +1,4 @@
-﻿using System;
-using SimpleFMS.Base.Enums;
-
-namespace SimpleFMS.DriverStation
+﻿namespace SimpleFMS.DriverStation
 {
     public static class GlobalDriverStationSettings
     {

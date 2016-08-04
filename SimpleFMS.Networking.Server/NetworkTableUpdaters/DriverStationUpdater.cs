@@ -2,7 +2,6 @@
 using NetworkTables.Tables;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
-using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base.Extensions;
 using SimpleFMS.Networking.Base.Extensions.DriverStation;
 using static SimpleFMS.Base.Networking.NetworkingConstants.DriverStationConstants;
@@ -15,20 +14,22 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
     internal sealed class DriverStationUpdater : NetworkTableUpdaterBase
     {
         private readonly IDriverStationManager m_driverStationManager;
+        private readonly StandaloneRemoteProcedureCall m_rpc;
 
-        public DriverStationUpdater(ITable root, IDriverStationManager dsManager)
+        public DriverStationUpdater(ITable root, StandaloneRemoteProcedureCall rpc, IDriverStationManager dsManager)
             : base(root, DriverStationTableName)
         {
+            m_rpc = rpc;
             m_driverStationManager = dsManager;
-            RemoteProcedureCall.CreateRpc(DriverStationSetConfigurationRpcKey,
+            m_rpc.CreateRpc(DriverStationSetConfigurationRpcKey,
                 new RpcDefinition(DriverStationSetConfigurationRpcVersion, DriverStationSetConfigurationRpcKey),
                 DriverStationTeamUpdateRpcCallback);
 
-            RemoteProcedureCall.CreateRpc(DriverStationUpdateBypassRpcKey,
+            m_rpc.CreateRpc(DriverStationUpdateBypassRpcKey,
                 new RpcDefinition(DriverStationUpdateBypassRpcVersion, DriverStationUpdateBypassRpcKey),
                 DriverStationUpdateBypassRpcCallback);
 
-            RemoteProcedureCall.CreateRpc(DriverStationUpdateEStopRpcKey,
+            m_rpc.CreateRpc(DriverStationUpdateEStopRpcKey,
                 new RpcDefinition(DriverStationUpdateEStopRpcVersion, DriverStationUpdateEStopRpcKey),
                 DriverStationUpdateEStopRpcCallback);
         }
