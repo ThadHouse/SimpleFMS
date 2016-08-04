@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DriverStation\DriverStationConfiguration.cs" />
     <Compile Include="DriverStation\DriverStationReport.cs" />
     <Compile Include="Enums\AllianceStationNumber.cs" />
     <Compile Include="Enums\AllianceStationSide.cs" />
@@ -47,9 +48,9 @@
     <Compile Include="DriverStation\AllianceStation.cs" />
     <Compile Include="Enums\MatchState.cs" />
     <Compile Include="Enums\MatchType.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationConfiguration.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationManager.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationReport.cs" />
+    <Compile Include="DriverStation\IDriverStationConfiguration.cs" />
+    <Compile Include="DriverStation\IDriverStationManager.cs" />
+    <Compile Include="DriverStation\IDriverStationReport.cs" />
     <Compile Include="Exceptions\MatchEnabledException.cs" />
     <Compile Include="MatchTiming\IMatchTimingManager.cs" />
     <Compile Include="MatchTiming\MatchTimingConstants.cs" />

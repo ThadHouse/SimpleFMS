@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.Exceptions;
 using SimpleFMS.Base.MatchTiming;
@@ -15,9 +11,9 @@ namespace SimpleFMS.MatchTiming
     {
         private const int MatchUpdatePeriod = 250;
 
-        private TimeSpan m_teleoperatedTime;
-        private TimeSpan m_autonomousTime;
-        private TimeSpan m_delayTime;
+        private TimeSpan m_teleoperatedTime = MatchTimingConstants.DefaultTeleoperatedTime;
+        private TimeSpan m_autonomousTime = MatchTimingConstants.DefaultAutonomousTime;
+        private TimeSpan m_delayTime = MatchTimingConstants.DefaultDelayTime;
 
         public TimeSpan TeleoperatedTime
         {
@@ -138,6 +134,9 @@ namespace SimpleFMS.MatchTiming
         {
             m_matchTimer.Dispose();
         }
+
+        public event Action<TimeSpan> OnMatchTimerUpdate;
+        public event Action<MatchState, MatchState> OnMatchPeriodUpdate;
 
         public TimeSpan GetRemainingPeriodTime()
         {

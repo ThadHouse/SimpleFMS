@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="NetworkTableUpdaters\DriverStationNetworkTableUpdater.cs" />
     <Compile Include="NetworkServerManager.cs" />
+    <Compile Include="NetworkTableUpdaters\MatchTimingUpdaterBase.cs" />
     <Compile Include="NetworkTableUpdaters\NetworkTableUpdaterBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Enums;
 using SimpleFMS.Networking.Base.Extensions;
 
 namespace SimpleFMS.Networking.Base.Test.Extensions
 {
-    public static class RandomDriverStationReportDictionaryCreator
+    public static class RandomDriverStationValueCreator
     {
 
         public static IReadOnlyDictionary<AllianceStation, IDriverStationReport> GetRandomDriverStationReports(int count)
@@ -33,6 +33,34 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
                 reports.Add(randomStation, report);
             }
             return reports;
+        }
+
+        public static IReadOnlyList<IDriverStationConfiguration> GetRandomDriverStationConfigurations(int count, 
+            ref int matchNumber, ref MatchType matchType)
+        {
+            List<IDriverStationConfiguration> configurations = new List<IDriverStationConfiguration>(count);
+
+            Random random = new Random();
+
+            matchNumber = (ushort)random.Next();
+            matchType = (MatchType) random.Next(0, 3);
+
+            for (int i = 0; i < count; i++)
+            {
+                ushort randomTeamNumber = (ushort) random.Next();
+                var randomStation = new AllianceStation((byte)i);
+                bool randomBypass = random.Next(0, 1) != 0;
+
+                DriverStationConfiguration config = new DriverStationConfiguration
+                {
+                    TeamNumber = randomTeamNumber,
+                    Station = randomStation,
+                    IsBypassed = randomBypass
+                };
+
+                configurations.Add(config);
+            }
+            return configurations;
         }
     }
 }

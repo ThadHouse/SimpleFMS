@@ -1,7 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation.UdpControllers;
 using SimpleFMS.DriverStation.UdpData;
 
@@ -25,11 +25,23 @@ namespace SimpleFMS.DriverStation
 
         public int TeamNumber { get; set; }
 
-        public DriverStationStatusData StatusResult { get; internal set; } = null;
+        public bool IsReceivingAutonomous { get; private set; } = true;
+        public bool IsReceivingEnabled { get; private set; }
+        public bool IsReceivingEStopped { get; private set; }
+        public bool IsRoboRioConnected { get; private set; }
+        public bool DriverStationConnected { get; set; }
+
+        public double RobotBattery { get; private set; }
+
+        public const int WatchDogTimer = 1500; // Milliseconds
+
+        //public DriverStationStatusData StatusResult { get; internal set; } = null;
 
         private IPEndPoint m_ipEp = null;
         private readonly int m_port = 0;
         private readonly DriverStationControlSender m_client = null;
+
+        private Timer m_watchDogTimer;
 
         public DriverStationControlData ControlData { get; } = new DriverStationControlData();
 
@@ -38,6 +50,32 @@ namespace SimpleFMS.DriverStation
             m_ipEp = null;
             m_port = port;
             m_client = client;
+            m_watchDogTimer = new Timer(OnWatchDogExpiration);
+            m_watchDogTimer.Change(WatchDogTimer, 0);
+        }
+
+        private void OnWatchDogExpiration(object state)
+        {
+            DriverStationConnected = false;
+        }
+
+        private void FeedWatchDog()
+        {
+            m_watchDogTimer.Change(WatchDogTimer, 0);
+        }
+
+        internal void UpdateDriverStationResponse(DriverStationStatusData data)
+        {
+            if (data == null) return;
+            FeedWatchDog();
+
+            DriverStationConnected = true;
+
+            IsRoboRioConnected = data.HasRobotComms;
+            IsReceivingEStopped = data.IsEStopped;
+            IsReceivingAutonomous = data.IsAutonomous;
+            IsReceivingEnabled = data.IsEnabled;
+            RobotBattery = data.RobotBattery;
         }
 
         internal IDriverStationReport GenerateDriverStationReport()
@@ -49,15 +87,21 @@ namespace SimpleFMS.DriverStation
                 IsBeingSentAutonomous = GlobalDriverStationControlData.IsAutonomous,
                 IsBeingSentEStopped = IsEStopped,
                 IsBeingSentEnabled = ControlData.IsEnabled,
-                DriverStationConnected = m_ipEp != null,
+                DriverStationConnected = DriverStationConnected,
                 // TODO: Add These
-                IsReceivingAutonomous = false,
-                IsReceivingEStopped = false,
-                IsReceivingEnabled = false,
-                RoboRioConnected = false,
-                RobotBattery = 0.0
+                IsReceivingAutonomous = IsReceivingAutonomous,
+                IsReceivingEStopped = IsReceivingEStopped,
+                IsReceivingEnabled = IsReceivingEnabled,
+                RoboRioConnected = IsRoboRioConnected,
+                RobotBattery = RobotBattery
             };
             return dsReport;
+        }
+
+        internal IPAddress GetRemoteIpAddress()
+        {
+            IPEndPoint ipEp = m_ipEp;
+            return ipEp?.Address;
         }
 
         internal void ConnectDriverStation(IPAddress address)
@@ -65,11 +109,14 @@ namespace SimpleFMS.DriverStation
             IPEndPoint ipEp = new IPEndPoint(address, m_port);
             // Only update IpAdress if old address is null
             Interlocked.CompareExchange(ref m_ipEp, ipEp, null);
+            DriverStationConnected = true;
+            FeedWatchDog();
         }
 
         internal void DisconnectDriverStation()
         {
             Interlocked.Exchange(ref m_ipEp, null);
+            IsRoboRioConnected = false;
         }
 
         public void SendPacket()

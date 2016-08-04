@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NetworkTables;
 using NetworkTables.Wire;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.Base.Networking;
 
 namespace SimpleFMS.Networking.Base.Extensions
@@ -83,12 +81,9 @@ namespace SimpleFMS.Networking.Base.Extensions
             report.IsReceivingEStopped = (controlByte & 0x80) == 0x80;
         }
 
-        public static IReadOnlyDictionary<AllianceStation, IDriverStationReport> GetDriverStationReports(this Value networkTableValue)
+        public static IReadOnlyDictionary<AllianceStation, IDriverStationReport> GetDriverStationReports(this byte[] value)
         {
-            if (!networkTableValue.IsRaw())
-                throw new ArgumentOutOfRangeException(nameof(networkTableValue), "Value must be a raw value passed");
-
-            MemoryStream stream = new MemoryStream(networkTableValue.GetRaw());
+            MemoryStream stream = new MemoryStream(value);
             if (stream.Length < 2)
                 throw new IndexOutOfRangeException("Value must have at least a length of 2");
 
@@ -114,7 +109,7 @@ namespace SimpleFMS.Networking.Base.Extensions
         }
 
         public static void GetDriverStationReport(this WireDecoder decoder,
-            Dictionary<AllianceStation, IDriverStationReport> reports)
+            IDictionary<AllianceStation, IDriverStationReport> reports)
         {
             // Ensure we have another 13 bytes.
             if (!decoder.HasMoreBytes(DriverStationReportSize + 1))

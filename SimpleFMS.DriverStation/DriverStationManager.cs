@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.DriverStation.TcpControllers;
 using SimpleFMS.DriverStation.UdpControllers;
@@ -14,14 +13,15 @@ namespace SimpleFMS.DriverStation
     public class DriverStationManager : IDriverStationManager
     {
         private readonly Dictionary<AllianceStation, DriverStation> m_driverStationsByAllianceStation =
-            new Dictionary<AllianceStation, DriverStation>(GlobalDriverStationSettings.MaxNumDriverStations);
+            new Dictionary<AllianceStation, DriverStation>(AllianceStationConstants.MaxNumDriverStations);
 
 
         private readonly Dictionary<int, DriverStation> m_driverStationsByTeam =
-            new Dictionary<int, DriverStation>(GlobalDriverStationSettings.MaxNumDriverStations);
+            new Dictionary<int, DriverStation>(AllianceStationConstants.MaxNumDriverStations);
 
 
-        // TODO
+        public event Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> OnDriverStationStatusChanged;
+
         public IReadOnlyDictionary<AllianceStation, IDriverStationReport> DriverStations
         {
             get
@@ -50,9 +50,6 @@ namespace SimpleFMS.DriverStation
 
         public DriverStationManager()
         {
-
-            m_driverStationsByAllianceStation?.Clear();
-            m_driverStationsByTeam?.Clear();
             m_dsStatusReceiver = new DriverStationStatusReceiver(GlobalDriverStationSettings.UdpReceivePort);
             m_dsStatusReceiver.Restart();
             m_dsStatusReceiver.OnDriverStationReceive += OnDriverStationStatusReceive;
@@ -86,14 +83,20 @@ namespace SimpleFMS.DriverStation
 
         private void OnDriverStationConnected(int teamNumber, IPAddress ipAddress, out AllianceStation station, out bool isRequested)
         {
+            bool updateConnections = false;
             lock (m_lockObject)
             {
                 DriverStation existingDs = null;
                 if (m_driverStationsByTeam.TryGetValue(teamNumber, out existingDs))
                 {
+                    IPAddress oldIpAddress = existingDs.GetRemoteIpAddress();
                     // Team is a currently requested team.
                     existingDs.ConnectDriverStation(ipAddress);
                     station = existingDs.Station;
+                    if (!ipAddress.Equals(oldIpAddress))
+                    {
+                        updateConnections = true;
+                    }
                     isRequested = true;
                 }
                 else
@@ -103,16 +106,21 @@ namespace SimpleFMS.DriverStation
                     isRequested = false;
                 }
             }
+            if (updateConnections)
+            {
+                OnDriverStationStatusChanged?.Invoke(DriverStations);
+            }
         }
 
         private void OnDriverStationStatusReceive(DriverStationStatusData statusData)
         {
+            if (statusData == null) return;
             lock (m_lockObject)
             {
                 DriverStation ds = null;
                 if (m_driverStationsByTeam.TryGetValue(statusData.TeamNumber, out ds))
                 {
-                    //m_connectionResponder?.OnRobotConnectionChanged(ds, statusData.HasRobotComms);
+                    ds.UpdateDriverStationResponse(statusData);
                 }
             }
         }
@@ -126,6 +134,7 @@ namespace SimpleFMS.DriverStation
             {
                 value.SendPacket();
             }
+            OnDriverStationStatusChanged?.Invoke(DriverStations);
         }
 
         public bool InitializeMatch(IReadOnlyList<IDriverStationConfiguration> driverStationConfigurations, int matchNumber, MatchType matchType)
@@ -138,7 +147,7 @@ namespace SimpleFMS.DriverStation
                 m_connectionListener.Restart();
 
                 // Only allow a max of 6 driver stations
-                if (driverStationConfigurations.Count > GlobalDriverStationSettings.MaxNumDriverStations) return false;
+                if (driverStationConfigurations.Count > AllianceStationConstants.MaxNumDriverStations) return false;
                 GlobalDriverStationControlData.MatchNumber = matchNumber;
                 GlobalDriverStationControlData.MatchType = matchType;
 

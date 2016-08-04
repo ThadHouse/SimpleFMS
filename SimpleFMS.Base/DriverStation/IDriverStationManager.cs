@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleFMS.Base.Enums;
 
-namespace SimpleFMS.Base.DriverStation.Interfaces
+namespace SimpleFMS.Base.DriverStation
 {
     /// <summary>
     /// An interface for dealing with all driver stations connected
@@ -10,6 +10,8 @@ namespace SimpleFMS.Base.DriverStation.Interfaces
     /// </summary>
     public interface IDriverStationManager : IDisposable
     {
+        event Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> OnDriverStationStatusChanged;
+
         IReadOnlyDictionary<AllianceStation, IDriverStationReport> DriverStations { get; }
 
         /// <summary>

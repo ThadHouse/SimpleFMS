@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.DriverStation;
 using SimpleFMS.Networking.Server;
 using SimpleFMS.WinForms.Panels;
@@ -26,6 +27,8 @@ namespace SimpleFMS.WinForms
             m_manger = new DriverStationManager();
 
             m_networkManager = new NetworkServerManager(m_manger);
+
+            m_manger.OnDriverStationStatusChanged += MangerOnOnDriverStationStatusChanged;
             
 
             m_alliancePanel = new AlliancesPanel();
@@ -46,6 +49,17 @@ namespace SimpleFMS.WinForms
             m_updateDsButton.Click += OnInitializeMatchButtonClick;
 
             Controls.Add(m_updateDsButton);
+        }
+
+        private void MangerOnOnDriverStationStatusChanged(IReadOnlyDictionary<AllianceStation, IDriverStationReport> readOnlyDictionary)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                foreach (var keyValuePair in readOnlyDictionary)
+                {
+                    m_alliancePanel.UpdateDriverStationConnectionInfo(keyValuePair.Key.StationNumber, keyValuePair.Key.AllianceSide, keyValuePair.Value.DriverStationConnected, keyValuePair.Value.RoboRioConnected);
+                }
+            });
         }
 
         private void OnInitializeMatchButtonClick(object sender, EventArgs e)

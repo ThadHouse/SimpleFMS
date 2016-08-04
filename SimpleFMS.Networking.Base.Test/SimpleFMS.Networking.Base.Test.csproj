@@ -47,9 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\DriverStationConfigurationExtensionTest.cs" />
     <Compile Include="Extensions\DriverStationReportExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\RandomDriverStationReportDictionaryCreator.cs" />
+    <Compile Include="Extensions\RandomDriverStationValueCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimpleFMS.Base\SimpleFMS.Base.csproj">

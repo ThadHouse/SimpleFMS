@@ -4,7 +4,6 @@ using NetworkTables;
 using NetworkTables.Wire;
 using NUnit.Framework;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base.Extensions;
@@ -45,7 +44,7 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
             Assert.That(data, Has.Length.EqualTo(13));
 
             Dictionary<AllianceStation, IDriverStationReport> reportDictionary =
-                new Dictionary<AllianceStation, IDriverStationReport>();
+                new Dictionary<AllianceStation, IDriverStationReport>(1);
 
             MemoryStream stream = new MemoryStream(data);
             WireDecoder decoder = new WireDecoder(stream, NetworkingConstants.NetworkTablesVersion);
@@ -61,7 +60,7 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
         [Test]
         public void DictionaryPackedDataTransaction([Range(0, 6)] int count)
         {
-            var reports = RandomDriverStationReportDictionaryCreator.GetRandomDriverStationReports(count);
+            var reports = RandomDriverStationValueCreator.GetRandomDriverStationReports(count);
 
             var data = reports.PackDriverStationReportData();
 
@@ -69,11 +68,7 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
 
             Assert.That(data, Has.Length.EqualTo(byteCount));
 
-            var value = Value.MakeRaw(data);
-
-            Assert.That(value.Type, Is.EqualTo(NtType.Raw));
-
-            var returnedReports = value.GetDriverStationReports();
+            var returnedReports = data.GetDriverStationReports();
 
             Assert.That(returnedReports, Has.Count.EqualTo(count));
 

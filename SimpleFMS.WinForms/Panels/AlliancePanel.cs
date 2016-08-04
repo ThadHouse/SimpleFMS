@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.WinForms.Panels

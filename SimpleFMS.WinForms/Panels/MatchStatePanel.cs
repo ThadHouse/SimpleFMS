@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Interfaces;
-using Timer = System.Threading.Timer;
+using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Base.Enums;
+using SimpleFMS.Base.MatchTiming;
+using SimpleFMS.MatchTiming;
 
 namespace SimpleFMS.WinForms.Panels
 {
@@ -15,18 +17,10 @@ namespace SimpleFMS.WinForms.Panels
             AutonomousOnly
         }
 
-        enum RunState
-        {
-            Stopped,
-            Autonomous,
-            Teleoperated,
-            Pause
-        }
-
         private IDriverStationManager m_dsManager;
 
         private CurrentState m_currentState = CurrentState.MatchSimulation;
-        private RunState m_runState = RunState.Stopped;
+        //private RunState m_runState = RunState.Stopped;
 
         private Button m_matchStateButton;
         private TextBox m_teleopTime;
@@ -34,15 +28,26 @@ namespace SimpleFMS.WinForms.Panels
         private TextBox m_periodGap;
         private Label m_matchTimer;
 
-        Timer m_timer;
-        private DateTime m_periodEndTime;
+
+        private Timer m_updateTimer;
+        private IMatchTimingManager m_matchManager;
 
         public MatchStatePanel(IDriverStationManager dsManager)
         {
-            m_timer = new Timer(OnPeriodTimerElapsed);
-            m_timer.Change(500, 500);
-
+            m_matchManager = new MatchTimingManager(dsManager);
             m_dsManager = dsManager;
+
+            m_updateTimer = new Timer();
+            m_updateTimer.Interval = 500;
+            m_updateTimer.Tick += UpdateTimerOnTick;
+            m_updateTimer.Start();
+            
+
+
+            //m_timer = new Timer(OnPeriodTimerElapsed);
+            //m_timer.Change(500, 500);
+
+            
             Size = new Size(400, 400);
 
             m_matchTimer = new Label()
@@ -122,15 +127,20 @@ namespace SimpleFMS.WinForms.Panels
             m_matchStateButton.Click += M_matchStateButton_Click;
         }
 
+        private void UpdateTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            TimeSpan time = m_matchManager.GetRemainingPeriodTime();
+            UpdateMatchTimer(time.Seconds + time.Minutes * 60);
+        }
+
         private void M_matchStateButton_Click(object sender, EventArgs e)
         {
             if (!m_matchStateButton.Enabled) return;
 
-            if (m_runState != RunState.Stopped)
+            if (m_matchManager.GetMatchState() != MatchState.Stopped)
             {
                 // Stop the match
                 OnDisable();
-                m_dsManager.StopMatchPeriod();
                 return;
             }
 
@@ -148,37 +158,35 @@ namespace SimpleFMS.WinForms.Panels
                 autoTimeSpan = TimeSpan.FromSeconds(autoTime > 0 ? autoTime : 15);
             }
 
+            int delayTime;
+            TimeSpan delayTimeSpan = TimeSpan.Zero;
+            if (int.TryParse(m_periodGap.Text, out delayTime))
+            {
+                delayTimeSpan = TimeSpan.FromSeconds(delayTime > 0 ? delayTime : 2);
+            }
+
             DateTime now = DateTime.UtcNow;
-            m_periodEndTime = DateTime.MinValue;
+            //m_periodEndTime = DateTime.MinValue;
 
             switch (m_currentState)
             {
                 case CurrentState.MatchSimulation:
-                    m_dsManager.StartMatchPertiod(true);
-                    if (autoTimeSpan != TimeSpan.Zero)
-                    {
-                        m_periodEndTime = now + autoTimeSpan;
-                    }
+                    m_matchManager.AutonomousTime = autoTimeSpan;
+                    m_matchManager.TeleoperatedTime = teleopTimeSpan;
+                    m_matchManager.DelayTime = delayTimeSpan;
+                    m_matchManager.StartMatch();
                     m_matchStateButton.Text = "Stop Autonomous";
-                    m_runState = RunState.Autonomous;
+                    //m_runState = RunState.Autonomous;
                     break;
                 case CurrentState.TeleoperatedOnly:
-                    m_dsManager.StartMatchPertiod(false);
-                    if (teleopTimeSpan != TimeSpan.Zero)
-                    {
-                        m_periodEndTime = now + teleopTimeSpan;
-                    }
+                    m_matchManager.StartTeleop();
                     m_matchStateButton.Text = "Stop Teleoperated";
-                    m_runState = RunState.Teleoperated;
+                    //m_runState = RunState.Teleoperated;
                     break;
                 case CurrentState.AutonomousOnly:
-                    m_dsManager.StartMatchPertiod(true);
-                    if (autoTimeSpan != TimeSpan.Zero)
-                    {
-                        m_periodEndTime = now + autoTimeSpan;
-                    }
+                    m_matchManager.StartAutonomous();
                     m_matchStateButton.Text = "Stop Autonomous";
-                    m_runState = RunState.Autonomous;
+                    //m_runState = RunState.Autonomous;
                     break;
             }
         }
@@ -195,7 +203,7 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_teleopTime_DoubleClick(object sender, EventArgs e)
         {
-            if (m_runState != RunState.Stopped) return;
+            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
             m_currentState = CurrentState.TeleoperatedOnly;
             m_matchStateButton.Text = "Start Teleop Only";
             int time = 0;
@@ -207,7 +215,7 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_autonTime_DoubleClick(object sender, EventArgs e)
         {
-            if (m_runState != RunState.Stopped) return;
+            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
             m_currentState = CurrentState.AutonomousOnly;
             m_matchStateButton.Text = "Start Autonomous Only";
             int time = 0;
@@ -219,7 +227,7 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_matchTimer_DoubleClick(object sender, EventArgs e)
         {
-            if (m_runState != RunState.Stopped) return;
+            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
             m_currentState = CurrentState.TeleoperatedOnly;
             m_matchStateButton.Text = "Start FMS Match";
             int time = 0;
@@ -231,8 +239,7 @@ namespace SimpleFMS.WinForms.Panels
 
         private void OnDisable()
         {
-            m_runState = RunState.Stopped;
-            m_periodEndTime = DateTime.MinValue;
+            m_matchManager.StopCurrentPeriod();
 
             switch (m_currentState)
             {
@@ -248,6 +255,7 @@ namespace SimpleFMS.WinForms.Panels
             }
         }
 
+        /*
         private void OnPeriodTimerElapsed(object s)
         {
             // Enable Teleop
@@ -305,5 +313,6 @@ namespace SimpleFMS.WinForms.Panels
 
            });
         }
+        */
     }
 }

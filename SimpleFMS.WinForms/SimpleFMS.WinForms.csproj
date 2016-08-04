@@ -49,7 +49,6 @@
     <Compile Include="CheckBoxes\BigCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DriverStationConfiguration.cs" />
     <Compile Include="Panels\AlliancePanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -103,6 +102,10 @@
     <ProjectReference Include="..\SimpleFMS.DriverStation\SimpleFMS.DriverStation.csproj">
       <Project>{4561f270-76ee-4062-a154-13ad9d1df58c}</Project>
       <Name>SimpleFMS.DriverStation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.MatchTiming\SimpleFMS.MatchTiming.csproj">
+      <Project>{a17e1f9d-37aa-4f10-b2c5-1dbf4a02adc4}</Project>
+      <Name>SimpleFMS.MatchTiming</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimpleFMS.Networking.Server\SimpleFMS.Networking.Server.csproj">
       <Project>{4ef10924-f589-4cca-8fe1-6381a3b7b82d}</Project>

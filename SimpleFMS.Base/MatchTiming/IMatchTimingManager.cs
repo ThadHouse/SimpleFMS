@@ -6,6 +6,9 @@ namespace SimpleFMS.Base.MatchTiming
 
     public interface IMatchTimingManager : IDisposable
     {
+        event Action<TimeSpan> OnMatchTimerUpdate;
+        event Action<MatchState, MatchState> OnMatchPeriodUpdate;
+
         TimeSpan GetRemainingPeriodTime();
         MatchState GetMatchState();
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using NetworkTables;
 using NetworkTables.Tables;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Server.NetworkTableUpdaters;
 

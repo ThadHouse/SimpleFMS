@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.Base.DriverStation.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation
 {
     public interface IDriverStationReport
     {

@@ -1,4 +1,4 @@
-﻿namespace SimpleFMS.Base.DriverStation.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation
 {
     /// <summary>
     /// Interface for supplying Driver Station Configurations to the 

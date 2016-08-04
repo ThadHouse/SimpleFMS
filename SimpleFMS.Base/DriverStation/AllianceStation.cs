@@ -3,6 +3,24 @@ using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.Base.DriverStation
 {
+    public static class AllianceStationConstants
+    {
+        public static readonly int MaxNumDriverStations = GetMaxNumDriverStations();
+
+        private static int GetMaxNumDriverStations()
+        {
+            int count = 0;
+            foreach (var side in Enum.GetValues(typeof(AllianceStationSide)))
+            {
+                foreach (var number in Enum.GetValues(typeof(AllianceStationNumber)))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+
     public struct AllianceStation : IEquatable<AllianceStation>
     {
         public bool Equals(AllianceStation other)
