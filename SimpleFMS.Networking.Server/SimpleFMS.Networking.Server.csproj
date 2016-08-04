@@ -43,9 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NetworkTableUpdaters\DriverStationNetworkTableUpdater.cs" />
+    <Compile Include="NetworkTableUpdaters\DriverStationUpdater.cs" />
     <Compile Include="NetworkServerManager.cs" />
-    <Compile Include="NetworkTableUpdaters\MatchTimingUpdaterBase.cs" />
+    <Compile Include="NetworkTableUpdaters\MatchTimingUpdater.cs" />
     <Compile Include="NetworkTableUpdaters\NetworkTableUpdaterBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

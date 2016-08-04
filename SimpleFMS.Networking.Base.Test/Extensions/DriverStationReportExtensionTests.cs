@@ -37,6 +37,8 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
 
             var pair = new KeyValuePair<AllianceStation, IDriverStationReport>(station, report);
 
+
+
             WireEncoder encoder = new WireEncoder(NetworkingConstants.NetworkTablesVersion);
             pair.PackDriverStationReportData(ref encoder);
 

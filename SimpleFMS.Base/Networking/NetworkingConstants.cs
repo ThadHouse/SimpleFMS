@@ -12,9 +12,12 @@
         {
             public const string DriverStationTableName = "DriverStation";
             public const string DriverStationReportKey = "DriverStationReports";
-            public const string DriverStationTeamUpdateRpcKey = "RpcDriverStationTeamUpdate";
-            public const string DriverStationUpdateBypassKey = "RpcDriverStationUpdateBypass";
-            public const string DriverStationUpdateEStopKey = "RpcDriverStationUpdateEStop";
+            public const string DriverStationSetConfigurationRpcKey = "RpcDriverStationSetConfiguration";
+            public const int DriverStationSetConfigurationRpcVersion = 1;
+            public const string DriverStationUpdateBypassRpcKey = "RpcDriverStationUpdateBypass";
+            public const int DriverStationUpdateBypassRpcVersion = 1;
+            public const string DriverStationUpdateEStopRpcKey = "RpcDriverStationUpdateEStop";
+            public const int DriverStationUpdateEStopRpcVersion = 1;
         }
 
         public static class MatchTimingConstatns
@@ -25,7 +28,7 @@
             public const string StartAutonomousRpcKey = "RpcStartAutonomous";
             public const string StartTeleoperatedRpcKey = "RpcStartTeleoperated";
             public const string SetMatchPeriodTimeRpcKey = "RpcSetMatchPeriodTime";
-            public const string MatchTimingReportKey = "MatchTimingReports";
+            public const string MatchStatusReportKey = "MatchStatusReports";
         }
     }
 }

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Base.MatchTiming;
+using SimpleFMS.Base.Networking;
 using SimpleFMS.DriverStation;
+using SimpleFMS.MatchTiming;
 using SimpleFMS.Networking.Server;
 using SimpleFMS.WinForms.Panels;
 
@@ -16,26 +19,29 @@ namespace SimpleFMS.WinForms
 
         private Button m_updateDsButton;
 
-        readonly DriverStationManager m_manger;
+        readonly IDriverStationManager m_driverStationManager;
 
-        private readonly NetworkServerManager m_networkManager;
+        private readonly INetworkServerManager m_networkManager;
+
+        private readonly IMatchTimingManager m_matchTimingManager;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_manger = new DriverStationManager();
+            m_driverStationManager = new DriverStationManager();
+            m_matchTimingManager = new MatchTimingManager(m_driverStationManager);
 
-            m_networkManager = new NetworkServerManager(m_manger);
+            m_networkManager = new NetworkServerManager(m_driverStationManager, m_matchTimingManager);
 
-            m_manger.OnDriverStationStatusChanged += MangerOnOnDriverStationStatusChanged;
+            m_driverStationManager.OnDriverStationStatusChanged += MangerOnOnDriverStationStatusChanged;
             
 
             m_alliancePanel = new AlliancesPanel();
             m_alliancePanel.Location = new Point(20, 20);
             this.Controls.Add(m_alliancePanel);
 
-            m_matchTimePanel = new MatchStatePanel(m_manger);
+            m_matchTimePanel = new MatchStatePanel(m_matchTimingManager);
             m_matchTimePanel.Location = new Point(500, 35);
             Controls.Add(m_matchTimePanel);
 
@@ -66,7 +72,7 @@ namespace SimpleFMS.WinForms
         {
             // Grab all DS Data.
             var list = m_alliancePanel.GetDriverStationConfigurations();
-            m_manger.InitializeMatch(list, 1, 0);
+            m_driverStationManager.InitializeMatch(list, 1, 0);
             m_matchTimePanel.EnableStart();
         }
 

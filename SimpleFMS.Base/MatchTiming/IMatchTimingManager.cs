@@ -20,5 +20,7 @@ namespace SimpleFMS.Base.MatchTiming
         TimeSpan TeleoperatedTime { get; set; }
         TimeSpan AutonomousTime { get; set; }
         TimeSpan DelayTime { get; set; }
+
+        IMatchTimingReport GetMatchTimingReport();
     }
 }

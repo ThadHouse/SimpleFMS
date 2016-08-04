@@ -17,8 +17,6 @@ namespace SimpleFMS.WinForms.Panels
             AutonomousOnly
         }
 
-        private IDriverStationManager m_dsManager;
-
         private CurrentState m_currentState = CurrentState.MatchSimulation;
         //private RunState m_runState = RunState.Stopped;
 
@@ -32,10 +30,9 @@ namespace SimpleFMS.WinForms.Panels
         private Timer m_updateTimer;
         private IMatchTimingManager m_matchManager;
 
-        public MatchStatePanel(IDriverStationManager dsManager)
+        public MatchStatePanel(IMatchTimingManager matchTimingManger)
         {
-            m_matchManager = new MatchTimingManager(dsManager);
-            m_dsManager = dsManager;
+            m_matchManager = matchTimingManger;
 
             m_updateTimer = new Timer();
             m_updateTimer.Interval = 500;

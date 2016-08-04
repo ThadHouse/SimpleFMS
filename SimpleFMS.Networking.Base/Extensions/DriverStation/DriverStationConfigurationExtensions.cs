@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkTables.Wire;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.Networking;
 
-namespace SimpleFMS.Networking.Base.Extensions
+namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 {
     public static class DriverStationConfigurationExtensions
     {
         private const int DriverStationConfigurationSize = 4;
+
+        public static byte[] PackDriverStationSetConfigurationResponse(bool set)
+        {
+            return new [] {(byte) CustomNetworkTableType.DriverStationConfiguration, (byte) (set ? 1 : 0)};
+        }
 
         public static byte[] PackDriverStationConfigurationData(
             this IReadOnlyList<IDriverStationConfiguration> configurations, int matchNumber, MatchType matchType)
@@ -24,7 +26,7 @@ namespace SimpleFMS.Networking.Base.Extensions
 
             WireEncoder encoder = new WireEncoder(NetworkingConstants.NetworkTablesVersion);
 
-            encoder.Write8((byte)CustomNetworkTableType.DriverStationConfigurationSend);
+            encoder.Write8((byte)CustomNetworkTableType.DriverStationConfiguration);
             encoder.Write16((ushort)matchNumber);
             encoder.Write8((byte)matchType);
             encoder.Write8((byte)configurations.Count);
@@ -50,9 +52,10 @@ namespace SimpleFMS.Networking.Base.Extensions
         public static IReadOnlyList<IDriverStationConfiguration> GetDriverStationConfigurations(this byte[] value, 
             out int matchNumber, out MatchType matchType)
         {
-            MemoryStream stream = new MemoryStream(value);
-            if (stream.Length < 5)
+            if (value.Length < 5)
                 throw new IndexOutOfRangeException("Value must have at least a length of 5");
+
+            MemoryStream stream = new MemoryStream(value);
 
             WireDecoder decoder = new WireDecoder(stream, NetworkingConstants.NetworkTablesVersion);
 
@@ -60,7 +63,7 @@ namespace SimpleFMS.Networking.Base.Extensions
 
             byte type = 0;
             decoder.Read8(ref type);
-            if (type != (byte) CustomNetworkTableType.DriverStationConfigurationSend)
+            if (type != (byte) CustomNetworkTableType.DriverStationConfiguration)
             {
                 matchNumber = 0;
                 matchType = 0;

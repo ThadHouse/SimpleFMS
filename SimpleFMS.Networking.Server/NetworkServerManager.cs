@@ -4,6 +4,7 @@ using System.Threading;
 using NetworkTables;
 using NetworkTables.Tables;
 using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Base.MatchTiming;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Server.NetworkTableUpdaters;
 
@@ -17,15 +18,12 @@ namespace SimpleFMS.Networking.Server
 
         private const int TableUpdatePeriod = 500;
 
-        private readonly IDriverStationManager m_driverStationManager;
-
         private readonly ITable m_networkTableRoot;
 
         private readonly Timer m_updateTimer;
 
-        public NetworkServerManager(IDriverStationManager driverStationManager)
+        public NetworkServerManager(IDriverStationManager driverStationManager, IMatchTimingManager matchTimingManager)
         {
-            m_driverStationManager = driverStationManager;
 
             NetworkTable.SetServerMode();
             NetworkTable.SetPort(NetworkingConstants.NetworkTablesPort);
@@ -35,8 +33,8 @@ namespace SimpleFMS.Networking.Server
 
             m_networkTableRoot = NetworkTable.GetTable(NetworkingConstants.RootTableName);
 
-            m_networkTableUpdaters.Add(new DriverStationNetworkTableUpdater(m_networkTableRoot, m_driverStationManager));
-
+            m_networkTableUpdaters.Add(new DriverStationUpdater(m_networkTableRoot, driverStationManager));
+            m_networkTableUpdaters.Add(new MatchTimingUpdater(m_networkTableRoot, matchTimingManager));
 
             m_updateTimer = new Timer(OnTimerUpdate);
             m_updateTimer.Change(TableUpdatePeriod, TableUpdatePeriod);

@@ -3,7 +3,15 @@
     public enum CustomNetworkTableType
     {
         DriverStationReport = 1,
-        DriverStationConfigurationSend = 2,
-        DriverStationConfigurationResponse = 3
+        DriverStationConfiguration,
+        DriverStationUpdateBypass,
+        DriverStationUpdateEStop,
+        
+        MatchTimingReport,
+        MatchTimingStartMatch,
+        MatchTimingStopPeriod,
+        MatchTimingStartAutonomous,
+        MatchTimingStartTeleoperated,
+        MatchTimingSetPeriodTimes
     }
 }

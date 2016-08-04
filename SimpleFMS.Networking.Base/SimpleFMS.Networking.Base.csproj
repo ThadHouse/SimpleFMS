@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DriverStationConfigurationExtensions.cs" />
-    <Compile Include="Extensions\DriverStationReportExtensions.cs" />
+    <Compile Include="Extensions\DriverStation\DriverStationBypassExtensions.cs" />
+    <Compile Include="Extensions\DriverStation\DriverStationConfigurationExtensions.cs" />
+    <Compile Include="Extensions\DriverStation\DriverStationEStopExtensions.cs" />
+    <Compile Include="Extensions\DriverStation\DriverStationReportExtensions.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\MatchTiming\MatchTimingReportExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +57,7 @@
       <Name>SimpleFMS.Base</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

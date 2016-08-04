@@ -63,6 +63,22 @@ namespace SimpleFMS.MatchTiming
             }
         }
 
+        public IMatchTimingReport GetMatchTimingReport()
+        {
+            lock (m_lockObject)
+            {
+                MatchTimingReport report = new MatchTimingReport
+                {
+                    MatchState = m_matchState,
+                    AutonomousTime = m_autonomousTime,
+                    DelayTime = m_delayTime,
+                    TeleoperatedTime = m_teleoperatedTime,
+                    RemainingPeriodTime = GetRemainingPeriodTime()
+                };
+                return report;
+            }
+        }
+
         private MatchState m_matchState = MatchState.Stopped;
         private DateTime m_periodEndTime = DateTime.MinValue;
         private bool m_fullMatch = false;

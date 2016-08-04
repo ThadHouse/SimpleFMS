@@ -10,6 +10,7 @@ using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base.Extensions;
+using SimpleFMS.Networking.Base.Extensions.DriverStation;
 
 namespace SimpleFMS.Networking.Base.Test.Extensions
 {
@@ -21,12 +22,10 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
         {
             WireEncoder encoder = new WireEncoder(NetworkingConstants.NetworkTablesVersion);
 
-            DriverStationConfiguration configuration = new DriverStationConfiguration
-            {
-                Station = new AllianceStation(AllianceStationSide.Red, AllianceStationNumber.Station2),
-                TeamNumber = 4488,
-                IsBypassed = true
-            };
+            int match = 0;
+            MatchType mType = 0;
+            IDriverStationConfiguration configuration =
+                RandomDriverStationValueCreator.GetRandomDriverStationConfigurations(1, ref match, ref mType)[0];
 
             configuration.PackDriverStationConfigurationData(ref encoder);
 
