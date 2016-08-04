@@ -1,5 +1,4 @@
-﻿using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.DriverStation.Interfaces;
+﻿using SimpleFMS.DriverStation.Enums;
 using SimpleFMS.DriverStation.Extensions;
 
 namespace SimpleFMS.DriverStation.UdpData
@@ -7,9 +6,8 @@ namespace SimpleFMS.DriverStation.UdpData
     /// <summary>
     /// The status returned from the DriverStations
     /// </summary>
-    public class DriverStationStatusData : IReceiveParser, IDriverStationIncomingData
+    public class DriverStationStatusData
     {
-        public bool HasDriverStationComms { get; internal set; }
 
         public bool HasRobotComms { get; internal set; }
 
@@ -42,10 +40,10 @@ namespace SimpleFMS.DriverStation.UdpData
             PacketNumber = packet.GetUShort(ref index);
             // Unknown what packet[2] is
             byte status = packet[3];
-            IsAutonomous = (status & 2) == 2;
-            IsEnabled = (status & 4) == 4;
-            IsEStopped = (status & 128) == 128;
-            HasRobotComms = (status & 32) == 32;
+            IsAutonomous = (status & 0x02) == 0x02;
+            IsEnabled = (status & 0x04) == 0x04;
+            IsEStopped = (status & 0x80) == 0x80;
+            HasRobotComms = (status & 0x20) == 0x20;
             index = 4;
             TeamNumber = packet.GetUShort(ref index);
             RobotBattery = packet.GetUShort(ref index) / 256.0;

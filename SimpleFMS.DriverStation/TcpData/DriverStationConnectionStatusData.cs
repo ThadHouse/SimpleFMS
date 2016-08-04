@@ -1,10 +1,9 @@
-﻿using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.DriverStation.Interfaces;
+﻿using SimpleFMS.DriverStation.Enums;
 using SimpleFMS.DriverStation.Extensions;
 
 namespace SimpleFMS.DriverStation.TcpData
 {
-    public class DriverStationConnectionStatusData : IReceiveParser
+    public class DriverStationConnectionStatusData 
     {
         public int TeamNumber { get; set; }
         public DriverStationConnectionPacketType Status { get; set; }

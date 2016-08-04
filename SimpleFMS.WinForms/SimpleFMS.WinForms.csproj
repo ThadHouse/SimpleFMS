@@ -49,6 +49,7 @@
     <Compile Include="CheckBoxes\BigCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DriverStationConfiguration.cs" />
     <Compile Include="Panels\AlliancePanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -103,9 +104,9 @@
       <Project>{4561f270-76ee-4062-a154-13ad9d1df58c}</Project>
       <Name>SimpleFMS.DriverStation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimpleFMS.NetworkTables\SimpleFMS.NetworkTables.csproj">
-      <Project>{665a751b-f2ad-48ac-baf5-1a7ef99bd33d}</Project>
-      <Name>SimpleFMS.NetworkTables</Name>
+    <ProjectReference Include="..\SimpleFMS.Networking.Server\SimpleFMS.Networking.Server.csproj">
+      <Project>{4ef10924-f589-4cca-8fe1-6381a3b7b82d}</Project>
+      <Name>SimpleFMS.Networking.Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

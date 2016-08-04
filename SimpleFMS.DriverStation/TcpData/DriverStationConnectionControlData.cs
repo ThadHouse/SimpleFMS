@@ -1,5 +1,5 @@
-﻿using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.DriverStation.Interfaces;
+﻿using SimpleFMS.Base.Enums;
+using SimpleFMS.DriverStation.Enums;
 
 namespace SimpleFMS.DriverStation.TcpData
 {
@@ -9,7 +9,7 @@ namespace SimpleFMS.DriverStation.TcpData
     /// <remarks>
     /// This is the data sent over TCP
     /// </remarks>
-    public class DriverStationConnectionControlData : ISendPacker
+    public class DriverStationConnectionControlData
     {
         public AllianceStationSide AllianceSide { get; set; }
         public AllianceStationNumber StationNumber { get; set; }

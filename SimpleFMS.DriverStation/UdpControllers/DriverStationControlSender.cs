@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation.UdpData;
 
 namespace SimpleFMS.DriverStation.UdpControllers
 {
-    public class DriverStationControlSender : IRestartable
+    public class DriverStationControlSender
     {
         private UdpClient m_client;
 

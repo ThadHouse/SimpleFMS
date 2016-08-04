@@ -4,19 +4,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Base.Enums;
+using SimpleFMS.DriverStation.Enums;
 using SimpleFMS.DriverStation.TcpData;
 
 namespace SimpleFMS.DriverStation.TcpControllers
 {
-    public class DriverStationConnectionListener : IRestartable
+    public class DriverStationConnectionListener
     {
         private readonly int m_port;
 
         public delegate void DriverStationNewConnectionInfo(
-            int teamNumber, IPAddress ipAddress, out AllianceStationSide allianceSide,
-            out AllianceStationNumber stationNumber, out bool isRequested);
+            int teamNumber, IPAddress ipAddress, out AllianceStation station, out bool isRequested);
 
         public event DriverStationNewConnectionInfo OnNewDriverStationConnected;
 
@@ -188,15 +188,14 @@ namespace SimpleFMS.DriverStation.TcpControllers
                             if (receiveData.Status == DriverStationConnectionPacketType.SetTeam)
                             {
                                 // Fire the new Driver Station Event
-                                AllianceStationSide alliance = 0;
-                                AllianceStationNumber station = 0;
+                                AllianceStation station = new AllianceStation();
                                 bool requested = false;
 
-                                OnNewDriverStationConnected?.Invoke(receiveData.TeamNumber, ((IPEndPoint)client.Client.RemoteEndPoint).Address, out alliance, out station,
+                                OnNewDriverStationConnected?.Invoke(receiveData.TeamNumber, ((IPEndPoint)client.Client.RemoteEndPoint).Address, out station,
                                     out requested);
 
-                                sendData.AllianceSide = alliance;
-                                sendData.StationNumber = station;
+                                sendData.AllianceSide = station.AllianceSide;
+                                sendData.StationNumber = station.StationNumber;
                                 sendData.StationStatus = requested ? AllianceStationStatus.CorrectStation : AllianceStationStatus.InvalidTeam;
                                 byte[] toSend = sendData.PackData();
 

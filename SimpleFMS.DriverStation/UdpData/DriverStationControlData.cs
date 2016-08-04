@@ -1,15 +1,11 @@
-﻿using System.Net;
-using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.DriverStation.Interfaces;
+﻿using SimpleFMS.Base.DriverStation;
 using SimpleFMS.DriverStation.Extensions;
 
 namespace SimpleFMS.DriverStation.UdpData
 {
-    public class DriverStationControlData : ISendPacker, IDriverStationOutgoingData
+    public class DriverStationControlData
     {
-        public IPAddress IpAddress { get; set; }
-        public AllianceStationSide AllianceSide { get; set; }
-        public AllianceStationNumber StationNumber { get; set; }
+        public AllianceStation Station { get; set; }
         public bool IsEStopped { get; set; }
         public bool IsEnabled { get; set; }
         public bool IsAutonomous => GlobalDriverStationControlData.IsAutonomous;
@@ -20,12 +16,9 @@ namespace SimpleFMS.DriverStation.UdpData
             byte controlWord = 0;
             unchecked
             {
-                if (IsAutonomous) controlWord |= 2;
-                else controlWord &= (byte)~2;
-                if (IsEnabled) controlWord |= 4;
-                else controlWord &= (byte)~4;
-                if (IsEStopped) controlWord |= 128;
-                else controlWord &= (byte)~128;
+                if (IsAutonomous) controlWord |= 0x02;
+                if (IsEnabled) controlWord |= 0x04;
+                if (IsEStopped) controlWord |= 0x80;
             }
             return controlWord;
         }
@@ -66,15 +59,7 @@ namespace SimpleFMS.DriverStation.UdpData
             index++;
             array[index] = 0;
             index++;
-            switch (AllianceSide)
-            {
-                case AllianceStationSide.Red:
-                    array[index] = (byte)(StationNumber);
-                    break;
-                case AllianceStationSide.Blue:
-                    array[index] = (byte)(StationNumber + 3);
-                    break;
-            }
+            array[index] = Station.GetByte();
             index++;
             array[index] = (byte)GlobalDriverStationControlData.MatchType;
             index++;

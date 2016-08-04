@@ -1,5 +1,5 @@
 ﻿using System;
-using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.DriverStation.UdpData
 {

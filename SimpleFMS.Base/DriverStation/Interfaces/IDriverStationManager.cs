@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using SimpleFMS.Base.DriverStation.Enums;
-using SimpleFMS.Base.Tuples;
+﻿using System;
+using System.Collections.Generic;
+using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.Base.DriverStation.Interfaces
 {
@@ -8,11 +8,9 @@ namespace SimpleFMS.Base.DriverStation.Interfaces
     /// An interface for dealing with all driver stations connected
     /// to an FMS.
     /// </summary>
-    public interface IDriverStationManager
+    public interface IDriverStationManager : IDisposable
     {
-        IReadOnlyList<IDriverStationConfiguration> ConnectedDriverStations { get; }
-        IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int> RequestedDriverStations
-        { get; }
+        IReadOnlyDictionary<AllianceStation, IDriverStationReport> DriverStations { get; }
 
         /// <summary>
         /// Initializes a new match to be played
@@ -40,17 +38,15 @@ namespace SimpleFMS.Base.DriverStation.Interfaces
         /// <summary>
         /// Sets a specific alliance station to be bypassed
         /// </summary>
-        /// <param name="alliance">The alliance side to bypass</param>
         /// <param name="station">The alliance station to bypass</param>
         /// <param name="bypassed">True to bypass, false otherwise</param>
-        void SetBypass(AllianceStationSide alliance, AllianceStationNumber station, bool bypassed);
+        void SetBypass(AllianceStation station, bool bypassed);
 
         /// <summary>
         /// Sets a specific alliance station to be eStopped
         /// </summary>
-        /// <param name="alliance">The alliance side to bypass</param>
         /// <param name="station">The alliance station to bypass</param>
         /// <param name="eStopped">True to eStop, false otherwise</param>
-        void SetEStop(AllianceStationSide alliance, AllianceStationNumber station, bool eStopped);
+        void SetEStop(AllianceStation station, bool eStopped);
     }
 }

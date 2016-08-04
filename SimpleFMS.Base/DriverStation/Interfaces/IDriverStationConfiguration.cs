@@ -1,6 +1,4 @@
-﻿using SimpleFMS.Base.DriverStation.Enums;
-
-namespace SimpleFMS.Base.DriverStation.Interfaces
+﻿namespace SimpleFMS.Base.DriverStation.Interfaces
 {
     /// <summary>
     /// Interface for supplying Driver Station Configurations to the 
@@ -12,14 +10,8 @@ namespace SimpleFMS.Base.DriverStation.Interfaces
         /// Gets the team number
         /// </summary>
         int TeamNumber { get; }
-        /// <summary>
-        /// Gets the alliance station side
-        /// </summary>
-        AllianceStationSide AllianceSide { get; }
-        /// <summary>
-        /// Gets the alliance station number
-        /// </summary>
-        AllianceStationNumber StationNumber { get; }
+        
+        AllianceStation Station { get; }
 
         bool IsBypassed { get; }
     }

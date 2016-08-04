@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Enums;
 using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.WinForms.Panels
 {
@@ -57,16 +57,15 @@ namespace SimpleFMS.WinForms.Panels
             }
         }
 
-        public void GetDriverStationConfigurations(ref List<IDriverStationConfiguration> configurations)
+        public void GetDriverStationConfigurations(ref List<IDriverStationConfiguration> configurations, ref int badStationNumber)
         {
             foreach (var stationPanel in m_panels)
             {
-                var state = stationPanel.GetState(AllianceSide);
-                if (state != null)
-                {
-                    configurations.Add(state);
-                }
+                var state = stationPanel.GetState(AllianceSide, badStationNumber);
+                configurations.Add(state);
+                badStationNumber--;
             }
+            ;
         }
 
         public void UpdateDriverStationConfiguration(AllianceStationNumber number, bool? dsConnected, bool? rioConnected)

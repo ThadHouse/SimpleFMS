@@ -17,7 +17,7 @@ namespace SimpleFMS.WinForms.Panels
 
         enum RunState
         {
-            Stopped, 
+            Stopped,
             Autonomous,
             Teleoperated,
             Pause
@@ -63,7 +63,7 @@ namespace SimpleFMS.WinForms.Panels
                 Location = new Point(m_matchTimer.Location.X, m_matchTimer.Location.Y + m_matchTimer.Size.Height + 5)
             };
             Controls.Add(m_matchStateButton);
-            
+
             Label label = new Label
             {
                 AutoSize = true,
@@ -251,59 +251,59 @@ namespace SimpleFMS.WinForms.Panels
         private void OnPeriodTimerElapsed(object s)
         {
             // Enable Teleop
-            Invoke((MethodInvoker) delegate
-            {
-                if (m_periodEndTime == DateTime.MinValue) return;
+            Invoke((MethodInvoker)delegate
+           {
+               if (m_periodEndTime == DateTime.MinValue) return;
 
-                DateTime now = DateTime.UtcNow;
-                TimeSpan remaining = m_periodEndTime - now;
-                if (remaining <= TimeSpan.Zero)
-                {
-                    // Period Expired
-                    // Stop the current period.
-                    m_dsManager.StopMatchPeriod();
+               DateTime now = DateTime.UtcNow;
+               TimeSpan remaining = m_periodEndTime - now;
+               if (remaining <= TimeSpan.Zero)
+               {
+                        // Period Expired
+                        // Stop the current period.
+                        m_dsManager.StopMatchPeriod();
 
-                    // If was auton, and is simulating a match
-                    if (m_runState == RunState.Autonomous && m_currentState == CurrentState.MatchSimulation)
-                    {
-                        m_matchStateButton.Text = "Stop Period Pause";
-                        m_runState = RunState.Pause;
-                        int pauseTime;
-                        TimeSpan pauseTimeSpan = TimeSpan.FromSeconds(3);
-                        if (int.TryParse(m_periodGap.Text, out pauseTime))
-                        {
-                            pauseTimeSpan = TimeSpan.FromSeconds(pauseTime > 0 ? pauseTime : 3);
-                        }
+                        // If was auton, and is simulating a match
+                        if (m_runState == RunState.Autonomous && m_currentState == CurrentState.MatchSimulation)
+                   {
+                       m_matchStateButton.Text = "Stop Period Pause";
+                       m_runState = RunState.Pause;
+                       int pauseTime;
+                       TimeSpan pauseTimeSpan = TimeSpan.FromSeconds(3);
+                       if (int.TryParse(m_periodGap.Text, out pauseTime))
+                       {
+                           pauseTimeSpan = TimeSpan.FromSeconds(pauseTime > 0 ? pauseTime : 3);
+                       }
 
-                        m_periodEndTime = now + pauseTimeSpan;
-                    }
-                    // Finished a pause
-                    else if (m_runState == RunState.Pause)
-                    {
-                        m_matchStateButton.Text = "Stop Teleoperated";
-                        m_runState = RunState.Teleoperated;
-                        int telopTime;
-                        TimeSpan teleopTimeSpan = TimeSpan.Zero;
-                        if (int.TryParse(m_teleopTime.Text, out telopTime))
-                        {
-                            teleopTimeSpan = TimeSpan.FromSeconds(telopTime > 0 ? telopTime : 135);
-                        }
+                       m_periodEndTime = now + pauseTimeSpan;
+                   }
+                        // Finished a pause
+                        else if (m_runState == RunState.Pause)
+                   {
+                       m_matchStateButton.Text = "Stop Teleoperated";
+                       m_runState = RunState.Teleoperated;
+                       int telopTime;
+                       TimeSpan teleopTimeSpan = TimeSpan.Zero;
+                       if (int.TryParse(m_teleopTime.Text, out telopTime))
+                       {
+                           teleopTimeSpan = TimeSpan.FromSeconds(telopTime > 0 ? telopTime : 135);
+                       }
 
-                        m_periodEndTime = now + teleopTimeSpan;
-                        m_dsManager.StartMatchPertiod(false);
-                    }
-                    else
-                    {
-                        OnDisable();
-                    }
-                }
-                else
-                {
-                    m_dsManager.SetRemainingMatchTime(remaining.Seconds);
-                    UpdateMatchTimer(remaining.Seconds);
-                }
+                       m_periodEndTime = now + teleopTimeSpan;
+                       m_dsManager.StartMatchPertiod(false);
+                   }
+                   else
+                   {
+                       OnDisable();
+                   }
+               }
+               else
+               {
+                   m_dsManager.SetRemainingMatchTime(remaining.Seconds);
+                   UpdateMatchTimer(remaining.Seconds);
+               }
 
-            });
+           });
         }
     }
 }

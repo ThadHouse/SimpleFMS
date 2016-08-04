@@ -40,23 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DriverStation\Enums\AllianceStationNumber.cs" />
-    <Compile Include="DriverStation\Enums\AllianceStationSide.cs" />
-    <Compile Include="DriverStation\Enums\AllianceStationStatus.cs" />
-    <Compile Include="DriverStation\Enums\DriverStationConnectionPacketType.cs" />
-    <Compile Include="DriverStation\Enums\MatchType.cs" />
-    <Compile Include="DriverStation\Enums\ReceiveParseStatus.cs" />
+    <Compile Include="DriverStation\DriverStationReport.cs" />
+    <Compile Include="Enums\AllianceStationNumber.cs" />
+    <Compile Include="Enums\AllianceStationSide.cs" />
+    <Compile Include="Enums\AllianceStationStatus.cs" />
+    <Compile Include="DriverStation\AllianceStation.cs" />
+    <Compile Include="Enums\MatchState.cs" />
+    <Compile Include="Enums\MatchType.cs" />
     <Compile Include="DriverStation\Interfaces\IDriverStationConfiguration.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationConnectionResponder.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationIncomingData.cs" />
     <Compile Include="DriverStation\Interfaces\IDriverStationManager.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationNetworkSender.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationOutgoingData.cs" />
-    <Compile Include="DriverStation\Interfaces\IDriverStationRobotConnectionResponder.cs" />
-    <Compile Include="DriverStation\Interfaces\IReceiveParser.cs" />
-    <Compile Include="DriverStation\Interfaces\IRestartable.cs" />
-    <Compile Include="DriverStation\Interfaces\ISendPacker.cs" />
-    <Compile Include="Networking\IRequestedDriverStationGatherer.cs" />
+    <Compile Include="DriverStation\Interfaces\IDriverStationReport.cs" />
+    <Compile Include="Exceptions\MatchEnabledException.cs" />
+    <Compile Include="MatchTiming\IMatchTimingManager.cs" />
+    <Compile Include="MatchTiming\MatchTimingConstants.cs" />
+    <Compile Include="Networking\INetworkClientManager.cs" />
+    <Compile Include="Networking\INetworkServerManager.cs" />
+    <Compile Include="Networking\NetworkingConstants.cs" />
     <Compile Include="Tuples\ValueTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

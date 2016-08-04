@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
 using System.Windows.Forms;
 using SimpleFMS.Base.DriverStation.Interfaces;
 using SimpleFMS.DriverStation;
-using SimpleFMS.NetworkTables;
+using SimpleFMS.Networking.Server;
 using SimpleFMS.WinForms.Panels;
 
 namespace SimpleFMS.WinForms
 {
-    public partial class MainWindow : Form, IDriverStationConnectionResponder
+    public partial class MainWindow : Form
     {
         private readonly AlliancesPanel m_alliancePanel;
         private readonly MatchStatePanel m_matchTimePanel;
@@ -18,14 +16,16 @@ namespace SimpleFMS.WinForms
         private Button m_updateDsButton;
 
         readonly DriverStationManager m_manger;
-        private DriverStationNetworkTablesController m_networkTableController;
+
+        private readonly NetworkServerManager m_networkManager;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_networkTableController = new DriverStationNetworkTablesController();
-            m_manger = new DriverStationManager(m_networkTableController, this);
+            m_manger = new DriverStationManager();
+
+            m_networkManager = new NetworkServerManager(m_manger);
             
 
             m_alliancePanel = new AlliancesPanel();
@@ -60,7 +60,7 @@ namespace SimpleFMS.WinForms
         {
             Invoke((MethodInvoker)delegate
             {
-                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.StationNumber, configuration.AllianceSide, connected, null);
+                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.Station.StationNumber, configuration.Station.AllianceSide, connected, null);
             });
         }
 
@@ -68,7 +68,7 @@ namespace SimpleFMS.WinForms
         {
             Invoke((MethodInvoker)delegate
             {
-                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.StationNumber, configuration.AllianceSide, null, connected);
+                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.Station.StationNumber, configuration.Station.AllianceSide, null, connected);
             });
         }
 

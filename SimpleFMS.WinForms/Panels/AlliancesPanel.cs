@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Enums;
 using SimpleFMS.Base.DriverStation.Interfaces;
+using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.WinForms.Panels
 {
@@ -53,9 +53,10 @@ namespace SimpleFMS.WinForms.Panels
         public IReadOnlyList<IDriverStationConfiguration> GetDriverStationConfigurations()
         {
             m_driverStationConfigurations.Clear();
+            int badStationNumber = -1;
             foreach (var alliancePanel in m_alliancePanels)
             {
-                alliancePanel.GetDriverStationConfigurations(ref m_driverStationConfigurations);
+                alliancePanel.GetDriverStationConfigurations(ref m_driverStationConfigurations, ref badStationNumber);
             }
             return m_driverStationConfigurations;
         }

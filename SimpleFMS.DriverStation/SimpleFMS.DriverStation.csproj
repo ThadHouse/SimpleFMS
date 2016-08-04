@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DriverStation.cs" />
-    <Compile Include="DriverStationConfiguration.cs" />
     <Compile Include="DriverStationManager.cs" />
+    <Compile Include="DriverStationReport.cs" />
+    <Compile Include="Enums\DriverStationConnectionPacketType.cs" />
+    <Compile Include="Enums\ReceiveParseStatus.cs" />
     <Compile Include="Extensions\ArrayIntegerExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="GlobalDriverStationSettings.cs" />
@@ -56,10 +58,7 @@
     <Compile Include="UdpData\DriverStationStatusData.cs" />
     <Compile Include="UdpData\GlobalDriverStationControlData.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Collections\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\SimpleFMS.Base\SimpleFMS.Base.csproj">
       <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>

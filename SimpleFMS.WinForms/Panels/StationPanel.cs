@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.DriverStation.Interfaces;
-using SimpleFMS.DriverStation;
-using SimpleFMS.DriverStation.UdpControllers;
+using SimpleFMS.Base.Enums;
 using SimpleFMS.WinForms.CheckBoxes;
 
 namespace SimpleFMS.WinForms.Panels
@@ -25,8 +20,6 @@ namespace SimpleFMS.WinForms.Panels
 
         public const int PanelWidth = 196;
         public const int PanelHeight = 80;
-
-        private readonly DriverStationConfiguration m_dsConfiguration = new DriverStationConfiguration();
 
         public StationPanel(AllianceStationNumber number, Color backColor)
         {
@@ -103,24 +96,29 @@ namespace SimpleFMS.WinForms.Panels
             UpdateConnectionStation(false, false);
         }
 
-        public IDriverStationConfiguration GetState(AllianceStationSide side)
+        public IDriverStationConfiguration GetState(AllianceStationSide side, int teamNumberToSet)
         {
-            if (m_dsConfiguration.IsBypassed) return null;
-
-            m_dsConfiguration.IsBypassed = m_bypass.Checked;
-            m_dsConfiguration.StationNumber = StationNumber;
-            m_dsConfiguration.AllianceSide = side;
+            DriverStationConfiguration ds = new DriverStationConfiguration();
+            ds.IsBypassed = m_bypass.Checked;
+            ds.Station = new AllianceStation(side, StationNumber);
 
             int teamNumber = 0;
             if (int.TryParse(m_teamNumber.Text, out teamNumber))
             {
-                m_dsConfiguration.TeamNumber = teamNumber;
+                ds.TeamNumber = teamNumber;
             }
             else
             {
-                return null;
+                // Failed to parse. Set team number and bypassed
+                ds.IsBypassed = true;
+                ds.TeamNumber = teamNumberToSet;
+                Invoke((MethodInvoker) delegate
+                {
+                    m_teamNumber.Text = teamNumberToSet.ToString();
+                    m_bypass.Checked = true;
+                });
             }
-            return m_dsConfiguration;
+            return ds;
         }
 
         public void UpdateConnectionStation(bool? dsConnection, bool? roboRioConnection)

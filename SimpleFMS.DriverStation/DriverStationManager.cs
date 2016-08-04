@@ -1,59 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
-using SimpleFMS.Base.DriverStation.Enums;
+using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.DriverStation.Interfaces;
-using SimpleFMS.Base.Tuples;
+using SimpleFMS.Base.Enums;
 using SimpleFMS.DriverStation.TcpControllers;
 using SimpleFMS.DriverStation.UdpControllers;
 using SimpleFMS.DriverStation.UdpData;
 
 namespace SimpleFMS.DriverStation
 {
-    public class DriverStationManager : IDriverStationManager, IDisposable
+    public class DriverStationManager : IDriverStationManager
     {
-        // Dictionaries to hold our team values
-        private readonly Dictionary<int, ValueTuple<AllianceStationSide, AllianceStationNumber>>
-            m_allianceStationsByTeam =
-                new Dictionary<int, ValueTuple<AllianceStationSide, AllianceStationNumber>>(
-                    GlobalDriverStationSettings.MaxNumDriverStations);
+        private readonly Dictionary<AllianceStation, DriverStation> m_driverStationsByAllianceStation =
+            new Dictionary<AllianceStation, DriverStation>(GlobalDriverStationSettings.MaxNumDriverStations);
 
-        private readonly Dictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
-            m_teamsByAllianceStations =
-                new Dictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>(
-                    GlobalDriverStationSettings.MaxNumDriverStations);
 
-        private readonly Dictionary<int, DriverStation> m_driverStationByTeam =
+        private readonly Dictionary<int, DriverStation> m_driverStationsByTeam =
             new Dictionary<int, DriverStation>(GlobalDriverStationSettings.MaxNumDriverStations);
 
-        public IReadOnlyList<IDriverStationConfiguration> ConnectedDriverStations => m_driverStationByTeam.Values.ToList();
 
-        public IReadOnlyDictionary<ValueTuple<AllianceStationSide, AllianceStationNumber>, int>
-            RequestedDriverStations => m_teamsByAllianceStations;
+        // TODO
+        public IReadOnlyDictionary<AllianceStation, IDriverStationReport> DriverStations
+        {
+            get
+            {
+                lock (m_lockObject)
+                {
+                    Dictionary<AllianceStation, IDriverStationReport> reports =
+                        new Dictionary<AllianceStation, IDriverStationReport>(m_driverStationsByTeam.Count);
+                    foreach (var ds in m_driverStationsByTeam.Values)
+                    {
+                        reports.Add(ds.Station, ds.GenerateDriverStationReport());
+                    }
+                    return reports;
+                }
+            }
+        }
 
         private readonly object m_lockObject = new object();
 
         private readonly Timer m_updateStationsTimer;
-        private readonly Timer m_updateNetworkTimer;
 
         private readonly DriverStationConnectionListener m_connectionListener;
 
         private readonly DriverStationControlSender m_dsControlSender;
         private readonly DriverStationStatusReceiver m_dsStatusReceiver;
 
-        private IDriverStationNetworkSender m_networkSender = null;
-        private IDriverStationConnectionResponder m_connectionResponder = null;
-
-        public DriverStationManager(IDriverStationNetworkSender networkSender, IDriverStationConnectionResponder connectionResponder)
+        public DriverStationManager()
         {
-            m_networkSender = networkSender;
-            m_connectionResponder = connectionResponder;
 
-            m_allianceStationsByTeam.Clear();
-            m_teamsByAllianceStations.Clear();
-            m_driverStationByTeam.Clear();
+            m_driverStationsByAllianceStation?.Clear();
+            m_driverStationsByTeam?.Clear();
             m_dsStatusReceiver = new DriverStationStatusReceiver(GlobalDriverStationSettings.UdpReceivePort);
             m_dsStatusReceiver.Restart();
             m_dsStatusReceiver.OnDriverStationReceive += OnDriverStationStatusReceive;
@@ -63,26 +62,6 @@ namespace SimpleFMS.DriverStation
             m_connectionListener = new DriverStationConnectionListener(GlobalDriverStationSettings.TcpListenPort);
             m_connectionListener.OnNewDriverStationConnected += OnDriverStationConnected;
             m_connectionListener.Restart();
-
-            m_updateNetworkTimer = new Timer(state =>
-            {
-                var stationLists =
-                    new List<ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>>();
-                lock (m_lockObject)
-                {
-                    foreach (var driverStation in m_driverStationByTeam)
-                    {
-                        var value = driverStation.Value;
-                        var ds = new ValueTuple<IDriverStationIncomingData, IDriverStationOutgoingData>(
-                            value.StatusResult, value.ControlData);
-                        stationLists.Add(ds);
-                    }
-                }
-                m_networkSender?.UpdateDriverStationNeworkData(stationLists);
-                m_networkSender?.UpdateRequestedDriverStations(RequestedDriverStations);
-            });
-
-            m_updateNetworkTimer.Change(500, 500);
 
             m_updateStationsTimer = new Timer(state =>
             {
@@ -97,44 +76,30 @@ namespace SimpleFMS.DriverStation
 
         public void Dispose()
         {
-            m_driverStationByTeam.Clear();
-            m_allianceStationsByTeam.Clear();
-            m_teamsByAllianceStations.Clear();
+            m_driverStationsByAllianceStation?.Clear();
+            m_driverStationsByTeam?.Clear();
             m_connectionListener?.Dispose();
             m_updateStationsTimer?.Dispose();
             m_dsStatusReceiver?.Dispose();
             m_dsControlSender?.Dispose();
         }
 
-        private void OnDriverStationConnected(int teamNumber, IPAddress ipAddress, out AllianceStationSide allianceSide, out AllianceStationNumber stationNumber, out bool isRequested)
+        private void OnDriverStationConnected(int teamNumber, IPAddress ipAddress, out AllianceStation station, out bool isRequested)
         {
             lock (m_lockObject)
             {
                 DriverStation existingDs = null;
-                ValueTuple<AllianceStationSide, AllianceStationNumber> existingLocation;
-                if (m_driverStationByTeam.TryGetValue(teamNumber, out existingDs))
+                if (m_driverStationsByTeam.TryGetValue(teamNumber, out existingDs))
                 {
-                    // Already contains DS
-                    allianceSide = existingDs.AllianceSide;
-                    stationNumber = existingDs.StationNumber;
+                    // Team is a currently requested team.
+                    existingDs.ConnectDriverStation(ipAddress);
+                    station = existingDs.Station;
                     isRequested = true;
-                }
-                else if (m_allianceStationsByTeam.TryGetValue(teamNumber, out existingLocation))
-                {
-                    // A requested team number
-                    DriverStation ds = new DriverStation(ipAddress, GlobalDriverStationSettings.UdpSendPort, m_dsControlSender);
-                    allianceSide = existingLocation.First;
-                    stationNumber = existingLocation.Second;
-                    ds.StationNumber = stationNumber;
-                    ds.AllianceSide = allianceSide;
-                    isRequested = true;
-                    m_driverStationByTeam.Add(teamNumber, ds);
-                    m_connectionResponder?.OnDriverStationConnectionChanged(ds, true);
                 }
                 else
                 {
-                    allianceSide = 0;
-                    stationNumber = 0;
+                    // Driver Station is not requested.
+                    station = new AllianceStation();
                     isRequested = false;
                 }
             }
@@ -142,19 +107,19 @@ namespace SimpleFMS.DriverStation
 
         private void OnDriverStationStatusReceive(DriverStationStatusData statusData)
         {
-            DriverStation ds = null;
             lock (m_lockObject)
             {
-                if (m_driverStationByTeam.TryGetValue(statusData.TeamNumber, out ds))
+                DriverStation ds = null;
+                if (m_driverStationsByTeam.TryGetValue(statusData.TeamNumber, out ds))
                 {
-                    m_connectionResponder?.OnRobotConnectionChanged(ds, statusData.HasRobotComms);
+                    //m_connectionResponder?.OnRobotConnectionChanged(ds, statusData.HasRobotComms);
                 }
             }
         }
 
         private void UpdateDriverStations()
         {
-            var values = m_driverStationByTeam.Values;
+            var values = m_driverStationsByTeam.Values;
             var now = DateTime.UtcNow;
             GlobalDriverStationControlData.FmsTime = now;
             foreach (var value in values)
@@ -168,27 +133,27 @@ namespace SimpleFMS.DriverStation
             lock (m_lockObject)
             {
                 StopMatchPeriod();
-                m_driverStationByTeam.Clear();
-                m_allianceStationsByTeam.Clear();
-                m_teamsByAllianceStations.Clear();
+                m_driverStationsByAllianceStation?.Clear();
+                m_driverStationsByTeam?.Clear();
                 m_connectionListener.Restart();
-
-                m_connectionResponder?.AllConnectionReset();
 
                 // Only allow a max of 6 driver stations
                 if (driverStationConfigurations.Count > GlobalDriverStationSettings.MaxNumDriverStations) return false;
                 GlobalDriverStationControlData.MatchNumber = matchNumber;
                 GlobalDriverStationControlData.MatchType = matchType;
 
+                if (m_driverStationsByTeam == null || m_driverStationsByAllianceStation == null) return false;
+
                 foreach (var driverStationConfiguration in driverStationConfigurations)
                 {
-                    if (driverStationConfiguration.IsBypassed) continue;
-                    var configData =
-                        new ValueTuple<AllianceStationSide, AllianceStationNumber>(
-                            driverStationConfiguration.AllianceSide, driverStationConfiguration.StationNumber);
-
-                    m_teamsByAllianceStations.Add(configData, driverStationConfiguration.TeamNumber);
-                    m_allianceStationsByTeam.Add(driverStationConfiguration.TeamNumber, configData);
+                    DriverStation ds = new DriverStation(GlobalDriverStationSettings.UdpSendPort, m_dsControlSender)
+                    {
+                        IsBypassed = driverStationConfiguration.IsBypassed,
+                        Station = driverStationConfiguration.Station,
+                        TeamNumber = driverStationConfiguration.TeamNumber
+                    };
+                    m_driverStationsByAllianceStation.Add(driverStationConfiguration.Station, ds);
+                    m_driverStationsByTeam.Add(driverStationConfiguration.TeamNumber, ds);
                 }
                 return true;
             }
@@ -219,36 +184,26 @@ namespace SimpleFMS.DriverStation
             GlobalDriverStationControlData.MatchTimeRemaining = remainingMatchTime;
         }
 
-        public void SetBypass(AllianceStationSide alliance, AllianceStationNumber station, bool bypassed)
+        public void SetBypass(AllianceStation station, bool bypassed)
         {
-            var configData = new ValueTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
-            int teamNumber = 0;
             lock (m_lockObject)
             {
-                if (m_teamsByAllianceStations.TryGetValue(configData, out teamNumber))
+                DriverStation ds;
+                if (m_driverStationsByAllianceStation.TryGetValue(station, out ds))
                 {
-                    DriverStation ds = null;
-                    if (m_driverStationByTeam.TryGetValue(teamNumber, out ds))
-                    {
-                        ds.IsBypassed = bypassed;
-                    }
+                    ds.IsBypassed = bypassed;
                 }
             }
         }
 
-        public void SetEStop(AllianceStationSide alliance, AllianceStationNumber station, bool eStopped)
+        public void SetEStop(AllianceStation station, bool eStopped)
         {
-            var configData = new ValueTuple<AllianceStationSide, AllianceStationNumber>(alliance, station);
-            int teamNumber = 0;
             lock (m_lockObject)
             {
-                if (m_teamsByAllianceStations.TryGetValue(configData, out teamNumber))
+                DriverStation ds;
+                if (m_driverStationsByAllianceStation.TryGetValue(station, out ds))
                 {
-                    DriverStation ds = null;
-                    if (m_driverStationByTeam.TryGetValue(teamNumber, out ds))
-                    {
-                        ds.IsEStopped = eStopped;
-                    }
+                    ds.IsEStopped = eStopped;
                 }
             }
         }
