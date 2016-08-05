@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace SimpleFMS.Base.Networking
+﻿namespace SimpleFMS.Base.Networking
 {
     public static class NetworkingConstants
     {

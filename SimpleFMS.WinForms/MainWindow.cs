@@ -5,8 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.MatchTiming;
-using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base;
 using SimpleFMS.Networking.Client;
 using SimpleFMS.Networking.Client.NetworkClients;

@@ -1,5 +1,4 @@
-﻿using System;
-using SimpleFMS.Base.DriverStation;
+﻿using SimpleFMS.Base.DriverStation;
 
 namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 {

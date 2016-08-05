@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using NetworkTables;
 using NetworkTables.Tables;
 
 namespace SimpleFMS.Networking.Server.NetworkTableUpdaters

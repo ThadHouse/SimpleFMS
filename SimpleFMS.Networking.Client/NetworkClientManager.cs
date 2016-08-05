@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NetworkTables;
-using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base;
 using static SimpleFMS.Base.Networking.NetworkingConstants;
 

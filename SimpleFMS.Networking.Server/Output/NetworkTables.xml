@@ -1,0 +1,2258 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NetworkTables</name>
+    </assembly>
+    <members>
+        <member name="T:NetworkTables.ConnectionInfo">
+            <summary>
+            This class contains all info needed for a given connection.
+            </summary>
+        </member>
+        <member name="P:NetworkTables.ConnectionInfo.RemoteId">
+            <summary>Gets the Remote Id of the Connection.</summary>
+        </member>
+        <member name="P:NetworkTables.ConnectionInfo.RemoteName">
+            <summary>Gets the Remote Name of the Connection.</summary>
+        </member>
+        <member name="P:NetworkTables.ConnectionInfo.RemotePort">
+            <summary>Gets the Remote Port of the Connection.</summary>
+        </member>
+        <member name="P:NetworkTables.ConnectionInfo.LastUpdate">
+            <summary>Gets the last update time of the Connection.</summary>
+        </member>
+        <member name="P:NetworkTables.ConnectionInfo.ProtocolVersion">
+            <summary>Gets the Protocol Version of the Connection.</summary>
+        </member>
+        <member name="T:NetworkTables.EntryListenerCallback">
+            <summary>
+            This delegate is used when creating callbacks to be used for EntryListeners
+            </summary>
+            <param name="uid">The uid of the callback</param>
+            <param name="name">The name of the entry being called back</param>
+            <param name="value">The value of the entry being called back</param>
+            <param name="flags">The flags of the entry bing called back</param>
+        </member>
+        <member name="T:NetworkTables.ConnectionListenerCallback">
+            <summary>
+            This delegate is used when creating callbacks to be used for Connection Listeners
+            </summary>
+            <param name="uid">The uid of the callback</param>
+            <param name="connected">True if this is an initial connection, false if the connection disconnected</param>
+            <param name="conn">The information for the connection</param>
+        </member>
+        <member name="T:NetworkTables.LogFunc">
+            <summary>
+            This delegate is use to specify the log function called back from the library
+            </summary>
+            <param name="level">The level of the current log</param>
+            <param name="file">The file the log was called from</param>
+            <param name="line">The line the log was called from</param>
+            <param name="msg">The message of the log</param>
+        </member>
+        <member name="T:NetworkTables.RpcCallback">
+            <summary>
+            This delegate is used for Remote Procedure Call callbacks
+            </summary>
+            <param name="name">The name of the callback</param>
+            <param name="param">The binary data of the callback</param>
+            <returns>The raw rpc data to send in response</returns>
+        </member>
+        <member name="T:NetworkTables.EntryInfo">
+            <summary>
+            This class contains all info for a given entry.
+            </summary>
+        </member>
+        <member name="P:NetworkTables.EntryInfo.Name">
+            <summary>Gets the Name of the entry.</summary>
+        </member>
+        <member name="P:NetworkTables.EntryInfo.Type">
+            <summary>Gets the Type of the entry.</summary>
+        </member>
+        <member name="P:NetworkTables.EntryInfo.Flags">
+            <summary>Gets the Flags attached to the entry.</summary>
+        </member>
+        <member name="P:NetworkTables.EntryInfo.LastChange">
+            <summary>Gets the last change time of the entry.</summary>
+        </member>
+        <member name="T:NetworkTables.NotifyFlags">
+            <summary>
+            The flags avalible for TableListeners
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyNone">
+            <summary>
+             Notify nobody
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyImmediate">
+            <summary>
+            Initial listener addition
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyLocal">
+            <summary>
+            Changed locally
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyNew">
+            <summary>
+            Newly created entry
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyDelete">
+            <summary>
+            Deleted entry
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyUpdate">
+            <summary>
+            Value changed for entry
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NotifyFlags.NotifyFlagsChanged">
+            <summary>
+            Flags changed for entry
+            </summary>
+        </member>
+        <member name="T:NetworkTables.EntryFlags">
+            <summary>
+            The flags avalible for Entries
+            </summary>
+        </member>
+        <member name="F:NetworkTables.EntryFlags.None">
+            <summary>
+            No flags
+            </summary>
+        </member>
+        <member name="F:NetworkTables.EntryFlags.Persistent">
+            <summary>
+            Set entry to be persistent
+            </summary>
+        </member>
+        <member name="T:NetworkTables.LogLevel">
+            <summary>
+            The log level to use for the NT logger
+            </summary>
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogCritical">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogError">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogWarning">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogInfo">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogDebug">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogDebug1">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogDebug2">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogDebug3">
+            
+        </member>
+        <member name="F:NetworkTables.LogLevel.LogDebug4">
+            
+        </member>
+        <member name="T:NetworkTables.Exceptions.PersistentException">
+            <summary>
+            An exception thrown when the persistent load/save fails in a <see cref="T:NetworkTables.NetworkTable"/>.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Exceptions.PersistentException.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:NetworkTables.Exceptions.PersistentException"/>.
+            </summary>
+            <param name="message">The error message.</param>
+        </member>
+        <member name="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">
+            <summary>
+            An exception thrown when the key has a different type then requested in the <see cref="T:NetworkTables.Tables.ITable"/>
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Exceptions.TableKeyDifferentTypeException.#ctor(System.String,NetworkTables.NtType,NetworkTables.NtType)">
+            <summary>
+            Creates a new <see cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException"/>.
+            </summary>
+            <param name="key">The table key that was different.</param>
+            <param name="requested">The type requested.</param>
+            <param name="typeInTable">The type actually in the table.</param>
+        </member>
+        <member name="T:NetworkTables.Exceptions.TableKeyNotDefinedException">
+            <summary>
+            An exception thrown when the lookup of a key-value fails in an <see cref="T:NetworkTables.Tables.ITable"/>.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Exceptions.TableKeyNotDefinedException.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException"/>.
+            </summary>
+            <param name="key">The key that was not defined in the table.</param>
+        </member>
+        <member name="T:NetworkTables.NetworkTable">
+            <summary>
+            This class is the Main Class for interfacing with NetworkTables.
+            </summary>
+            <remarks>For most users, this will be the only class that will be needed.
+            Any interfaces needed to work with this can be found in the <see cref="N:NetworkTables.Tables"/> 
+            namespace. </remarks>
+            <example>
+            The following example demonstrates creating a server:
+            
+            <code language="cs">
+            //Set Server Mode
+            NetworkTable.SetServerMode();
+            
+            //Initialize the Server
+            NetworkTable.Initialize();
+            
+            //Get a reference to the smartdashboard.
+            var smartDashboard = NetworkTable.GetTable("SmartDashboard");
+            </code>
+            <c>smartDashboard</c> can now be used to get and set values in the smart dashboard.
+            Examples on this can be found below the client section.
+            <para />
+            The following example demonstrates creating a client and connecting it to a server:
+            
+            <code language="cs">
+            //Set IP Address. Replace xxxx with your team number if connecting to a RoboRIO,
+            //or the server's IP if the server is not a RoboRIO.
+            NetworkTable.SetIPAddress("roborio-xxxx.local");
+            
+            //Set Client Mode
+            NetworkTable.SetClientMode();
+            
+            //Initialize the client
+            NetworkTable.Initialize();
+            
+            //Get a reference to the smartdashboard.
+            var smartDashboard = NetworkTable.GetTable("SmartDashboard");
+            </code>
+            <c>smartDashboard</c> can now be used to get and set values in the smart dashboard.
+            <para />
+            The following example shows how to get and put values into the smart dashboard:
+            
+            <code language="cs">
+            //Strings
+            smartDashboard.PutString("MyString", "MyValue");
+            string s = smartDashboard.GetString("MyString");
+            //Note that if the key has not been put in the smart dashboard,
+            //the GetString function will throw a TableKeyNotDefinedException.
+            //To get around this, set a default value to be returned if there is no key, like this:
+            string s = smartDashboard.GetString("MyString", "Default");
+            
+            //Numbers
+            smartDashboard.PutNumber("MyNumber", 3.562);
+            double s = smartDashboard.GetNumber("MyNumber");
+            //Note that if the key has not been put in the smart dashboard,
+            //the GetString function will throw a TableKeyNotDefinedException.
+            //To get around this, set a default value to be returned if there is no key, like this:
+            double s = smartDashboard.GetDouble("MyNumber", 0.0);
+            
+            //Bools
+            smartDashboard.PutBoolean("MyBool", true);
+            bool s = smartDashboard.GetBoolean("MyBool");
+            //Note that if the key has not been put in the smart dashboard,
+            //the GetString function will throw a TableKeyNotDefinedException.
+            //To get around this, set a default value to be returned if there is no key, like this:
+            bool s = smartDashboard.GetBoolean("MyBool", false);
+            </code>
+            </example>
+        </member>
+        <member name="F:NetworkTables.NetworkTable.PathSeperatorChar">
+            <summary>The character used to seperate tables and keys.</summary>
+        </member>
+        <member name="F:NetworkTables.NetworkTable.DefaultPort">
+            <summary>The default port NetworkTables listens on.</summary>
+        </member>
+        <member name="F:NetworkTables.NetworkTable.DefaultPersistentFileName">
+            <summary>
+            The default file name used for Persistent Storage.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.Initialize">
+            <summary>
+            Initializes NetworkTables. Please call <see cref="M:NetworkTables.NetworkTable.SetServerMode"/> or <see cref="M:NetworkTables.NetworkTable.SetClientMode"/>
+            first.
+            </summary>
+            <remarks>
+            If NetworkTables is already running, the old instance will be shutdown and a new instance will 
+            be created.
+            </remarks>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.Shutdown">
+            <summary>
+            Shuts down NetworkTables.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetClientMode">
+            <summary>
+            Sets NetworkTables to be a client.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">This is thrown if Network Tables
+            has already been initialized.</exception>
+            <remarks>This or <see cref="M:NetworkTables.NetworkTable.SetServerMode"/> must be called
+            before <see cref="M:NetworkTables.NetworkTable.Initialize"/> or <see cref="M:NetworkTables.NetworkTable.GetTable(System.String)"/>.</remarks>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetServerMode">
+            <summary> 
+            Sets NetworkTables to be a server
+            </summary>
+            <exception cref="T:System.InvalidOperationException">This is thrown if Network Tables
+            has already been initialized.</exception>
+            <remarks>This or <see cref="M:NetworkTables.NetworkTable.SetClientMode"/> must be called
+            before <see cref="M:NetworkTables.NetworkTable.Initialize"/> or <see cref="M:NetworkTables.NetworkTable.GetTable(System.String)"/></remarks>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetTeam(System.Int32)">
+            <summary>
+            Sets the team the robot is configured for. This will set the Mdns
+            address that NetworkTables will connect to in client mode.
+            </summary>
+            <param name="team">The team number</param>
+            /// <remarks>This must be called before <see cref="M:NetworkTables.NetworkTable.Initialize"/> or 
+            <see cref="M:NetworkTables.NetworkTable.GetTable(System.String)"/> if the system is a client.</remarks>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetIPAddress(System.String)">
+            <summary>
+            Sets the IP address that will be connected to in client mode.
+            </summary>
+            <param name="address">The IP address to connect to in client mode</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetIPAddress(System.String[])">
+            <summary>
+            Sets the IP address that will be connected to in client mode using round robin order.
+            </summary>
+            <param name="addresses">The IP address to connect to in client mode using round robin order.</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetTable(System.String)">
+            <summary>
+            Gets the table with the specified key.
+            </summary>
+            <remarks>If the table does not exist, a new table will be created.
+            This will automatically initialize network tables if it has not been already.</remarks>
+            <param name="key">The network table key to request.</param>
+            <returns>The <see cref="T:NetworkTables.NetworkTable"/> requested.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetPort(System.Int32)">
+            <summary>
+            Sets the Port for NetworkTables to connect to in client mode or listen to
+            in server mode.
+            </summary>
+            <param name="port">The port number to listen on or connect to.</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetPersistentFilename(System.String)">
+            <summary>
+            Sets the Persistent file name.
+            </summary>
+            <param name="filename">The filename that the NetworkTables server uses
+            for automatic loading and saving of persistent values.</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetNetworkIdentity(System.String)">
+            <summary>
+            Sets the Network Identity
+            </summary>
+            <param name="name">The name to identify this program as on the network.</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.ContainsKey(System.String)">
+            <summary>
+            Checkts the table and tells if it contains the specified key.
+            </summary>
+            <param name="key">The key to be checked.</param>
+            <returns>True if the table contains the key, otherwise false.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.ContainsSubTable(System.String)">
+            <summary>
+            Checks the table and tells if if contains the specified sub-table.
+            </summary>
+            <param name="key">The sub-table to check for</param>
+            <returns>True if the table contains the sub-table, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetKeys(NetworkTables.NtType)">
+            <summary>
+            Gets a set of all the keys contained in the table with the specified type.
+            </summary>
+            <param name="types">Bitmask of types to check for; 0 is treated as a "don't care".</param>
+            <returns>A set of all keys currently in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetKeys">
+            <summary>
+            Gets a set of all the keys contained in the table.
+            </summary>
+            <returns>A set of all keys currently in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetSubTables">
+            <summary>
+            Gets a set of all the sub-tables contained in the table.
+            </summary>
+            <returns>A set of all subtables currently contained in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetSubTable(System.String)">
+            <summary>
+            Returns the <see cref="T:NetworkTables.Tables.ITable"/> at the specified key. If there is no 
+            table at the specified key, it will create a new table.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The <see cref="T:NetworkTables.Tables.ITable"/> to be returned.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetPersistent(System.String)">
+            <summary>
+            Makes a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.ClearPersistent(System.String)">
+            <summary>
+            Stop making a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.IsPersistent(System.String)">
+            <summary>
+            Returns whether a value is persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+            <returns>True if the value is persistent.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Sets flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to set. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.ClearFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Clears flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to clear. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetFlags(System.String)">
+            <summary>
+            Returns the flags for the specified key.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The flags attached to the key.</returns>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.Delete(System.String)">
+            <summary>
+            Deletes the specifed key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GlobalDeleteAll">
+            <summary>
+            Deletes ALL keys in ALL subtables. Use with caution!
+            </summary>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.Flush">
+            <summary>
+            Flushes all updated values immediately to the network.
+            </summary>
+            <remarks>
+            Note that this is rate-limited to protect the network from flooding.
+            This is primarily useful for synchronizing network updates with user code.
+            </remarks>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SetUpdateRate(System.Double)">
+            <summary>
+            Sets the periodic update rate of the NetworkTables.
+            </summary>
+            <param name="interval">The update interval in seconds (0.1 to 1.0).</param>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.SavePersistent(System.String)">
+            <summary>
+            Saves persistent keys to a file. The server does this automatically.
+            </summary>
+            <param name="filename">The file name.</param>
+            <exception cref="T:NetworkTables.Exceptions.PersistentException">Thrown if there is an error
+            saving the file.</exception>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.LoadPersistent(System.String)">
+            <summary>
+            Loads persistent keys from a file. The server does this automatically.
+            </summary>
+            <param name="filename">The file name.</param>
+            <returns>A List of warnings (errors result in an exception instead.)</returns>
+            <exception cref="T:NetworkTables.Exceptions.PersistentException">Thrown if there is an error
+            loading the file.</exception>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetValue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetValue(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutValue(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutNumber(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetNumber(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutString(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetString(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetString(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutBoolean(System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetBoolean(System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetBoolean(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutStringArray(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetStringArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetStringArray(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutNumberArray(System.String,System.Double[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetNumberArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetNumberArray(System.String,System.Double[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutBooleanArray(System.String,System.Boolean[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetBooleanArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.PutRaw(System.String,System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetRaw(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetRaw(System.String,System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.GetBooleanArray(System.String,System.Boolean[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListenerEx(NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListenerEx(System.String,NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddSubTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListener(System.String,NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddSubTableListener(NetworkTables.Tables.ITableListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.RemoveTableListener(NetworkTables.Tables.ITableListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListenerEx(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListenerEx(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddTableListener(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.RemoveTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddConnectionListener(NetworkTables.Tables.IRemoteConnectionListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.RemoveConnectionListener(NetworkTables.Tables.IRemoteConnectionListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.AddConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.RemoveConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean})">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetworkTables.NetworkTable.IsConnected">
+            <summary>
+            Gets if the NetworkTables is connected to a client or server.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.NetworkTable.Connections">
+            <summary>
+            Gets a list of all the connections attached to this instance.
+            </summary>
+            <remarks>
+            Note that connections do not propogate through the server to clients.
+            This means that a client will see at most 1 connection, and the server will see
+            all connections to itself.
+            </remarks>
+            <returns>An array of all connections attached to this instance.</returns>
+        </member>
+        <member name="P:NetworkTables.NetworkTable.IsServer">
+            <summary>
+            Gets if the NetworkTables instance is a Server.
+            </summary>
+        </member>
+        <member name="T:NetworkTables.NtType">
+            <summary>
+            An enumeration of all types allowed in the NetworkTables.
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.Unassigned">
+            <summary>
+            No type assigned
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.Boolean">
+            <summary>
+            Boolean type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.Double">
+            <summary>
+            Double type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.String">
+            <summary>
+            String type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.Raw">
+            <summary>
+            Raw type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.BooleanArray">
+            <summary>
+            Boolean Array type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.DoubleArray">
+            <summary>
+            Double Array type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.StringArray">
+            <summary>
+            String Array type
+            </summary>
+        </member>
+        <member name="F:NetworkTables.NtType.Rpc">
+            <summary>
+            Rpc type
+            </summary>
+        </member>
+        <member name="T:NetworkTables.ImmutablePair`2">
+            <summary>
+            Creates an Immutable pair as a struct
+            </summary>
+            <typeparam name="T">The first type of the pair</typeparam>
+            <typeparam name="U">The second type of the pair</typeparam>
+        </member>
+        <member name="T:NetworkTables.Tables.IRemote">
+            <summary>
+            Represents an object that has a remote connection.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemote.AddConnectionListener(NetworkTables.Tables.IRemoteConnectionListener,System.Boolean)">
+            <summary>
+            Register an object to listen for connection and disconnection events.
+            </summary>
+            <param name="listener">The listener to be registered</param>
+            <param name="immediateNotify">True if the listener object should be notified of the current
+            connection state immediately.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemote.RemoveConnectionListener(NetworkTables.Tables.IRemoteConnectionListener)">
+            <summary>
+            Unregister a listener from connection events.
+            </summary>
+            <param name="listener">The listener to be unregistered.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemote.AddConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean},System.Boolean)">
+            <summary>
+            Register a delegate to listen for connection and disconnection events.
+            </summary>
+            <param name="listener">The listener to be registered.</param>
+            <param name="immediateNotify">True if the listener object should be notified of the current
+            connection state immediately.</param>
+            <remarks>
+            The <see cref="T:NetworkTables.Tables.IRemote"/> of the action is the current table, the <see cref="T:NetworkTables.ConnectionInfo"/>
+            is the info of the connected or disconnected target, and the bool is true if the event is
+            a connect, otherwise false.
+            </remarks>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemote.RemoveConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean})">
+            <summary>
+            Unregister a listener delegate from connection events.
+            </summary>
+            <param name="listener">The listener to be unregistered.</param>
+        </member>
+        <member name="P:NetworkTables.Tables.IRemote.IsConnected">
+            <summary>
+            Gets if the current object is connected.
+            </summary>
+        </member>
+        <member name="P:NetworkTables.Tables.IRemote.IsServer">
+            <summary>
+            Gets if the object is a server.
+            </summary>
+        </member>
+        <member name="T:NetworkTables.Tables.IRemoteConnectionListener">
+            <summary>
+            A listener that listens for connection changes in an <see cref="T:NetworkTables.Tables.IRemote"/> object.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemoteConnectionListener.Connected(NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo)">
+            <summary>
+            Called when an <see cref="T:NetworkTables.Tables.IRemote"/> is connected
+            </summary>
+            <param name="remote">The object that connected.</param>
+            <param name="info">An object containing information about the 
+            connected remote.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.IRemoteConnectionListener.Disconnected(NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo)">
+            <summary>
+            Called when an <see cref="T:NetworkTables.Tables.IRemote"/> is disconnected.
+            </summary>
+            <param name="remote">The object that disconnected.</param>
+            <param name="info">An object containing information about the
+            disconnected remote.</param>
+        </member>
+        <member name="T:NetworkTables.Tables.ITable">
+            <summary>
+            A table whose values can be read from and written to.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.ContainsKey(System.String)">
+            <summary>
+            Determines whether the given key is in this table.
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>If the table has a value assignend to the given key</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.ContainsSubTable(System.String)">
+            <summary>
+            Determines whether there exists a non-empty subtable for this key in this table.
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>If there is a subtable with the key which contains at least one key/subtable of its own</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetSubTable(System.String)">
+            <summary>
+            Gets the subtable in this table for the given name.
+            </summary>
+            <param name="key">The name of the table relative to this one.</param>
+            <returns>A sub table relative to this one</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetKeys(NetworkTables.NtType)">
+            <summary>
+            Gets the keys currently in the table with the specified flags
+            </summary>
+            <param name="types">The bitmask of flags to check for.</param>
+            <returns>A set of the keys currently in the table with the specified flags.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetKeys">
+            <summary>
+            Gets all keys currently in the table.
+            </summary>
+            <returns>A set of all keys in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetSubTables">
+            <summary>
+            Gets all sub-tables currently in the table.
+            </summary>
+            <returns>A set of all sub-tables in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.SetPersistent(System.String)">
+            <summary>
+            Makes a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.ClearPersistent(System.String)">
+            <summary>
+            Stop making a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.IsPersistent(System.String)">
+            <summary>
+            Returns whether a value is persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+            <returns>True if the value is persistent.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.SetFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Sets flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to set. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.ClearFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Clears flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to clear. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetFlags(System.String)">
+            <summary>
+            Returns the flags for the specified key.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The flags attached to the key.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.Delete(System.String)">
+            <summary>
+            Deletes the specifed key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetValue(System.String,System.Object)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetValue(System.String)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutValue(System.String,System.Object)">
+            <summary>
+            Maps the specified key to the specified value in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+            <exception cref="T:System.ArgumentException">Thrown if the value is not a type supported
+            by the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutNumber(System.String,System.Double)">
+            <summary>
+            Maps the specified key to the specified value in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetNumber(System.String,System.Double)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetNumber(System.String)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutString(System.String,System.String)">
+            <summary>
+            Maps the specified key to the specified value in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetString(System.String,System.String)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetString(System.String)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutBoolean(System.String,System.Boolean)">
+            <summary>
+            Maps the specified key to the specified value in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetBoolean(System.String,System.Boolean)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetBoolean(System.String)">
+            <summary>
+            Returns the value that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutBooleanArray(System.String,System.Boolean[])">
+            <summary>
+            Maps the specified key to the specified array of values in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetBooleanArray(System.String)">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value array.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetBooleanArray(System.String,System.Boolean[])">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutNumberArray(System.String,System.Double[])">
+            <summary>
+            Maps the specified key to the specified array of values in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetNumberArray(System.String)">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value array.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetNumberArray(System.String,System.Double[])">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutStringArray(System.String,System.String[])">
+            <summary>
+            Maps the specified key to the specified array of values in the table. 
+            </summary>
+            <remarks>
+            The key cannot be null. The value can be retreived by calling the Get method with
+            the key used to Put the number in.
+            </remarks>
+            <param name="key">The key to map the value to.</param>
+            <param name="value">The value to set.</param>
+            <returns>True if the key was set properly, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetStringArray(System.String)">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value array.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetStringArray(System.String,System.String[])">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.PutRaw(System.String,System.Byte[])">
+            <summary>
+            Put a raw value (byte array) in the table.
+            </summary>
+            <param name="key">The key to be assigned to.</param>
+            <param name="value">The value that will be assigned.</param>
+            <returns>False if the table key already exists with a different type.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetRaw(System.String)">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The requested value array.</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyNotDefinedException">Thrown if the key does not 
+            exist in the table, or if the key is null.</exception>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if the key exists
+            as a different type in the table.</exception>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.GetRaw(System.String,System.Byte[])">
+            <summary>
+            Returns the value array that the key maps to.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="defaultValue">The default value if the key does not exist or is null</param>
+            <returns>The value array requested, or defaultValue if the key does not exist or is null.</returns>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListenerEx(NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <summary>
+            Add a listener to changes to the table.
+            </summary>
+            <param name="listener">The listener to add</param>
+            <param name="flags">The <see cref="T:NetworkTables.EntryFlags"/> flags to use for the listener</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListenerEx(System.String,NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <summary>
+            Add a listener for changes to a specific key in the table.
+            </summary>
+            <param name="key">The key to listen for</param>
+            <param name="listener">The listener to add</param>
+            <param name="flags">The <see cref="T:NetworkTables.EntryFlags"/> flags to use for the listener</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddSubTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <summary>
+            Adds a SubTable Listener.
+            </summary>
+            <param name="listener">The <see cref="T:NetworkTables.Tables.ITableListener"/> to add.</param>
+            <param name="localNotify">True if we want to notify local and remote listeners,
+            otherwise just notify remote listeners.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <summary>
+            Add a listener to changes to the table.
+            </summary>
+            <param name="listener">The listener to add</param>
+            <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListener(System.String,NetworkTables.Tables.ITableListener,System.Boolean)">
+            <summary>
+            Add a listener for changes to a specific key in the table.
+            </summary>
+            <param name="key">The key to listen for</param>
+            <param name="listener">The listener to add</param>
+            <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddSubTableListener(NetworkTables.Tables.ITableListener)">
+            <summary>
+            Adds a SubTable Listener with the default flags, and without local notify.
+            </summary>
+            <param name="listener">The <see cref="T:NetworkTables.Tables.ITableListener"/> to add.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.RemoveTableListener(NetworkTables.Tables.ITableListener)">
+            <summary>
+            Remove a listener from receiving table events.
+            </summary>
+            <param name="listener">The listener to be removed.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListenerEx(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <summary>
+            Add a listener to changes to the table.
+            </summary>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+            <param name="flags">The <see cref="T:NetworkTables.EntryFlags"/> flags to use for the listener</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListenerEx(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <summary>
+            Add a listener for changes to a specific key in the table.
+            </summary>
+            <param name="key">The key to listen for</param>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+            <param name="flags">The <see cref="T:NetworkTables.EntryFlags"/> flags to use for the listener</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <summary>
+            Adds a SubTable Listener.
+            </summary>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+            <param name="localNotify">True if we want to notify local and remote listeners,
+            otherwise just notify remote listeners.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <summary>
+            Add a listener to changes to the table.
+            </summary>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+            <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddTableListener(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <summary>
+            Add a listener for changes to a specific key in the table.
+            </summary>
+            <param name="key">The key to listen for</param>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+            <param name="immediateNotify">If true then this listener will be notified of all current entries (marked as new)</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <summary>
+            Adds a SubTable Listener with the default flags, and without local notify.
+            </summary>
+            <param name="listenerDelegate">The Table Listener Delegate to add.</param>
+        </member>
+        <member name="M:NetworkTables.Tables.ITable.RemoveTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <summary>
+            Remove a listener from receiving table events.
+            </summary>
+            <param name="listenerDelegate">The Table Listener Delegate to remove.</param>
+        </member>
+        <member name="T:NetworkTables.Tables.ITableListener">
+            <summary>
+            A listener that listens to changes in values in an <see cref="T:NetworkTables.Tables.ITable"/>
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Tables.ITableListener.ValueChanged(NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags)">
+            <summary>
+            Called when a key-value pair is changed in an <see cref="T:NetworkTables.Tables.ITable"/>.
+            </summary>
+            <param name="source">The table the key-value pair exist in.</param>
+            <param name="key">The key associated with the value that changed.</param>
+            <param name="value">The new value.</param>
+            <param name="flags">The update flags.</param>
+        </member>
+        <member name="T:NetworkTables.Value">
+            <summary>
+            This class represents all types allowed by NetworkTables
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Value.#ctor">
+            <summary>
+            Creates a value with an Unassigned default type
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Value.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetworkTables.Value.Type">
+            <summary>
+            Gets the type of this Value
+            </summary>
+        </member>
+        <member name="P:NetworkTables.Value.LastChange">
+            <summary>
+            Gets the Timestamp when this value was last changed.
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Value.IsBoolean">
+            <summary>
+            Gets if the type is boolean
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsDouble">
+            <summary>
+            Gets if the type is double
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsString">
+            <summary>
+            Gets if the type is string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsRaw">
+            <summary>
+            Gets if the type is raw
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsRpc">
+            <summary>
+            Gets if the type is Rpc
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsBooleanArray">
+            <summary>
+            Gets if the type is boolean array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsDoubleArray">
+            <summary>
+            Gets if the type is double array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.IsStringArray">
+            <summary>
+            Gets if the type is string array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.GetBoolean">
+            <summary>
+            Gets the boolean value from the type
+            </summary>
+            <returns>boolean contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not boolean.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetDouble">
+            <summary>
+            Gets the double value from the type
+            </summary>
+            <returns>double contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not double.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetString">
+            <summary>
+            Gets the string value from the type
+            </summary>
+            <returns>string contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not string.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetRaw">
+            <summary>
+            Gets the raw value from the type
+            </summary>
+            <returns>raw byte array contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not raw.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetRpc">
+            <summary>
+            Gets the rpc value from the type
+            </summary>
+            <returns>rpc byte array contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not rpc.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetBooleanArray">
+            <summary>
+            Gets the boolean array value from the type
+            </summary>
+            <returns>boolean array contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not boolean array.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetDoubleArray">
+            <summary>
+            Gets the double array value from the type
+            </summary>
+            <returns>double array contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not double array.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.GetStringArray">
+            <summary>
+            Gets the string array value from the type
+            </summary>
+            <returns>string array contained in type</returns>
+            <exception cref="T:NetworkTables.Exceptions.TableKeyDifferentTypeException">Thrown if
+            type is not string arrya.</exception>
+        </member>
+        <member name="M:NetworkTables.Value.ToString">
+            <summary>
+            Gets a string representation of the backing value
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetworkTables.Value.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetworkTables.Dispatcher.Instance">
+            <summary>
+            Gets the local instance of Dispatcher
+            </summary>
+        </member>
+        <member name="M:NetworkTables.Extensions.AutoResetEventExtensions.WaitTimeout(System.Threading.AutoResetEvent,System.Object,System.Boolean@,System.TimeSpan,System.Func{System.Boolean})">
+            <summary>
+            Extension for AutoReset that takes a mutex and a ref entered bool, 
+            and unlocks the mutex before waiting for the specified timeout. 
+            The predicate checks if something goes wrong.
+            </summary>
+            <param name="e"></param>
+            <param name="mutex"></param>
+            <param name="lockEntered"></param>
+            <param name="timeout"></param>
+            <param name="pred"></param>
+            <returns></returns>
+        </member>
+        <member name="P:NetworkTables.RpcServer.Instance">
+            <summary>
+            Gets the local instance of Dispatcher
+            </summary>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.ContainsKey(System.String)">
+            <summary>
+            Checkts the table and tells if it contains the specified key.
+            </summary>
+            <param name="key">The key to be checked.</param>
+            <returns>True if the table contains the key, otherwise false.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.ContainsSubTable(System.String)">
+            <summary>
+            Checks the table and tells if if contains the specified sub-table.
+            </summary>
+            <param name="key">The sub-table to check for</param>
+            <returns>True if the table contains the sub-table, otherwise false</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetKeys(NetworkTables.NtType)">
+            <summary>
+            Gets a set of all the keys contained in the table with the specified type.
+            </summary>
+            <param name="types">Bitmask of types to check for; 0 is treated as a "don't care".</param>
+            <returns>A set of all keys currently in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetKeys">
+            <summary>
+            Gets a set of all the keys contained in the table.
+            </summary>
+            <returns>A set of all keys currently in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetSubTables">
+            <summary>
+            Gets a set of all the sub-tables contained in the table.
+            </summary>
+            <returns>A set of all subtables currently contained in the table.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetSubTable(System.String)">
+            <summary>
+            Returns the <see cref="T:NetworkTables.Tables.ITable"/> at the specified key. If there is no 
+            table at the specified key, it will create a new table.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The <see cref="T:NetworkTables.Tables.ITable"/> to be returned.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.SetPersistent(System.String)">
+            <summary>
+            Makes a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.ClearPersistent(System.String)">
+            <summary>
+            Stop making a key's value persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.IsPersistent(System.String)">
+            <summary>
+            Returns whether a value is persistent through program restarts.
+            </summary>
+            <param name="key">The key name (cannot be null).</param>
+            <returns>True if the value is persistent.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.SetFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Sets flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to set. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.ClearFlags(System.String,NetworkTables.EntryFlags)">
+            <summary>
+            Clears flags on the specified key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+            <param name="flags">The flags to clear. (Bitmask)</param>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetFlags(System.String)">
+            <summary>
+            Returns the flags for the specified key.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>The flags attached to the key.</returns>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.Delete(System.String)">
+            <summary>
+            Deletes the specifed key in this table.
+            </summary>
+            <param name="key">The key name.</param>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.Flush">
+            <summary>
+            Flushes all updated values immediately to the network.
+            </summary>
+            <remarks>
+            Note that this is rate-limited to protect the network from flooding.
+            This is primarily useful for synchronizing network updates with user code.
+            </remarks>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.SavePersistent(System.String)">
+            <summary>
+            Saves persistent keys to a file. The server does this automatically.
+            </summary>
+            <param name="filename">The file name.</param>
+            <exception cref="T:NetworkTables.Exceptions.PersistentException">Thrown if there is an error
+            saving the file.</exception>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.LoadPersistent(System.String)">
+            <summary>
+            Loads persistent keys from a file. The server does this automatically.
+            </summary>
+            <param name="filename">The file name.</param>
+            <returns>A List of warnings (errors result in an exception instead.)</returns>
+            <exception cref="T:NetworkTables.Exceptions.PersistentException">Thrown if there is an error
+            loading the file.</exception>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetValue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetValue(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutValue(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutNumber(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetNumber(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetNumber(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutString(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetString(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetString(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutBoolean(System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetBoolean(System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetBoolean(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutStringArray(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetStringArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetStringArray(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutNumberArray(System.String,System.Double[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetNumberArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetNumberArray(System.String,System.Double[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutBooleanArray(System.String,System.Boolean[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetBooleanArray(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.PutRaw(System.String,System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetRaw(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetRaw(System.String,System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.GetBooleanArray(System.String,System.Boolean[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListenerEx(NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListenerEx(System.String,NetworkTables.Tables.ITableListener,NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddSubTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListener(NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListener(System.String,NetworkTables.Tables.ITableListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddSubTableListener(NetworkTables.Tables.ITableListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.RemoveTableListener(NetworkTables.Tables.ITableListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListenerEx(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListenerEx(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},NetworkTables.NotifyFlags)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddTableListener(System.String,System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddSubTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.RemoveTableListener(System.Action{NetworkTables.Tables.ITable,System.String,NetworkTables.Value,NetworkTables.NotifyFlags})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddConnectionListener(NetworkTables.Tables.IRemoteConnectionListener,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.RemoveConnectionListener(NetworkTables.Tables.IRemoteConnectionListener)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.AddConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NetworkTables.StandaloneNetworkTable.RemoveConnectionListener(System.Action{NetworkTables.Tables.IRemote,NetworkTables.ConnectionInfo,System.Boolean})">
+            <inheritdoc/>
+        </member>
+        <member name="P:NetworkTables.StandaloneNetworkTable.IsConnected">
+            <summary>
+            Gets if the NetworkTables is connected to a client or server.
+            </summary>
+        </member>
+        <member name="T:Nito.AsyncEx.AsyncAutoResetEvent">
+            <summary>
+            An async-compatible auto-reset event.
+            </summary>
+        </member>
+        <member name="F:Nito.AsyncEx.AsyncAutoResetEvent._queue">
+            <summary>
+            The queue of TCSs that other tasks are awaiting.
+            </summary>
+        </member>
+        <member name="F:Nito.AsyncEx.AsyncAutoResetEvent._set">
+            <summary>
+            The current state of the event.
+            </summary>
+        </member>
+        <member name="F:Nito.AsyncEx.AsyncAutoResetEvent._id">
+            <summary>
+            The semi-unique identifier for this instance. This is 0 if the id has not yet been created.
+            </summary>
+        </member>
+        <member name="F:Nito.AsyncEx.AsyncAutoResetEvent._mutex">
+            <summary>
+            The object used for mutual exclusion.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.#ctor(System.Boolean,Nito.AsyncEx.IAsyncWaitQueue{System.Object})">
+            <summary>
+            Creates an async-compatible auto-reset event.
+            </summary>
+            <param name="set">Whether the auto-reset event is initially set or unset.</param>
+            <param name="queue">The wait queue used to manage waiters.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.#ctor(System.Boolean)">
+            <summary>
+            Creates an async-compatible auto-reset event.
+            </summary>
+            <param name="set">Whether the auto-reset event is initially set or unset.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.#ctor">
+            <summary>
+            Creates an async-compatible auto-reset event that is initially unset.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.AsyncAutoResetEvent.Id">
+            <summary>
+            Gets a semi-unique identifier for this asynchronous auto-reset event.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.AsyncAutoResetEvent.IsSet">
+            <summary>
+            Whether this event is currently set. This member is seldom used; code using this member has a high possibility of race conditions.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously waits for this event to be set. If the event is set, this method will auto-reset it and return immediately, even if the cancellation token is already signalled. If the wait is canceled, then it will not auto-reset this event.
+            </summary>
+            <param name="cancellationToken">The cancellation token used to cancel this wait.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.Wait(System.Threading.CancellationToken)">
+            <summary>
+            Synchronously waits for this event to be set. If the event is set, this method will auto-reset it and return immediately, even if the cancellation token is already signalled. If the wait is canceled, then it will not auto-reset this event. This method may block the calling thread.
+            </summary>
+            <param name="cancellationToken">The cancellation token used to cancel this wait.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.WaitAsync">
+            <summary>
+            Asynchronously waits for this event to be set. If the event is set, this method will auto-reset it and return immediately.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.Wait">
+            <summary>
+            Synchronously waits for this event to be set. If the event is set, this method will auto-reset it and return immediately. This method may block the calling thread.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncAutoResetEvent.Set">
+            <summary>
+            Sets the event, atomically completing a task returned by <see cref="o:WaitAsync"/>. If the event is already set, this method does nothing.
+            </summary>
+        </member>
+        <member name="T:Nito.AsyncEx.IAsyncWaitQueue`1">
+            <summary>
+            A collection of cancelable <see cref="T:System.Threading.Tasks.TaskCompletionSource`1"/> instances. Implementations must be threadsafe <b>and</b> must work correctly if the caller is holding a lock.
+            </summary>
+            <typeparam name="T">The type of the results. If this isn't needed, use <see cref="T:System.Object"/>.</typeparam>
+        </member>
+        <member name="P:Nito.AsyncEx.IAsyncWaitQueue`1.IsEmpty">
+            <summary>
+            Gets whether the queue is empty.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.IAsyncWaitQueue`1.Enqueue">
+            <summary>
+            Creates a new entry and queues it to this wait queue. The returned task must support both synchronous and asynchronous waits.
+            </summary>
+            <returns>The queued task.</returns>
+        </member>
+        <member name="M:Nito.AsyncEx.IAsyncWaitQueue`1.Dequeue(`0)">
+            <summary>
+            Removes a single entry in the wait queue. Returns a disposable that completes that entry.
+            </summary>
+            <param name="result">The result used to complete the wait queue entry. If this isn't needed, use <c>default(T)</c>.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.IAsyncWaitQueue`1.DequeueAll(`0)">
+            <summary>
+            Removes all entries in the wait queue. Returns a disposable that completes all entries.
+            </summary>
+            <param name="result">The result used to complete the wait queue entries. If this isn't needed, use <c>default(T)</c>.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.IAsyncWaitQueue`1.TryCancel(System.Threading.Tasks.Task)">
+            <summary>
+            Attempts to remove an entry from the wait queue. Returns a disposable that cancels the entry.
+            </summary>
+            <param name="task">The task to cancel.</param>
+            <returns>A value indicating whether the entry was found and canceled.</returns>
+        </member>
+        <member name="M:Nito.AsyncEx.IAsyncWaitQueue`1.CancelAll">
+            <summary>
+            Removes all entries from the wait queue. Returns a disposable that cancels all entries.
+            </summary>
+        </member>
+        <member name="T:Nito.AsyncEx.AsyncWaitQueueExtensions">
+            <summary>
+            Provides extension methods for wait queues.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncWaitQueueExtensions.Enqueue``1(Nito.AsyncEx.IAsyncWaitQueue{``0},System.Threading.CancellationToken)">
+            <summary>
+            Creates a new entry and queues it to this wait queue. If the cancellation token is already canceled, this method immediately returns a canceled task without modifying the wait queue.
+            </summary>
+            <param name="this">The wait queue.</param>
+            <param name="token">The token used to cancel the wait.</param>
+            <returns>The queued task.</returns>
+        </member>
+        <member name="M:Nito.AsyncEx.AsyncWaitQueueExtensions.Enqueue``1(Nito.AsyncEx.IAsyncWaitQueue{``0},System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new entry and queues it to this wait queue. If the cancellation token is already canceled, this method immediately returns a canceled task without modifying the wait queue.
+            </summary>
+            <param name="this">The wait queue.</param>
+            <param name="syncObject">A synchronization object taken while cancelling the entry.</param>
+            <param name="token">The token used to cancel the wait.</param>
+            <returns>The queued task.</returns>
+        </member>
+        <member name="T:Nito.AsyncEx.DefaultAsyncWaitQueue`1">
+            <summary>
+            The default wait queue implementation, which uses a double-ended queue.
+            </summary>
+            <typeparam name="T">The type of the results. If this isn't needed, use <see cref="T:System.Object"/>.</typeparam>
+        </member>
+        <member name="T:Nito.AsyncEx.Internal.IdManager`1">
+            <summary>
+            Allocates Ids for instances on demand. 0 is an invalid/unassigned Id. Ids may be non-unique in very long-running systems. This is similar to the Id system used by <see cref="T:System.Threading.Tasks.Task"/> and <see cref="T:System.Threading.Tasks.TaskScheduler"/>.
+            </summary>
+            <typeparam name="TTag">The type for which ids are generated.</typeparam>
+        </member>
+        <member name="F:Nito.AsyncEx.Internal.IdManager`1._lastId">
+            <summary>
+            The last id generated for this type. This is 0 if no ids have been generated.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.Internal.IdManager`1.GetId(System.Int32@)">
+            <summary>
+            Returns the id, allocating it if necessary.
+            </summary>
+            <param name="id">A reference to the field containing the id.</param>
+        </member>
+        <member name="T:Nito.AsyncEx.ExceptionHelpers">
+            <summary>
+            Provides helper (non-extension) methods dealing with exceptions.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.ExceptionHelpers.PrepareForRethrow(System.Exception)">
+            <summary>
+            Attempts to prepare the exception for re-throwing by preserving the stack trace. The returned exception should be immediately thrown.
+            </summary>
+            <param name="exception">The exception. May not be <c>null</c>.</param>
+            <returns>The <see cref="T:System.Exception"/> that was passed into this method.</returns>
+        </member>
+        <member name="T:Nito.AsyncEx.TaskConstants">
+            <summary>
+            Provides completed task constants.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.BooleanTrue">
+            <summary>
+            A task that has been completed with the value <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.BooleanFalse">
+            <summary>
+            A task that has been completed with the value <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.Int32Zero">
+            <summary>
+            A task that has been completed with the value <c>0</c>.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.Int32NegativeOne">
+            <summary>
+            A task that has been completed with the value <c>-1</c>.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.Completed">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.Task"/> that has been completed.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.Never">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.Task"/> that will never complete.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants.Canceled">
+            <summary>
+            A task that has been canceled.
+            </summary>
+        </member>
+        <member name="T:Nito.AsyncEx.TaskConstants`1">
+            <summary>
+            Provides completed task constants.
+            </summary>
+            <typeparam name="T">The type of the task result.</typeparam>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants`1.Default">
+            <summary>
+            A task that has been completed with the default value of <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants`1.Never">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.Task"/> that will never complete.
+            </summary>
+        </member>
+        <member name="P:Nito.AsyncEx.TaskConstants`1.Canceled">
+            <summary>
+            A task that has been canceled.
+            </summary>
+        </member>
+        <member name="T:Nito.AsyncEx.Synchronous.TaskExtensions">
+            <summary>
+            Provides synchronous extension methods for tasks.
+            </summary>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitAndUnwrapException(System.Threading.Tasks.Task)">
+            <summary>
+            Waits for the task to complete, unwrapping any exceptions.
+            </summary>
+            <param name="task">The task. May not be <c>null</c>.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitAndUnwrapException(System.Threading.Tasks.Task,System.Threading.CancellationToken)">
+            <summary>
+            Waits for the task to complete, unwrapping any exceptions.
+            </summary>
+            <param name="task">The task. May not be <c>null</c>.</param>
+            <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled before the <paramref name="task"/> completed, or the <paramref name="task"/> raised an <see cref="T:System.OperationCanceledException"/>.</exception>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitAndUnwrapException``1(System.Threading.Tasks.Task{``0})">
+            <summary>
+            Waits for the task to complete, unwrapping any exceptions.
+            </summary>
+            <typeparam name="TResult">The type of the result of the task.</typeparam>
+            <param name="task">The task. May not be <c>null</c>.</param>
+            <returns>The result of the task.</returns>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitAndUnwrapException``1(System.Threading.Tasks.Task{``0},System.Threading.CancellationToken)">
+            <summary>
+            Waits for the task to complete, unwrapping any exceptions.
+            </summary>
+            <typeparam name="TResult">The type of the result of the task.</typeparam>
+            <param name="task">The task. May not be <c>null</c>.</param>
+            <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+            <returns>The result of the task.</returns>
+            <exception cref="T:System.OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled before the <paramref name="task"/> completed, or the <paramref name="task"/> raised an <see cref="T:System.OperationCanceledException"/>.</exception>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitWithoutException(System.Threading.Tasks.Task)">
+            <summary>
+            Waits for the task to complete, but does not raise task exceptions. The task exception (if any) is unobserved.
+            </summary>
+            <param name="task">The task. May not be <c>null</c>.</param>
+        </member>
+        <member name="M:Nito.AsyncEx.Synchronous.TaskExtensions.WaitWithoutException(System.Threading.Tasks.Task,System.Threading.CancellationToken)">
+            <summary>
+            Waits for the task to complete, but does not raise task exceptions. The task exception (if any) is unobserved.
+            </summary>
+            <param name="task">The task. May not be <c>null</c>.</param>
+            <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+            <exception cref="T:System.OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled before the <paramref name="task"/> completed.</exception>
+        </member>
+        <member name="T:Nito.Deque`1">
+            <summary>
+            A double-ended queue (deque), which provides O(1) indexed access, O(1) removals from the front and back, amortized O(1) insertions to the front and back, and O(N) insertions and removals anywhere else (with the operations getting slower as the index approaches the middle).
+            </summary>
+            <typeparam name="T">The type of elements contained in the deque.</typeparam>
+        </member>
+        <member name="F:Nito.Deque`1.DefaultCapacity">
+            <summary>
+            The default capacity.
+            </summary>
+        </member>
+        <member name="F:Nito.Deque`1.buffer">
+            <summary>
+            The circular buffer that holds the view.
+            </summary>
+        </member>
+        <member name="F:Nito.Deque`1.offset">
+            <summary>
+            The offset into <see cref="F:Nito.Deque`1.buffer"/> where the view begins.
+            </summary>
+        </member>
+        <member name="M:Nito.Deque`1.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nito.Deque`1"/> class with the specified capacity.
+            </summary>
+            <param name="capacity">The initial capacity. Must be greater than <c>0</c>.</param>
+        </member>
+        <member name="M:Nito.Deque`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nito.Deque`1"/> class with the elements from the specified collection.
+            </summary>
+            <param name="collection">The collection.</param>
+        </member>
+        <member name="M:Nito.Deque`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nito.Deque`1"/> class.
+            </summary>
+        </member>
+        <member name="P:Nito.Deque`1.System#Collections#Generic#ICollection{T}#IsReadOnly">
+            <summary>
+            Gets a value indicating whether this list is read-only. This implementation always returns <c>false</c>.
+            </summary>
+            <returns>true if this list is read-only; otherwise, false.</returns>
+        </member>
+        <member name="P:Nito.Deque`1.Item(System.Int32)">
+            <summary>
+            Gets or sets the item at the specified index.
+            </summary>
+            <param name="index">The index of the item to get or set.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in this list.</exception>
+            <exception cref="T:System.NotSupportedException">This property is set and the list is read-only.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.Insert(System.Int32,`0)">
+            <summary>
+            Inserts an item to this list at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The object to insert into this list.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="index"/> is not a valid index in this list.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            This list is read-only.
+            </exception>
+        </member>
+        <member name="M:Nito.Deque`1.RemoveAt(System.Int32)">
+            <summary>
+            Removes the item at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the item to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="index"/> is not a valid index in this list.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            This list is read-only.
+            </exception>
+        </member>
+        <member name="M:Nito.Deque`1.IndexOf(`0)">
+            <summary>
+            Determines the index of a specific item in this list.
+            </summary>
+            <param name="item">The object to locate in this list.</param>
+            <returns>The index of <paramref name="item"/> if found in this list; otherwise, -1.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.System#Collections#Generic#ICollection{T}#Add(`0)">
+            <summary>
+            Adds an item to the end of this list.
+            </summary>
+            <param name="item">The object to add to this list.</param>
+            <exception cref="T:System.NotSupportedException">
+            This list is read-only.
+            </exception>
+        </member>
+        <member name="M:Nito.Deque`1.System#Collections#Generic#ICollection{T}#Contains(`0)">
+            <summary>
+            Determines whether this list contains a specific value.
+            </summary>
+            <param name="item">The object to locate in this list.</param>
+            <returns>
+            true if <paramref name="item"/> is found in this list; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Nito.Deque`1.System#Collections#Generic#ICollection{T}#CopyTo(`0[],System.Int32)">
+            <summary>
+            Copies the elements of this list to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from this slice. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="array"/> is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="arrayIndex"/> is less than 0.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+            -or-
+            The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.
+            </exception>
+        </member>
+        <member name="M:Nito.Deque`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of a specific object from this list.
+            </summary>
+            <param name="item">The object to remove from this list.</param>
+            <returns>
+            true if <paramref name="item"/> was successfully removed from this list; otherwise, false. This method also returns false if <paramref name="item"/> is not found in this list.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            This list is read-only.
+            </exception>
+        </member>
+        <member name="M:Nito.Deque`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Nito.Deque`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Nito.Deque`1.CheckNewIndexArgument(System.Int32,System.Int32)">
+            <summary>
+            Checks the <paramref name="index"/> argument to see if it refers to a valid insertion point in a source of a given length.
+            </summary>
+            <param name="sourceLength">The length of the source. This parameter is not checked for validity.</param>
+            <param name="index">The index into the source.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index to an insertion point for the source.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.CheckExistingIndexArgument(System.Int32,System.Int32)">
+            <summary>
+            Checks the <paramref name="index"/> argument to see if it refers to an existing element in a source of a given length.
+            </summary>
+            <param name="sourceLength">The length of the source. This parameter is not checked for validity.</param>
+            <param name="index">The index into the source.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index to an existing element for the source.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.CheckRangeArguments(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Checks the <paramref name="offset"/> and <paramref name="count"/> arguments for validity when applied to a source of a given length. Allows 0-element ranges, including a 0-element range at the end of the source.
+            </summary>
+            <param name="sourceLength">The length of the source. This parameter is not checked for validity.</param>
+            <param name="offset">The index into source at which the range begins.</param>
+            <param name="count">The number of elements in the range.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Either <paramref name="offset"/> or <paramref name="count"/> is less than 0.</exception>
+            <exception cref="T:System.ArgumentException">The range [offset, offset + count) is not within the range [0, sourceLength).</exception>
+        </member>
+        <member name="P:Nito.Deque`1.IsEmpty">
+            <summary>
+            Gets a value indicating whether this instance is empty.
+            </summary>
+        </member>
+        <member name="P:Nito.Deque`1.IsFull">
+            <summary>
+            Gets a value indicating whether this instance is at full capacity.
+            </summary>
+        </member>
+        <member name="P:Nito.Deque`1.IsSplit">
+            <summary>
+            Gets a value indicating whether the buffer is "split" (meaning the beginning of the view is at a later index in <see cref="F:Nito.Deque`1.buffer"/> than the end).
+            </summary>
+        </member>
+        <member name="P:Nito.Deque`1.Capacity">
+            <summary>
+            Gets or sets the capacity for this deque. This value must always be greater than zero, and this property cannot be set to a value less than <see cref="P:Nito.Deque`1.Count"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException"><c>Capacity</c> cannot be set to a value less than <see cref="P:Nito.Deque`1.Count"/>.</exception>
+        </member>
+        <member name="P:Nito.Deque`1.Count">
+            <summary>
+            Gets the number of elements contained in this deque.
+            </summary>
+            <returns>The number of elements contained in this deque.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DequeIndexToBufferIndex(System.Int32)">
+            <summary>
+            Applies the offset to <paramref name="index"/>, resulting in a buffer index.
+            </summary>
+            <param name="index">The deque index.</param>
+            <returns>The buffer index.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DoGetItem(System.Int32)">
+            <summary>
+            Gets an element at the specified view index.
+            </summary>
+            <param name="index">The zero-based view index of the element to get. This index is guaranteed to be valid.</param>
+            <returns>The element at the specified index.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DoSetItem(System.Int32,`0)">
+            <summary>
+            Sets an element at the specified view index.
+            </summary>
+            <param name="index">The zero-based view index of the element to get. This index is guaranteed to be valid.</param>
+            <param name="item">The element to store in the list.</param>
+        </member>
+        <member name="M:Nito.Deque`1.DoInsert(System.Int32,`0)">
+            <summary>
+            Inserts an element at the specified view index.
+            </summary>
+            <param name="index">The zero-based view index at which the element should be inserted. This index is guaranteed to be valid.</param>
+            <param name="item">The element to store in the list.</param>
+        </member>
+        <member name="M:Nito.Deque`1.DoRemoveAt(System.Int32)">
+            <summary>
+            Removes an element at the specified view index.
+            </summary>
+            <param name="index">The zero-based view index of the element to remove. This index is guaranteed to be valid.</param>
+        </member>
+        <member name="M:Nito.Deque`1.PostIncrement(System.Int32)">
+            <summary>
+            Increments <see cref="F:Nito.Deque`1.offset"/> by <paramref name="value"/> using modulo-<see cref="P:Nito.Deque`1.Capacity"/> arithmetic.
+            </summary>
+            <param name="value">The value by which to increase <see cref="F:Nito.Deque`1.offset"/>. May not be negative.</param>
+            <returns>The value of <see cref="F:Nito.Deque`1.offset"/> after it was incremented.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.PreDecrement(System.Int32)">
+            <summary>
+            Decrements <see cref="F:Nito.Deque`1.offset"/> by <paramref name="value"/> using modulo-<see cref="P:Nito.Deque`1.Capacity"/> arithmetic.
+            </summary>
+            <param name="value">The value by which to reduce <see cref="F:Nito.Deque`1.offset"/>. May not be negative or greater than <see cref="P:Nito.Deque`1.Capacity"/>.</param>
+            <returns>The value of <see cref="F:Nito.Deque`1.offset"/> before it was decremented.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DoAddToBack(`0)">
+            <summary>
+            Inserts a single element to the back of the view. <see cref="P:Nito.Deque`1.IsFull"/> must be false when this method is called.
+            </summary>
+            <param name="value">The element to insert.</param>
+        </member>
+        <member name="M:Nito.Deque`1.DoAddToFront(`0)">
+            <summary>
+            Inserts a single element to the front of the view. <see cref="P:Nito.Deque`1.IsFull"/> must be false when this method is called.
+            </summary>
+            <param name="value">The element to insert.</param>
+        </member>
+        <member name="M:Nito.Deque`1.DoRemoveFromBack">
+            <summary>
+            Removes and returns the last element in the view. <see cref="P:Nito.Deque`1.IsEmpty"/> must be false when this method is called.
+            </summary>
+            <returns>The former last element.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DoRemoveFromFront">
+            <summary>
+            Removes and returns the first element in the view. <see cref="P:Nito.Deque`1.IsEmpty"/> must be false when this method is called.
+            </summary>
+            <returns>The former first element.</returns>
+        </member>
+        <member name="M:Nito.Deque`1.DoInsertRange(System.Int32,System.Collections.Generic.IEnumerable{`0},System.Int32)">
+            <summary>
+            Inserts a range of elements into the view.
+            </summary>
+            <param name="index">The index into the view at which the elements are to be inserted.</param>
+            <param name="collection">The elements to insert.</param>
+            <param name="collectionCount">The number of elements in <paramref name="collection"/>. Must be greater than zero, and the sum of <paramref name="collectionCount"/> and <see cref="P:Nito.Deque`1.Count"/> must be less than or equal to <see cref="P:Nito.Deque`1.Capacity"/>.</param>
+        </member>
+        <member name="M:Nito.Deque`1.DoRemoveRange(System.Int32,System.Int32)">
+            <summary>
+            Removes a range of elements from the view.
+            </summary>
+            <param name="index">The index into the view at which the range begins.</param>
+            <param name="collectionCount">The number of elements in the range. This must be greater than 0 and less than or equal to <see cref="P:Nito.Deque`1.Count"/>.</param>
+        </member>
+        <member name="M:Nito.Deque`1.EnsureCapacityForOneElement">
+            <summary>
+            Doubles the capacity if necessary to make room for one more element. When this method returns, <see cref="P:Nito.Deque`1.IsFull"/> is false.
+            </summary>
+        </member>
+        <member name="M:Nito.Deque`1.AddToBack(`0)">
+            <summary>
+            Inserts a single element at the back of this deque.
+            </summary>
+            <param name="value">The element to insert.</param>
+        </member>
+        <member name="M:Nito.Deque`1.AddToFront(`0)">
+            <summary>
+            Inserts a single element at the front of this deque.
+            </summary>
+            <param name="value">The element to insert.</param>
+        </member>
+        <member name="M:Nito.Deque`1.InsertRange(System.Int32,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Inserts a collection of elements into this deque.
+            </summary>
+            <param name="index">The index at which the collection is inserted.</param>
+            <param name="collection">The collection of elements to insert.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index to an insertion point for the source.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.RemoveRange(System.Int32,System.Int32)">
+            <summary>
+            Removes a range of elements from this deque.
+            </summary>
+            <param name="offset">The index into the deque at which the range begins.</param>
+            <param name="count">The number of elements to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Either <paramref name="offset"/> or <paramref name="count"/> is less than 0.</exception>
+            <exception cref="T:System.ArgumentException">The range [<paramref name="offset"/>, <paramref name="offset"/> + <paramref name="count"/>) is not within the range [0, <see cref="P:Nito.Deque`1.Count"/>).</exception>
+        </member>
+        <member name="M:Nito.Deque`1.RemoveFromBack">
+            <summary>
+            Removes and returns the last element of this deque.
+            </summary>
+            <returns>The former last element.</returns>
+            <exception cref="T:System.InvalidOperationException">The deque is empty.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.RemoveFromFront">
+            <summary>
+            Removes and returns the first element of this deque.
+            </summary>
+            <returns>The former first element.</returns>
+            <exception cref="T:System.InvalidOperationException">The deque is empty.</exception>
+        </member>
+        <member name="M:Nito.Deque`1.Clear">
+            <summary>
+            Removes all items from this deque.
+            </summary>
+        </member>
+    </members>
+</doc>
