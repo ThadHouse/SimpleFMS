@@ -12,6 +12,25 @@ namespace SimpleFMS.DriverStation
 {
     public class DriverStationManager : IDriverStationManager
     {
+        public IReadOnlyList<IDriverStationConfiguration> GetDefaultConfiguration()
+        {
+            List<IDriverStationConfiguration> configs =
+                new List<IDriverStationConfiguration>(
+                    AllianceStationConstants.MaxNumDriverStations);
+            for (int i = 0; i < AllianceStationConstants.MaxNumDriverStations; i++)
+            {
+                AllianceStation station = new AllianceStation((byte)i);
+                DriverStationConfiguration config = new DriverStationConfiguration
+                {
+                    Station = station,
+                    IsBypassed = true,
+                    TeamNumber = (i + 1)*-1
+                };
+                configs.Add(config);
+            }
+            return configs;
+        }
+
         private readonly Dictionary<AllianceStation, DriverStation> m_driverStationsByAllianceStation =
             new Dictionary<AllianceStation, DriverStation>(AllianceStationConstants.MaxNumDriverStations);
 
@@ -69,6 +88,8 @@ namespace SimpleFMS.DriverStation
             });
 
             m_updateStationsTimer.Change(250, 250);
+
+            InitializeMatch(GetDefaultConfiguration(), 1, MatchType.Practice);
         }
 
         public void Dispose()

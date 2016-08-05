@@ -151,17 +151,5 @@ namespace SimpleFMS.WinForms.Panels
             }
 
         }
-
-        public void Disable()
-        {
-            m_teamNumber.Enabled = false;
-            m_bypass.Enabled = false;
-        }
-
-        public void Enable()
-        {
-            m_teamNumber.Enabled = true;
-            m_bypass.Enabled = true;
-        }
     }
 }

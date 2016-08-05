@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NetworkTables;
 using NetworkTables.Tables;
 using SimpleFMS.Base.MatchTiming;
+using SimpleFMS.Networking.Base;
 using SimpleFMS.Networking.Base.Extensions.MatchTiming;
 using static SimpleFMS.Base.Networking.NetworkingConstants.MatchTimingConstants;
 using static SimpleFMS.Networking.Base.Extensions.MatchTiming.MatchTimingMatchStateExtensions;
@@ -14,10 +15,10 @@ namespace SimpleFMS.Networking.Client.NetworkClients
     {
         private readonly StandaloneRemoteProcedureCall m_rpc;
 
-        public MatchTimingClient(ITable root, StandaloneRemoteProcedureCall rpc) 
-            : base(root, MatchTimingTableName)
+        public MatchTimingClient(INetworkClientManager manager) 
+            : base(manager.NetworkTable, MatchTimingTableName)
         {
-            m_rpc = rpc;
+            m_rpc = manager.Rpc;
 
             AddTableListener(MatchStatusReportKey, OnMatchTimeReportCallback);
         }

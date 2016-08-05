@@ -6,6 +6,7 @@ using NetworkTables;
 using NetworkTables.Tables;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
+using SimpleFMS.Networking.Base;
 using SimpleFMS.Networking.Base.Extensions.DriverStation;
 using static SimpleFMS.Base.Networking.NetworkingConstants.DriverStationConstants;
 
@@ -15,10 +16,10 @@ namespace SimpleFMS.Networking.Client.NetworkClients
     {
         private readonly StandaloneRemoteProcedureCall m_rpc;
 
-        public DriverStationClient(ITable root, StandaloneRemoteProcedureCall rpc) 
-            : base(root, DriverStationTableName)
+        public DriverStationClient(INetworkClientManager manager) 
+            : base(manager.NetworkTable, DriverStationTableName)
         {
-            m_rpc = rpc;
+            m_rpc = manager.Rpc;
 
             AddTableListener(DriverStationReportKey, OnDriverStationReportCallback);
         }

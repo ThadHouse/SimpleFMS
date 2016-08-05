@@ -28,9 +28,9 @@ namespace SimpleFMS.WinForms
             InitializeComponent();
 
             var builder = new ContainerBuilder();
-            NetworkClientManager nManager = new NetworkClientManager("Win Forms Client");
-            DriverStationClient dsClient = new DriverStationClient(nManager.NetworkTable, nManager.Rpc);
-            MatchTimingClient matchClient = new MatchTimingClient(nManager.NetworkTable, nManager.Rpc);
+            INetworkClientManager nManager = new NetworkClientManager("Win Forms Client");
+            DriverStationClient dsClient = new DriverStationClient(nManager);
+            MatchTimingClient matchClient = new MatchTimingClient(nManager);
             nManager.AddClient(dsClient);
             builder.RegisterInstance(nManager).As<INetworkClientManager>().SingleInstance();
             builder.RegisterInstance(dsClient).As<DriverStationClient>().SingleInstance();

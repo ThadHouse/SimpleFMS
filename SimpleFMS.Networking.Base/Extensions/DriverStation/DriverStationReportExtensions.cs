@@ -132,7 +132,7 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 
             DriverStationReport report = new DriverStationReport
             {
-                TeamNumber = teamNumber,
+                TeamNumber = (short)teamNumber,
                 Station = sta,
                 RobotBattery = battery
             };

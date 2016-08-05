@@ -121,7 +121,7 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             DriverStationConfiguration config = new DriverStationConfiguration
             {
                 Station = new AllianceStation(station),
-                TeamNumber = teamNumber,
+                TeamNumber = (short)teamNumber,
                 IsBypassed = bypass != 0
             };
 
