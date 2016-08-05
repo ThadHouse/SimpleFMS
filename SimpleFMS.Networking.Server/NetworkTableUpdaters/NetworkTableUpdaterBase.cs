@@ -9,9 +9,6 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
     {
         protected readonly ITable NetworkTable;
 
-        protected Dictionary<int, Action<ITable, string, Value, NotifyFlags>> NetworkTableListeners { get; } =
-            new Dictionary<int, Action<ITable, string, Value, NotifyFlags>>();
-
         protected NetworkTableUpdaterBase(ITable root, string tableName)
         {
             if (root == null) 
@@ -24,10 +21,6 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
 
         public virtual void Dispose()
         {
-            foreach (var networkTableListener in NetworkTableListeners.Values)
-            {
-                NetworkTable.RemoveTableListener(networkTableListener);
-            }
         }
     }
 }

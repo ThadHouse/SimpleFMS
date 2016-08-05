@@ -15,6 +15,25 @@ namespace SimpleFMS.MatchTiming
         private TimeSpan m_autonomousTime = MatchTimingConstants.DefaultAutonomousTime;
         private TimeSpan m_delayTime = MatchTimingConstants.DefaultDelayTime;
 
+        public bool SetMatchTimes(IMatchTimes times)
+        {
+            lock (m_lockObject)
+            {
+                try
+                {
+                    TeleoperatedTime = times.TeleoperatedTime;
+                    AutonomousTime = times.AutonomousTime;
+                    DelayTime = times.DelayTime;
+                }
+                catch (MatchEnabledException)
+                {
+                    // Cannot set times with match enabled
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public TimeSpan TeleoperatedTime
         {
             get

@@ -18,22 +18,22 @@ namespace SimpleFMS.Networking.Server
         private const int TableUpdatePeriod = 500;
 
         private readonly StandaloneNetworkTable m_networkTableRoot;
-        private readonly StandaloneNtCore m_standaloneNtCore;
-        private readonly StandaloneRemoteProcedureCall m_standaloneRpc;
+        private readonly StandaloneNtCore m_ntCore;
+        private readonly StandaloneRemoteProcedureCall m_rpc;
 
         private readonly Timer m_updateTimer;
 
         public NetworkServerManager(IDriverStationManager driverStationManager, IMatchTimingManager matchTimingManager)
         {
-            m_standaloneNtCore = new StandaloneNtCore();
-            m_standaloneNtCore.UpdateRate = 1.0;
-            m_standaloneNtCore.RemoteName = ServerRemoteName;
-            m_standaloneNtCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
-            m_standaloneRpc = new StandaloneRemoteProcedureCall(m_standaloneNtCore);
-            m_networkTableRoot = new StandaloneNetworkTable(m_standaloneNtCore, RootTableName);
+            m_ntCore = new StandaloneNtCore();
+            m_ntCore.UpdateRate = 1.0;
+            m_ntCore.RemoteName = ServerRemoteName;
+            m_ntCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
+            m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);
+            m_networkTableRoot = new StandaloneNetworkTable(m_ntCore, RootTableName);
 
-            m_networkTableUpdaters.Add(new DriverStationUpdater(m_networkTableRoot,m_standaloneRpc, driverStationManager));
-            m_networkTableUpdaters.Add(new MatchTimingUpdater(m_networkTableRoot, m_standaloneRpc, matchTimingManager));
+            m_networkTableUpdaters.Add(new DriverStationUpdater(m_networkTableRoot,m_rpc, driverStationManager));
+            m_networkTableUpdaters.Add(new MatchTimingUpdater(m_networkTableRoot, m_rpc, matchTimingManager));
 
             m_updateTimer = new Timer(OnTimerUpdate);
             m_updateTimer.Change(TableUpdatePeriod, TableUpdatePeriod);
@@ -51,7 +51,7 @@ namespace SimpleFMS.Networking.Server
                 }
             }
 
-            NetworkTable.Shutdown();
+            m_ntCore.Dispose();
         }
 
         private void OnTimerUpdate(object state)

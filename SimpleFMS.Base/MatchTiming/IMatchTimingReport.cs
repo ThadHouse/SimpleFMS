@@ -3,12 +3,9 @@ using SimpleFMS.Base.Enums;
 
 namespace SimpleFMS.Base.MatchTiming
 {
-    public interface IMatchTimingReport
+    public interface IMatchTimingReport : IMatchTimes
     {
         MatchState MatchState { get; }
         TimeSpan RemainingPeriodTime { get; }
-        TimeSpan TeleoperatedTime { get; }
-        TimeSpan DelayTime { get; }
-        TimeSpan AutonomousTime { get; }
     }
 }

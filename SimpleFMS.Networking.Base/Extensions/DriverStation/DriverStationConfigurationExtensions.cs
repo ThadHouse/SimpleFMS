@@ -61,8 +61,11 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
         public static IReadOnlyList<IDriverStationConfiguration> GetDriverStationConfigurations(this byte[] value, 
             out int matchNumber, out MatchType matchType)
         {
+            matchNumber = 0;
+            matchType = 0;
+
             if (value.Length < 5)
-                throw new IndexOutOfRangeException("Value must have at least a length of 5");
+                return null;
 
             MemoryStream stream = new MemoryStream(value);
 

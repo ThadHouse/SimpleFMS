@@ -1,4 +1,6 @@
-﻿namespace SimpleFMS.Base.Networking
+﻿using System.Net;
+
+namespace SimpleFMS.Base.Networking
 {
     public static class NetworkingConstants
     {
@@ -6,6 +8,8 @@
         public const uint NetworkTablesVersion = 0x0300;
         public const string ServerRemoteName = "SimpleFMS Server";
         public const string PersistentFilename = "SimpleFMSPersistence.txt";
+        public const string ListenAddress = "";
+        public const string FmsIpAddress = "10.0.100.5";
 
         public const string RootTableName = "FMS";
 
@@ -21,7 +25,7 @@
             public const int DriverStationUpdateEStopRpcVersion = 1;
         }
 
-        public static class MatchTimingConstatns
+        public static class MatchTimingConstants
         {
             public const string MatchTimingTableName = "MatchTiming";
             public const string StartMatchRpcKey = "RpcStartMatch";
@@ -30,6 +34,13 @@
             public const string StartTeleoperatedRpcKey = "RpcStartTeleoperated";
             public const string SetMatchPeriodTimeRpcKey = "RpcSetMatchPeriodTime";
             public const string MatchStatusReportKey = "MatchStatusReports";
+
+            public const int StartMatchRpcVersion = 1;
+            public const int StopPeriodRpcVersion = 1;
+            public const int StartAutonomousRpcVersion = 1;
+            public const int StartTeleoperatedRpcVersion = 1;
+            public const int SetMatchPeriodTimeRpcVersion = 1;
+            public const int MatchStatusReportVersion = 1;
         }
     }
 }

@@ -16,11 +16,11 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 
         public static AllianceStation GetDriverStationToEStop(this byte[] value, out bool eStop, out bool isValid)
         {
-            if (value.Length < 3)
-                throw new IndexOutOfRangeException("Value must have at least a length of 3");
-
             eStop = false;
             isValid = false;
+
+            if (value.Length < 3)
+               return new AllianceStation();
 
             if (value[0] != (byte)CustomNetworkTableType.DriverStationUpdateEStop) return new AllianceStation();
             var station = new AllianceStation(value[1]);

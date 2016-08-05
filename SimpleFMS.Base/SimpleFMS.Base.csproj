@@ -52,10 +52,13 @@
     <Compile Include="DriverStation\IDriverStationManager.cs" />
     <Compile Include="DriverStation\IDriverStationReport.cs" />
     <Compile Include="Exceptions\MatchEnabledException.cs" />
+    <Compile Include="MatchTiming\IMatchTimes.cs" />
     <Compile Include="MatchTiming\IMatchTimingManager.cs" />
     <Compile Include="MatchTiming\IMatchTimingReport.cs" />
+    <Compile Include="MatchTiming\MatchTimes.cs" />
     <Compile Include="MatchTiming\MatchTimingConstants.cs" />
     <Compile Include="MatchTiming\MatchTimingReport.cs" />
+    <Compile Include="Networking\INetworkClient.cs" />
     <Compile Include="Networking\INetworkClientManager.cs" />
     <Compile Include="Networking\INetworkServerManager.cs" />
     <Compile Include="Networking\NetworkingConstants.cs" />

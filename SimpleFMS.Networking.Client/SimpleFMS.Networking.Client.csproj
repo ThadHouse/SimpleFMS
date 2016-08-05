@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D398F615-0191-42F5-AE79-1EE464425DDD}</ProjectGuid>
+    <ProjectGuid>{D0E39587-EA39-497E-B29E-994E30BC4AB8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleFMS.Networking.Base</RootNamespace>
-    <AssemblyName>SimpleFMS.Networking.Base</AssemblyName>
+    <RootNamespace>SimpleFMS.Networking.Client</RootNamespace>
+    <AssemblyName>SimpleFMS.Networking.Client</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NetworkTables">
-      <HintPath>..\..\..\RobotDotNet\NetworkTables\NetworkTables\Output\NetworkTables.dll</HintPath>
+      <HintPath>..\SimpleFMS.Networking.Base\bin\Debug\NetworkTables.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,13 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DriverStation\DriverStationBypassExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationConfigurationExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationEStopExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationReportExtensions.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Extensions\MatchTiming\MatchTimingMatchStateExtensions.cs" />
-    <Compile Include="Extensions\MatchTiming\MatchTimingReportExtensions.cs" />
+    <Compile Include="NetworkClientManager.cs" />
+    <Compile Include="NetworkClients\DriverStationClient.cs" />
+    <Compile Include="NetworkClients\MatchTimingClient.cs" />
+    <Compile Include="NetworkClients\NetworkClientBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,8 +54,11 @@
       <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>
       <Name>SimpleFMS.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.Networking.Base\SimpleFMS.Networking.Base.csproj">
+      <Project>{d398f615-0191-42f5-ae79-1ee464425ddd}</Project>
+      <Name>SimpleFMS.Networking.Base</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -16,11 +16,11 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 
         public static AllianceStation GetDriverStationToBypass(this byte[] value, out bool bypass, out bool isValid)
         {
-            if (value.Length < 3)
-                throw new IndexOutOfRangeException("Value must have at least a length of 3");
-
             bypass = false;
             isValid = false;
+
+            if (value.Length < 3)
+                return new AllianceStation();
 
             if (value[0] != (byte) CustomNetworkTableType.DriverStationUpdateBypass) return new AllianceStation();
             var station = new AllianceStation(value[1]);

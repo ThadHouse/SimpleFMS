@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.MatchTiming", "Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.MatchTiming.Test", "SimpleFMS.MatchTiming.Test\SimpleFMS.MatchTiming.Test.csproj", "{2993096F-B1EA-423A-A095-FCAFC110F64C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.Networking.Client", "SimpleFMS.Networking.Client\SimpleFMS.Networking.Client.csproj", "{D0E39587-EA39-497E-B29E-994E30BC4AB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{2993096F-B1EA-423A-A095-FCAFC110F64C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2993096F-B1EA-423A-A095-FCAFC110F64C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2993096F-B1EA-423A-A095-FCAFC110F64C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E39587-EA39-497E-B29E-994E30BC4AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E39587-EA39-497E-B29E-994E30BC4AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E39587-EA39-497E-B29E-994E30BC4AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E39587-EA39-497E-B29E-994E30BC4AB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

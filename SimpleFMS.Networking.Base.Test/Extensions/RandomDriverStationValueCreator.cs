@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Networking.Base.Extensions;
+using SimpleFMS.Networking.Base.Extensions.DriverStation;
 
 namespace SimpleFMS.Networking.Base.Test.Extensions
 {

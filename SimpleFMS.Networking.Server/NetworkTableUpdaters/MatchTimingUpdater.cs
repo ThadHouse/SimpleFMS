@@ -3,7 +3,8 @@ using NetworkTables;
 using NetworkTables.Tables;
 using SimpleFMS.Base.MatchTiming;
 using SimpleFMS.Networking.Base.Extensions.MatchTiming;
-using static SimpleFMS.Base.Networking.NetworkingConstants.MatchTimingConstatns;
+using static SimpleFMS.Base.Networking.NetworkingConstants.MatchTimingConstants;
+using static SimpleFMS.Networking.Base.Extensions.MatchTiming.MatchTimingMatchStateExtensions;
 
 namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
 {
@@ -17,31 +18,60 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
         {
             m_rpc = rpc;
             m_matchTimingManager = timingManager;
+
+            m_rpc.CreateRpc(StartMatchRpcKey, new RpcDefinition(StartMatchRpcVersion, StartMatchRpcKey),
+                StartMatchCallback);
+
+            m_rpc.CreateRpc(StopPeriodRpcKey, new RpcDefinition(StopPeriodRpcVersion, StopPeriodRpcKey),
+                StopPeriodCallback);
+
+            m_rpc.CreateRpc(StartAutonomousRpcKey, new RpcDefinition(StartAutonomousRpcVersion, StartAutonomousRpcKey),
+                StartAutonomousCallback);
+
+            m_rpc.CreateRpc(StartTeleoperatedRpcKey,
+                new RpcDefinition(StartTeleoperatedRpcVersion, StartTeleoperatedRpcKey), StartTeleoperatedCallback);
+
+            m_rpc.CreateRpc(SetMatchPeriodTimeRpcKey,
+                new RpcDefinition(SetMatchPeriodTimeRpcVersion, SetMatchPeriodTimeRpcKey), SetMatchPeriodTimeCallback);
         }
 
         private byte[] StartMatchCallback(string name, byte[] bytes)
         {
-            throw new NotImplementedException();
+            var good = bytes.UnpackStartMatch();
+            if (good) m_matchTimingManager.StartMatch();
+            return PackStartMatchResponse(good);
         }
 
         private byte[] StopPeriodCallback(string name, byte[] bytes)
         {
-            throw new NotImplementedException();
+            var good = bytes.UnpackStopPeriod();
+            if (good) m_matchTimingManager.StopCurrentPeriod();
+            return PackStopPeriodResponse(good);
         }
 
         private byte[] StartAutonomousCallback(string name, byte[] bytes)
         {
-            throw new NotImplementedException();
+            var good = bytes.UnpackStartAutonomous();
+            if (good) m_matchTimingManager.StartAutonomous();
+            return PackStartAutonomousResponse(good);
         }
 
         private byte[] StartTeleoperatedCallback(string name, byte[] bytes)
         {
-            throw new NotImplementedException();
+            var good = bytes.UnpackStartTeleoperated();
+            if (good) m_matchTimingManager.StartTeleop();
+            return PackStartTeleoperatedResponse(good);
         }
 
         private byte[] SetMatchPeriodTimeCallback(string name, byte[] bytes)
         {
-            throw new NotImplementedException();
+            var data = bytes.UnpackMatchTimes();
+            bool success = false;
+            if (data != null)
+            {
+                success = m_matchTimingManager.SetMatchTimes(data);
+            }
+            return PackMatchTimesResponse(success);
         }
 
         public override void UpdateTable()

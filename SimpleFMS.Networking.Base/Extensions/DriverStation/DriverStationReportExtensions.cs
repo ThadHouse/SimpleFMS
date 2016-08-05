@@ -5,7 +5,7 @@ using NetworkTables.Wire;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Networking;
 
-namespace SimpleFMS.Networking.Base.Extensions
+namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 {
     public static class DriverStationReportExtensions
     {
@@ -85,7 +85,7 @@ namespace SimpleFMS.Networking.Base.Extensions
         {
             MemoryStream stream = new MemoryStream(value);
             if (stream.Length < 2)
-                throw new IndexOutOfRangeException("Value must have at least a length of 2");
+                return null;
 
             WireDecoder decoder = new WireDecoder(stream ,NetworkingConstants.NetworkTablesVersion);
 

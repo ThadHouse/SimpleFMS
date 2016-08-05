@@ -8,14 +8,14 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
 {
     public static class MatchTimingReportExtensions
     {
-        private static void AddTimeSpanToReport(this TimeSpan span, List<byte> addTo)
+        internal static void AddTimeSpanToReport(this TimeSpan span, List<byte> addTo)
         {
             byte[] remaining =
                 BitConverter.GetBytes(IPAddress.HostToNetworkOrder(BitConverter.DoubleToInt64Bits(span.TotalSeconds)));
             addTo.AddRange(remaining);
         }
 
-        private static TimeSpan GetTimeSpanFromReport(this byte[] data, ref int startIndex)
+        internal static TimeSpan GetTimeSpanFromReport(this byte[] data, ref int startIndex)
         {
             double seconds =
                 BitConverter.Int64BitsToDouble(IPAddress.NetworkToHostOrder(BitConverter.ToInt64(data, startIndex)));
@@ -38,7 +38,7 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
         public static IMatchTimingReport GetMatchTimingReport(this byte[] bytes)
         {
             if (bytes.Length < 34)
-                throw new ArgumentOutOfRangeException(nameof(bytes), "Bytes must have a length of at least 34 bytes");
+                return null;
 
             if (bytes[0] != (byte) CustomNetworkTableType.MatchTimingReport)
                 return null;

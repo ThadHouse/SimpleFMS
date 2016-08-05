@@ -17,6 +17,8 @@ namespace SimpleFMS.Base.MatchTiming
         void StartAutonomous();
         void StartTeleop();
 
+        bool SetMatchTimes(IMatchTimes times);
+
         TimeSpan TeleoperatedTime { get; set; }
         TimeSpan AutonomousTime { get; set; }
         TimeSpan DelayTime { get; set; }
