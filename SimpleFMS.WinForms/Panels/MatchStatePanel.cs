@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Autofac;
 using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.MatchTiming;
+using SimpleFMS.Networking.Client.NetworkClients;
+using Timer = System.Windows.Forms.Timer;
 
 namespace SimpleFMS.WinForms.Panels
 {
@@ -26,21 +31,14 @@ namespace SimpleFMS.WinForms.Panels
 
 
         private Timer m_updateTimer;
-        private IMatchTimingManager m_matchManager;
 
-        public MatchStatePanel(IMatchTimingManager matchTimingManger)
+        public MatchStatePanel()
         {
-            m_matchManager = matchTimingManger;
 
             m_updateTimer = new Timer();
             m_updateTimer.Interval = 500;
             m_updateTimer.Tick += UpdateTimerOnTick;
             m_updateTimer.Start();
-            
-
-
-            //m_timer = new Timer(OnPeriodTimerElapsed);
-            //m_timer.Change(500, 500);
 
             
             Size = new Size(400, 400);
@@ -124,65 +122,84 @@ namespace SimpleFMS.WinForms.Panels
 
         private void UpdateTimerOnTick(object sender, EventArgs eventArgs)
         {
-            TimeSpan time = m_matchManager.GetRemainingPeriodTime();
-            UpdateMatchTimer(time.Seconds + time.Minutes * 60);
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<MatchTimingClient>();
+
+                var report = client.GetMatchTimingReport();
+                if (report == null) return;
+
+                TimeSpan time = report.RemainingPeriodTime;
+                UpdateMatchTimer(time.Seconds + time.Minutes * 60);
+            }
         }
 
-        private void M_matchStateButton_Click(object sender, EventArgs e)
+        CancellationTokenSource source = new CancellationTokenSource();
+
+        private async void M_matchStateButton_Click(object sender, EventArgs e)
         {
             if (!m_matchStateButton.Enabled) return;
 
-            if (m_matchManager.GetMatchState() != MatchState.Stopped)
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
             {
-                // Stop the match
-                OnDisable();
-                return;
-            }
+                var client = scope.Resolve<MatchTimingClient>();
 
-            int telopTime;
-            TimeSpan teleopTimeSpan = TimeSpan.Zero;
-            if (int.TryParse(m_teleopTime.Text, out telopTime))
-            {
-                teleopTimeSpan = TimeSpan.FromSeconds(telopTime > 0 ? telopTime : 135);
-            }
+                IMatchTimingReport report = client.GetMatchTimingReport();
 
-            int autoTime;
-            TimeSpan autoTimeSpan = TimeSpan.Zero;
-            if (int.TryParse(m_autonTime.Text, out autoTime))
-            {
-                autoTimeSpan = TimeSpan.FromSeconds(autoTime > 0 ? autoTime : 15);
-            }
+                if (report.MatchState != MatchState.Stopped)
+                {
+                    // Stop the match
+                    await OnDisable();
+                    return;
+                }
 
-            int delayTime;
-            TimeSpan delayTimeSpan = TimeSpan.Zero;
-            if (int.TryParse(m_periodGap.Text, out delayTime))
-            {
-                delayTimeSpan = TimeSpan.FromSeconds(delayTime > 0 ? delayTime : 2);
-            }
+                int telopTime;
+                TimeSpan teleopTimeSpan = TimeSpan.Zero;
+                if (int.TryParse(m_teleopTime.Text, out telopTime))
+                {
+                    teleopTimeSpan = TimeSpan.FromSeconds(telopTime > 0 ? telopTime : 135);
+                }
 
-            DateTime now = DateTime.UtcNow;
-            //m_periodEndTime = DateTime.MinValue;
+                int autoTime;
+                TimeSpan autoTimeSpan = TimeSpan.Zero;
+                if (int.TryParse(m_autonTime.Text, out autoTime))
+                {
+                    autoTimeSpan = TimeSpan.FromSeconds(autoTime > 0 ? autoTime : 15);
+                }
 
-            switch (m_currentState)
-            {
-                case CurrentState.MatchSimulation:
-                    m_matchManager.AutonomousTime = autoTimeSpan;
-                    m_matchManager.TeleoperatedTime = teleopTimeSpan;
-                    m_matchManager.DelayTime = delayTimeSpan;
-                    m_matchManager.StartMatch();
-                    m_matchStateButton.Text = "Stop Autonomous";
-                    //m_runState = RunState.Autonomous;
-                    break;
-                case CurrentState.TeleoperatedOnly:
-                    m_matchManager.StartTeleop();
-                    m_matchStateButton.Text = "Stop Teleoperated";
-                    //m_runState = RunState.Teleoperated;
-                    break;
-                case CurrentState.AutonomousOnly:
-                    m_matchManager.StartAutonomous();
-                    m_matchStateButton.Text = "Stop Autonomous";
-                    //m_runState = RunState.Autonomous;
-                    break;
+                int delayTime;
+                TimeSpan delayTimeSpan = TimeSpan.Zero;
+                if (int.TryParse(m_periodGap.Text, out delayTime))
+                {
+                    delayTimeSpan = TimeSpan.FromSeconds(delayTime > 0 ? delayTime : 2);
+                }
+
+                DateTime now = DateTime.UtcNow;
+                //m_periodEndTime = DateTime.MinValue;
+
+                switch (m_currentState)
+                {
+                    case CurrentState.MatchSimulation:
+                        MatchTimes times = new MatchTimes();
+                        times.AutonomousTime = autoTimeSpan;
+                        times.TeleoperatedTime = teleopTimeSpan;
+                        times.DelayTime = delayTimeSpan;
+                        await client.SetMatchPeriodTimes(times, source.Token);
+                        await client.StartMatch(source.Token);
+                        m_matchStateButton.Text = "Stop Autonomous";
+                        //m_runState = RunState.Autonomous;
+                        break;
+                    case CurrentState.TeleoperatedOnly:
+                        await client.StartTeleoperated(source.Token);
+                        m_matchStateButton.Text = "Stop Teleoperated";
+                        //m_runState = RunState.Teleoperated;
+                        break;
+                    case CurrentState.AutonomousOnly:
+                        await client.StartAutonomous(source.Token);
+                        m_matchStateButton.Text = "Stop Autonomous";
+                        //m_runState = RunState.Autonomous;
+                        break;
+                }
             }
         }
 
@@ -198,7 +215,16 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_teleopTime_DoubleClick(object sender, EventArgs e)
         {
-            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
+            IMatchTimingReport report;
+
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<MatchTimingClient>();
+
+                report = client.GetMatchTimingReport();
+            }
+
+            if (report.MatchState != MatchState.Stopped) return;
             m_currentState = CurrentState.TeleoperatedOnly;
             m_matchStateButton.Text = "Start Teleop Only";
             int time = 0;
@@ -210,7 +236,16 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_autonTime_DoubleClick(object sender, EventArgs e)
         {
-            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
+            IMatchTimingReport report;
+
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<MatchTimingClient>();
+
+                report = client.GetMatchTimingReport();
+            }
+
+            if (report.MatchState != MatchState.Stopped) return;
             m_currentState = CurrentState.AutonomousOnly;
             m_matchStateButton.Text = "Start Autonomous Only";
             int time = 0;
@@ -222,7 +257,16 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_matchTimer_DoubleClick(object sender, EventArgs e)
         {
-            if (m_matchManager.GetMatchState() != MatchState.Stopped) return;
+            IMatchTimingReport report;
+
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<MatchTimingClient>();
+
+                report = client.GetMatchTimingReport();
+            }
+
+            if (report.MatchState != MatchState.Stopped) return;
             m_currentState = CurrentState.TeleoperatedOnly;
             m_matchStateButton.Text = "Start FMS Match";
             int time = 0;
@@ -232,9 +276,16 @@ namespace SimpleFMS.WinForms.Panels
             }
         }
 
-        private void OnDisable()
+        private async Task OnDisable()
         {
-            m_matchManager.StopCurrentPeriod();
+
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<MatchTimingClient>();
+
+                await client.StopPeriod(source.Token);
+
+            }
 
             switch (m_currentState)
             {

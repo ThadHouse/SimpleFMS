@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NetworkTables;
 using NetworkTables.Tables;
 using SimpleFMS.Base.Networking;
+using SimpleFMS.Networking.Base;
 
 namespace SimpleFMS.Networking.Client.NetworkClients
 {

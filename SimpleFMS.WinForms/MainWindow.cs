@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.MatchTiming;
 using SimpleFMS.Base.Networking;
-using SimpleFMS.DriverStation;
-using SimpleFMS.MatchTiming;
-using SimpleFMS.Networking.Server;
+using SimpleFMS.Networking.Base;
+using SimpleFMS.Networking.Client;
+using SimpleFMS.Networking.Client.NetworkClients;
 using SimpleFMS.WinForms.Panels;
 
 namespace SimpleFMS.WinForms
@@ -19,29 +21,33 @@ namespace SimpleFMS.WinForms
 
         private Button m_updateDsButton;
 
-        readonly IDriverStationManager m_driverStationManager;
+        public static IContainer AutoFacContainer { get; private set; }
 
-        private readonly INetworkServerManager m_networkManager;
-
-        private readonly IMatchTimingManager m_matchTimingManager;
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            m_driverStationManager = new DriverStationManager();
-            m_matchTimingManager = new MatchTimingManager(m_driverStationManager);
+            var builder = new ContainerBuilder();
+            NetworkClientManager nManager = new NetworkClientManager("Win Forms Client");
+            DriverStationClient dsClient = new DriverStationClient(nManager.NetworkTable, nManager.Rpc);
+            MatchTimingClient matchClient = new MatchTimingClient(nManager.NetworkTable, nManager.Rpc);
+            nManager.AddClient(dsClient);
+            builder.RegisterInstance(nManager).As<INetworkClientManager>().SingleInstance();
+            builder.RegisterInstance(dsClient).As<DriverStationClient>().SingleInstance();
+            builder.RegisterInstance(matchClient).As<MatchTimingClient>().SingleInstance();
 
-            m_networkManager = new NetworkServerManager(m_driverStationManager, m_matchTimingManager);
+            AutoFacContainer = builder.Build();
 
-            m_driverStationManager.OnDriverStationStatusChanged += MangerOnOnDriverStationStatusChanged;
-            
+            dsClient.OnDriverStationReportsChanged += MangerOnOnDriverStationStatusChanged;
+
 
             m_alliancePanel = new AlliancesPanel();
             m_alliancePanel.Location = new Point(20, 20);
             this.Controls.Add(m_alliancePanel);
 
-            m_matchTimePanel = new MatchStatePanel(m_matchTimingManager);
+            m_matchTimePanel = new MatchStatePanel();
             m_matchTimePanel.Location = new Point(500, 35);
             Controls.Add(m_matchTimePanel);
 
@@ -68,33 +74,28 @@ namespace SimpleFMS.WinForms
             });
         }
 
-        private void OnInitializeMatchButtonClick(object sender, EventArgs e)
+        private async void OnInitializeMatchButtonClick(object sender, EventArgs e)
         {
             // Grab all DS Data.
             var list = m_alliancePanel.GetDriverStationConfigurations();
-            m_driverStationManager.InitializeMatch(list, 1, 0);
+            using (var scope = AutoFacContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve <DriverStationClient>();
+                await client.UpdateDriverStationConfigurations(list, 1, 0, tokenSource.Token);
+            }
             m_matchTimePanel.EnableStart();
-        }
-
-        public void OnDriverStationConnectionChanged(IDriverStationConfiguration configuration, bool connected)
-        {
-            Invoke((MethodInvoker)delegate
-            {
-                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.Station.StationNumber, configuration.Station.AllianceSide, connected, null);
-            });
-        }
-
-        public void OnRobotConnectionChanged(IDriverStationConfiguration configuration, bool connected)
-        {
-            Invoke((MethodInvoker)delegate
-            {
-                m_alliancePanel.UpdateDriverStationConnectionInfo(configuration.Station.StationNumber, configuration.Station.AllianceSide, null, connected);
-            });
         }
 
         public void AllConnectionReset()
         {
             // No Op right now
+        }
+
+        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            AutoFacContainer.Dispose();
+            
+            tokenSource.Cancel();
         }
     }
 }

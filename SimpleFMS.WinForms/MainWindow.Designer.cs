@@ -38,6 +38,7 @@
             this.ClientSize = new System.Drawing.Size(324, 363);
             this.Name = "MainWindow";
             this.Text = "SimpleFMS";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.ResumeLayout(false);
 
         }

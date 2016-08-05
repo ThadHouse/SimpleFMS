@@ -15,7 +15,7 @@ namespace SimpleFMS.Networking.Server
 
         private readonly object m_lockObject = new object();
 
-        private const int TableUpdatePeriod = 500;
+        private const int TableUpdatePeriod = 100;
 
         private readonly StandaloneNetworkTable m_networkTableRoot;
         private readonly StandaloneNtCore m_ntCore;
@@ -26,7 +26,7 @@ namespace SimpleFMS.Networking.Server
         public NetworkServerManager(IDriverStationManager driverStationManager, IMatchTimingManager matchTimingManager)
         {
             m_ntCore = new StandaloneNtCore();
-            m_ntCore.UpdateRate = 1.0;
+            m_ntCore.UpdateRate = 0.5;
             m_ntCore.RemoteName = ServerRemoteName;
             m_ntCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
             m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);

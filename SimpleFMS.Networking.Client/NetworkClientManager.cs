@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NetworkTables;
 using SimpleFMS.Base.Networking;
+using SimpleFMS.Networking.Base;
 using static SimpleFMS.Base.Networking.NetworkingConstants;
 
 namespace SimpleFMS.Networking.Client
@@ -18,7 +19,6 @@ namespace SimpleFMS.Networking.Client
         public NetworkClientManager(string clientName)
         {
             m_ntCore = new StandaloneNtCore();
-            m_ntCore.UpdateRate = 1.0;
             m_ntCore.RemoteName = clientName;
             m_ntCore.StartClient(FmsIpAddress, NetworkTablesPort);
             m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);
@@ -29,7 +29,7 @@ namespace SimpleFMS.Networking.Client
 
         public StandaloneNtCore NtCore => m_ntCore;
         public StandaloneNetworkTable NetworkTable => m_networkTableRoot;
-        public StandaloneRemoteProcedureCall RPC => m_rpc;
+        public StandaloneRemoteProcedureCall Rpc => m_rpc;
 
         public void AddClient(INetworkClient client)
         {

@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D398F615-0191-42F5-AE79-1EE464425DDD}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{3D0C84D9-D515-4B8C-9693-60A7B9351C27}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleFMS.Networking.Base</RootNamespace>
-    <AssemblyName>SimpleFMS.Networking.Base</AssemblyName>
+    <RootNamespace>SimpleFMS.ConsoleHost</RootNamespace>
+    <AssemblyName>SimpleFMS.ConsoleHost</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NetworkTables">
-      <HintPath>..\..\..\RobotDotNet\NetworkTables\NetworkTables\Output\NetworkTables.dll</HintPath>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,24 +47,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DriverStation\DriverStationBypassExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationConfigurationExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationEStopExtensions.cs" />
-    <Compile Include="Extensions\DriverStation\DriverStationReportExtensions.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Extensions\MatchTiming\MatchTimingMatchStateExtensions.cs" />
-    <Compile Include="Extensions\MatchTiming\MatchTimingReportExtensions.cs" />
-    <Compile Include="INetworkClient.cs" />
-    <Compile Include="INetworkClientManager.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimpleFMS.Base\SimpleFMS.Base.csproj">
       <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>
       <Name>SimpleFMS.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.DriverStation\SimpleFMS.DriverStation.csproj">
+      <Project>{4561f270-76ee-4062-a154-13ad9d1df58c}</Project>
+      <Name>SimpleFMS.DriverStation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.MatchTiming\SimpleFMS.MatchTiming.csproj">
+      <Project>{a17e1f9d-37aa-4f10-b2c5-1dbf4a02adc4}</Project>
+      <Name>SimpleFMS.MatchTiming</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.Networking.Server\SimpleFMS.Networking.Server.csproj">
+      <Project>{4ef10924-f589-4cca-8fe1-6381a3b7b82d}</Project>
+      <Name>SimpleFMS.Networking.Server</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

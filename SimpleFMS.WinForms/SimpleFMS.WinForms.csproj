@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetworkTables, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SimpleFMS.Networking.Base\bin\Debug\NetworkTables.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -81,6 +89,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,17 +108,13 @@
       <Project>{cbce2f79-4a6f-410a-a5b9-32788d5918c0}</Project>
       <Name>SimpleFMS.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimpleFMS.DriverStation\SimpleFMS.DriverStation.csproj">
-      <Project>{4561f270-76ee-4062-a154-13ad9d1df58c}</Project>
-      <Name>SimpleFMS.DriverStation</Name>
+    <ProjectReference Include="..\SimpleFMS.Networking.Base\SimpleFMS.Networking.Base.csproj">
+      <Project>{d398f615-0191-42f5-ae79-1ee464425ddd}</Project>
+      <Name>SimpleFMS.Networking.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimpleFMS.MatchTiming\SimpleFMS.MatchTiming.csproj">
-      <Project>{a17e1f9d-37aa-4f10-b2c5-1dbf4a02adc4}</Project>
-      <Name>SimpleFMS.MatchTiming</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimpleFMS.Networking.Server\SimpleFMS.Networking.Server.csproj">
-      <Project>{4ef10924-f589-4cca-8fe1-6381a3b7b82d}</Project>
-      <Name>SimpleFMS.Networking.Server</Name>
+    <ProjectReference Include="..\SimpleFMS.Networking.Client\SimpleFMS.Networking.Client.csproj">
+      <Project>{d0e39587-ea39-497e-b29e-994e30bc4ab8}</Project>
+      <Name>SimpleFMS.Networking.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

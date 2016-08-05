@@ -58,8 +58,6 @@
     <Compile Include="MatchTiming\MatchTimes.cs" />
     <Compile Include="MatchTiming\MatchTimingConstants.cs" />
     <Compile Include="MatchTiming\MatchTimingReport.cs" />
-    <Compile Include="Networking\INetworkClient.cs" />
-    <Compile Include="Networking\INetworkClientManager.cs" />
     <Compile Include="Networking\INetworkServerManager.cs" />
     <Compile Include="Networking\NetworkingConstants.cs" />
     <Compile Include="Tuples\ValueTuple.cs" />

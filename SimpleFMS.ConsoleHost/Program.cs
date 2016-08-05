@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac;
+using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Base.MatchTiming;
+using SimpleFMS.Base.Networking;
+using SimpleFMS.DriverStation;
+using SimpleFMS.MatchTiming;
+using SimpleFMS.Networking.Server;
+
+namespace SimpleFMS.ConsoleHost
+{
+    class Program
+    {
+        private static IContainer Container { get; set; }
+
+        static void Main(string[] args)
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<DriverStationManager>().As<IDriverStationManager>().SingleInstance();
+            builder.RegisterType<MatchTimingManager>().As<IMatchTimingManager>().SingleInstance();
+            builder.RegisterType<NetworkServerManager>().As<INetworkServerManager>().SingleInstance();
+
+            Console.WriteLine("Welcome to Simple FMS!");
+
+
+            Container = builder.Build();
+
+
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                var manager = scope.Resolve<INetworkServerManager>();
+
+                Thread.Sleep(Timeout.Infinite);
+
+                GC.KeepAlive(manager);
+            }
+        }
+    }
+}
