@@ -9,7 +9,7 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
 {
     public static class DriverStationReportExtensions
     {
-        private const int DriverStationReportSize = 12;
+        private const int DriverStationReportSize = 13;
 
         // Packet Structure
         // Written using NetworkTables WireEncoder
@@ -40,7 +40,8 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
         // [1-2] Team Number (unsigned 16 bit value)
         // [2] Driver Station Number
         // [3] Controls Status Byte (Layout below)
-        // [4-12] Battery Voltage (double value)
+        // [4] Contol Status Byte 2
+        // [5-13] Battery Voltage (double value)
         public static void PackDriverStationReportData(this KeyValuePair<AllianceStation, IDriverStationReport> report,
             ref WireEncoder encoder)
         {
@@ -51,11 +52,19 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             encoder.Write16((ushort)value.TeamNumber);
             encoder.Write8(value.Station.GetByte());
 
-            encoder.Write8(value.GetControlByteToSend());
+            encoder.Write8(value.GetControlByte1ToSend());
+            encoder.Write8(value.GetControlByte2ToSend());
             encoder.WriteDouble(value.RobotBattery);
         }
 
-        internal static byte GetControlByteToSend(this IDriverStationReport report)
+        internal static byte GetControlByte2ToSend(this IDriverStationReport report)
+        {
+            byte controlByte = 0;
+            if (report.IsBypassed) controlByte |= 0x01;
+            return controlByte;
+        }
+
+        internal static byte GetControlByte1ToSend(this IDriverStationReport report)
         {
             byte controlByte = 0;
             if (report.DriverStationConnected) controlByte |= 0x01;
@@ -69,7 +78,12 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             return controlByte;
         }
 
-        internal static void ReadControlByte(this byte controlByte, ref DriverStationReport report)
+        internal static void ReadControlByte2(this byte controlByte, ref DriverStationReport report)
+        {
+            report.IsBypassed = (controlByte & 0x01) == 0x01;
+        }
+
+        internal static void ReadControlByte1(this byte controlByte, ref DriverStationReport report)
         {
             report.DriverStationConnected = (controlByte & 0x01) == 0x01;
             report.RoboRioConnected = (controlByte & 0x02) == 0x02;
@@ -111,7 +125,7 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
         public static void GetDriverStationReport(this WireDecoder decoder,
             IDictionary<AllianceStation, IDriverStationReport> reports)
         {
-            // Ensure we have another 13 bytes.
+            // Ensure we have another 14 bytes.
             if (!decoder.HasMoreBytes(DriverStationReportSize + 1))
                 return;
 
@@ -125,6 +139,8 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             decoder.Read8(ref station);
             byte control = 0;
             decoder.Read8(ref control);
+            byte control2 = 0;
+            decoder.Read8(ref control2);
             double battery = 0;
             decoder.ReadDouble(ref battery);
 
@@ -137,7 +153,8 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
                 RobotBattery = battery
             };
 
-            control.ReadControlByte(ref report);
+            control.ReadControlByte1(ref report);
+            control2.ReadControlByte2(ref report);
 
             reports.Add(sta, report);
         }

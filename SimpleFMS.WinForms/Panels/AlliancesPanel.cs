@@ -67,7 +67,7 @@ namespace SimpleFMS.WinForms.Panels
             {
                 if (alliancePanel.AllianceSide == side)
                 {
-                    alliancePanel.UpdateDriverStationConfiguration(number, dsConnection, roboRioConnection);
+                    alliancePanel.UpdateDriverStationConfiguration(new AllianceStation(side, number), dsConnection, roboRioConnection);
                 }
             }
         }

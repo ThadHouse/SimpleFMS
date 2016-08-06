@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NetworkTables;
+using NetworkTables.Tables;
 using SimpleFMS.Networking.Base;
 using static SimpleFMS.Base.Networking.NetworkingConstants;
 
@@ -13,8 +15,6 @@ namespace SimpleFMS.Networking.Client
         private readonly StandaloneNtCore m_ntCore;
         private readonly StandaloneRemoteProcedureCall m_rpc;
 
-        private readonly object m_lockObject = new object();
-
         public NetworkClientManager(string clientName)
         {
             m_ntCore = new StandaloneNtCore();
@@ -23,8 +23,20 @@ namespace SimpleFMS.Networking.Client
             m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);
             m_networkTableRoot = new StandaloneNetworkTable(m_ntCore, RootTableName);
 
-            
+            Action<IRemote, ConnectionInfo, bool> connectionChanged = (remote, info, conn) =>
+            {
+                if (info.RemoteId == FmsServerRemoteName)
+                {
+                    OnFmsConnectionChanged?.Invoke(conn);
+                }
+            };
+            m_networkTableRoot.AddConnectionListener(connectionChanged, true);
+            m_fmsConnectionListeners.Add(connectionChanged);
         }
+
+        private readonly List<Action<IRemote, ConnectionInfo, bool>> m_fmsConnectionListeners = new List<Action<IRemote, ConnectionInfo, bool>>();
+
+        public event Action<bool> OnFmsConnectionChanged;
 
         public StandaloneNtCore NtCore => m_ntCore;
         public StandaloneNetworkTable NetworkTable => m_networkTableRoot;
@@ -37,6 +49,11 @@ namespace SimpleFMS.Networking.Client
 
         public void Dispose()
         {
+            foreach (var fmsConnectionListener in m_fmsConnectionListeners)
+            {
+                m_networkTableRoot.RemoveConnectionListener(fmsConnectionListener);
+            }
+
             m_ntCore.Dispose();
         }
     }

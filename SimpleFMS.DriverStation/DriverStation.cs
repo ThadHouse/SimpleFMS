@@ -92,8 +92,10 @@ namespace SimpleFMS.DriverStation
                 IsReceivingEStopped = IsReceivingEStopped,
                 IsReceivingEnabled = IsReceivingEnabled,
                 RoboRioConnected = IsRoboRioConnected,
-                RobotBattery = RobotBattery
+                RobotBattery = RobotBattery,
+                IsBypassed = IsBypassed
             };
+           
             return dsReport;
         }
 

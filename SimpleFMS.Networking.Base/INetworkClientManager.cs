@@ -7,6 +7,8 @@ namespace SimpleFMS.Networking.Base
     {
         void AddClient(INetworkClient client);
 
+        event Action<bool> OnFmsConnectionChanged;
+
         StandaloneNtCore NtCore { get; }
         StandaloneNetworkTable NetworkTable { get; }
         StandaloneRemoteProcedureCall Rpc { get; }

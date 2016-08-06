@@ -18,6 +18,7 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
             for (int i = 0; i < count; i++)
             {
                 byte randomControlByte = (byte)random.Next();
+                byte randomControlByte2 = (byte)random.Next();
                 ushort randomTeamNumber = (ushort)random.Next();
                 double randomBattery = random.NextDouble();
                 var randomStation = new AllianceStation((byte)i);
@@ -28,14 +29,15 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
                     RobotBattery = randomBattery,
                     Station = randomStation
                 };
-                randomControlByte.ReadControlByte(ref report);
+                randomControlByte.ReadControlByte1(ref report);
+                randomControlByte2.ReadControlByte2(ref report);
 
                 reports.Add(randomStation, report);
             }
             return reports;
         }
 
-        public static IReadOnlyList<IDriverStationConfiguration> GetRandomDriverStationConfigurations(int count, 
+        public static IReadOnlyList<IDriverStationConfiguration> GetRandomDriverStationConfigurations(int count,
             ref int matchNumber, ref MatchType matchType)
         {
             List<IDriverStationConfiguration> configurations = new List<IDriverStationConfiguration>(count);
@@ -43,11 +45,11 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
             Random random = new Random();
 
             matchNumber = (ushort)random.Next();
-            matchType = (MatchType) random.Next(0, 3);
+            matchType = (MatchType)random.Next(0, 3);
 
             for (int i = 0; i < count; i++)
             {
-                ushort randomTeamNumber = (ushort) random.Next();
+                ushort randomTeamNumber = (ushort)random.Next();
                 var randomStation = new AllianceStation((byte)i);
                 bool randomBypass = random.Next(0, 1) != 0;
 

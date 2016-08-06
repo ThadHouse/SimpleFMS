@@ -40,7 +40,7 @@ namespace SimpleFMS.WinForms.Panels
                     Controls.Add(sepPanel);
                 }
 
-                StationPanel panel = new StationPanel(number, BackColor);
+                StationPanel panel = new StationPanel(new AllianceStation(AllianceSide, number), BackColor);
                 panel.Location = new Point(0, height);
                 m_panels.Add(panel);
                 Controls.Add(panel);
@@ -68,11 +68,11 @@ namespace SimpleFMS.WinForms.Panels
             ;
         }
 
-        public void UpdateDriverStationConfiguration(AllianceStationNumber number, bool? dsConnected, bool? rioConnected)
+        public void UpdateDriverStationConfiguration(AllianceStation station, bool? dsConnected, bool? rioConnected)
         {
             foreach (var stationPanel in m_panels)
             {
-                if (stationPanel.StationNumber == number)
+                if (stationPanel.Station == station)
                 {
                     stationPanel.UpdateConnectionStation(dsConnected, rioConnected);
                 }

@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="DriverStation.cs" />
     <Compile Include="DriverStationManager.cs" />
-    <Compile Include="DriverStationReport.cs" />
     <Compile Include="Enums\DriverStationConnectionPacketType.cs" />
     <Compile Include="Enums\ReceiveParseStatus.cs" />
     <Compile Include="Extensions\ArrayIntegerExtensions.cs" />

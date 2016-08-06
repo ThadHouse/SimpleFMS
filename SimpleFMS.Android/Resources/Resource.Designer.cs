@@ -165,6 +165,12 @@ namespace SimpleFMS.Android
 			// aapt resource value: 0x7f050002
 			public const int Titles = 2131034114;
 			
+			// aapt resource value: 0x7f050034
+			public const int autoTimeView = 2131034164;
+			
+			// aapt resource value: 0x7f050036
+			public const int delayTimeView = 2131034166;
+			
 			// aapt resource value: 0x7f05002d
 			public const int initializeMatchButton = 2131034157;
 			
@@ -177,11 +183,44 @@ namespace SimpleFMS.Android
 			// aapt resource value: 0x7f05002c
 			public const int matchNumberText = 2131034156;
 			
+			// aapt resource value: 0x7f05003a
+			public const int matchStartButton = 2131034170;
+			
 			// aapt resource value: 0x7f05000d
 			public const int space1 = 2131034125;
 			
+			// aapt resource value: 0x7f050038
+			public const int startAutonomousButton = 2131034168;
+			
+			// aapt resource value: 0x7f050039
+			public const int startTeleoperatedButton = 2131034169;
+			
+			// aapt resource value: 0x7f05002e
+			public const int tableLayout1 = 2131034158;
+			
+			// aapt resource value: 0x7f05002f
+			public const int tableRow1 = 2131034159;
+			
+			// aapt resource value: 0x7f050033
+			public const int tableRow2 = 2131034163;
+			
+			// aapt resource value: 0x7f050037
+			public const int tableRow3 = 2131034167;
+			
+			// aapt resource value: 0x7f050035
+			public const int teleopTimeView = 2131034165;
+			
+			// aapt resource value: 0x7f050030
+			public const int textView18 = 2131034160;
+			
+			// aapt resource value: 0x7f050031
+			public const int textView19 = 2131034161;
+			
 			// aapt resource value: 0x7f050004
 			public const int textView2 = 2131034116;
+			
+			// aapt resource value: 0x7f050032
+			public const int textView20 = 2131034162;
 			
 			// aapt resource value: 0x7f050005
 			public const int textView3 = 2131034117;

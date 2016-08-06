@@ -12,6 +12,7 @@
         bool IsReceivingEnabled { get; }
         bool IsReceivingAutonomous { get; }
         bool IsReceivingEStopped { get; }
+        bool IsBypassed { get; }
         double RobotBattery { get; }
     }
 }

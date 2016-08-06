@@ -1,8 +1,13 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
+using Autofac;
 using SimpleFMS.Base.DriverStation;
+using SimpleFMS.Networking.Client.NetworkClients;
+using static SimpleFMS.Android.AutoFacContainer;
 
 namespace SimpleFMS.Android
 {
@@ -20,10 +25,7 @@ namespace SimpleFMS.Android
         private int m_teamNumber;
         public int TeamNumber
         {
-            get
-            {
-                return m_teamNumber;
-            }
+            get  { return m_teamNumber; }
             set
             {
                 int old = m_teamNumber;
@@ -35,9 +37,27 @@ namespace SimpleFMS.Android
             }
         }
 
+        private bool m_bypassed = true;
+        public bool Bypass
+        {
+            get { return m_bypassed; }
+            set
+            {
+                bool old = m_bypassed;
+                m_bypassed = value;
+                if (value != old)
+                {
+                    m_parentActivity.RunOnUiThread(() => m_bypassView.Checked = m_bypassed);
+                }
+            }
+        }
+
+        private int m_defaultTeamNumber = 0;
+
         public FmsAllianceStation(EditText teamNumberView, CheckBox bypassView, View dsCommView, View rioCommView,
             View eStoppedView, Activity parent, AllianceStation station, int startingTeamNumber)
         {
+            m_defaultTeamNumber = startingTeamNumber;
             m_teamNumberView = teamNumberView;
             m_bypassView = bypassView;
             m_dsCommView = dsCommView;
@@ -56,6 +76,7 @@ namespace SimpleFMS.Android
                     if (teamNumber < 0)
                     {
                         m_bypassView.Checked = true;
+                        teamNumber = m_defaultTeamNumber;
                     }
                     else
                     {
@@ -65,28 +86,30 @@ namespace SimpleFMS.Android
                 else
                 {
                     m_bypassView.Checked = true;
+                    teamNumber = m_defaultTeamNumber;
                 }
-                if (!m_bypassView.Checked) m_teamNumber = teamNumber;
+                m_teamNumber = teamNumber;
             };
 
-            m_bypassView.CheckedChange += (sender, args) =>
+            m_bypassView.CheckedChange += async (sender, args) =>
             {
-                // Always allow a check
-                if (args.IsChecked) return;
-                int teamNumber = 0;
-                if (int.TryParse(m_teamNumberView.Text, out teamNumber))
-                {
-                    if (teamNumber < 0)
-                    {
-                        m_bypassView.Checked = true;
-                    }
-                    m_teamNumber = teamNumber;
-                }
-                else
-                {
-                    m_bypassView.Checked = true;
-                }
+                bool newValue = args.IsChecked;
+                m_bypassed = newValue;
+                bool success = await UpdateStationBypass(newValue);
+                // TODO: Handle an unsuccessful set
             };
+        }
+        private CancellationTokenSource source = new CancellationTokenSource();
+
+        private async Task<bool> UpdateStationBypass(bool newValue)
+        {
+
+            using (var scope = GlobalContainer.BeginLifetimeScope())
+            {
+                var client = scope.Resolve<DriverStationClient>();
+                bool success = await client.UpdateDriverStationBypass(Station, newValue, source.Token);
+                return success;
+            }
         }
 
         public IDriverStationConfiguration GetCurrentState(int teamNumberToSetIfInvalid)

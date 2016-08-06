@@ -355,4 +355,94 @@
             android:layout_height="match_parent"
             android:id="@+id/initializeMatchButton" />
     </LinearLayout>
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1"
+        android:stretchColumns="*"
+        android:id="@+id/tableLayout1">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <TextView
+                android:text="Autonomous Time"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/textView18"
+                android:gravity="center"
+                android:minLines="2"
+                android:layout_gravity="center" />
+            <TextView
+                android:text="Teleoperated Time"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="1"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/textView19"
+                android:minLines="2"
+                android:gravity="center"
+                android:layout_gravity="center" />
+            <TextView
+                android:text="Delay Time"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="2"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/textView20"
+                android:gravity="center"
+                android:minLines="2"
+                android:layout_gravity="center" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+            <EditText
+                android:layout_column="0"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/autoTimeView" />
+            <EditText
+                android:layout_column="1"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/teleopTimeView" />
+            <EditText
+                android:layout_column="2"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/delayTimeView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3">
+            <Button
+                android:layout_column="0"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/startAutonomousButton"
+                android:text="Start Autonomous"
+                android:gravity="center"
+                android:minLines="2"
+                android:layout_gravity="center" />
+            <Button
+                android:layout_column="1"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/startTeleoperatedButton"
+                android:text="Start Teleoperated"
+                android:minLines="2"
+                android:layout_gravity="center"
+                android:gravity="center" />
+            <Button
+                android:layout_column="2"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:id="@+id/matchStartButton"
+                android:text="Start Match"
+                android:gravity="center"
+                android:minLines="2"
+                android:layout_gravity="center" />
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

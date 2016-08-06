@@ -6,8 +6,6 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Autofac;
-using NetworkTables;
-using NetworkTables.Tables;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base;
 using SimpleFMS.Networking.Client;

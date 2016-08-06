@@ -13,8 +13,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Autofac;
-using NetworkTables;
-using NetworkTables.Tables;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base;
@@ -47,7 +45,7 @@ namespace SimpleFMS.Android
                 networkManager.AddClient(dsClient);
                 networkManager.AddClient(matchClient);
 
-                networkManager.NetworkTable.AddConnectionListener(OnNetworkTableConnection, true);
+                networkManager.OnFmsConnectionChanged += OnFmsConnectionChanged;
 
                 var builder = new ContainerBuilder();
                 builder.RegisterInstance(networkManager).As<INetworkClientManager>();
@@ -55,6 +53,8 @@ namespace SimpleFMS.Android
                 builder.RegisterInstance(matchClient).As<MatchTimingClient>();
 
                 GlobalContainer = builder.Build();
+
+                dsClient.OnDriverStationReportsChanged += OnDriverStationReportsChanged;
             }
 
             var IdConstants = GetIdConstants();
@@ -80,6 +80,28 @@ namespace SimpleFMS.Android
             initializeMatchButton.Click += OnInitializeMatchButtonClick;
         }
 
+        private void OnDriverStationReportsChanged(IReadOnlyDictionary<AllianceStation, IDriverStationReport> obj)
+        {
+            if (obj == null) return;
+            RunOnUiThread(() =>
+            {
+
+                foreach (var s in obj)
+                {
+                    FmsAllianceStation station = null;
+                    if (m_fmsAllianceStations.TryGetValue(s.Key, out station))
+                    {
+                        // Station exists.
+                        station.TeamNumber = s.Value.TeamNumber;
+                        station.Bypass = s.Value.IsBypassed;
+                        station.UpdateStationConnection(s.Value.DriverStationConnected, s.Value.RoboRioConnected,
+                            s.Value.IsBeingSentEStopped || s.Value.IsReceivingEStopped);
+                    }
+
+                }
+            });
+        }
+
         private CancellationTokenSource source = new CancellationTokenSource();
 
         private async void OnInitializeMatchButtonClick(object sender, EventArgs e)
@@ -101,21 +123,13 @@ namespace SimpleFMS.Android
             }
         }
 
-        private void OnNetworkTableConnection(IRemote remote, ConnectionInfo info, bool connected)
+        private void OnFmsConnectionChanged(bool connected)
         {
-            if (info.RemoteId == NetworkingConstants.ServerRemoteName)
-            {
-                RunOnUiThread(() =>
-                {
-                    if (connected) OnFMSConnected();
-                    else OnFMSDisconnected();
-                }); ;
-            }
+            if (connected) FmsConnected();
+            else FmsDisconnected();
         }
 
-        private Activity mainFmsWindow;
-
-        private void OnFMSConnected()
+        private void FmsConnected()
         {
             using (var scope = GlobalContainer.BeginLifetimeScope())
             {
@@ -133,7 +147,7 @@ namespace SimpleFMS.Android
             }
         }
 
-        private void OnFMSDisconnected()
+        private void FmsDisconnected()
         {
             foreach (var fmsAllianceStation in m_fmsAllianceStations)
             {

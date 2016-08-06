@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+using Autofac;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Base.Enums;
+using SimpleFMS.Networking.Client.NetworkClients;
 using SimpleFMS.WinForms.CheckBoxes;
 
 namespace SimpleFMS.WinForms.Panels
 {
     public class StationPanel : Panel
     {
-        public AllianceStationNumber StationNumber { get; }
+
+        public AllianceStation Station { get; }
 
         private readonly TextBox m_teamNumber;
         private readonly BigCheckBox m_bypass;
@@ -20,9 +24,9 @@ namespace SimpleFMS.WinForms.Panels
         public const int PanelWidth = 196;
         public const int PanelHeight = 80;
 
-        public StationPanel(AllianceStationNumber number, Color backColor)
+        public StationPanel(AllianceStation station, Color backColor)
         {
-            StationNumber = number;
+            Station = station;
 
             Size = new Size(PanelWidth, PanelHeight);
 
@@ -46,6 +50,8 @@ namespace SimpleFMS.WinForms.Panels
                 Checked = true
             };
             Controls.Add(m_bypass);
+
+            m_bypass.CheckedChanged += BypassCheckedChanged;
 
             var label = new Label
             {
@@ -71,6 +77,23 @@ namespace SimpleFMS.WinForms.Panels
                 Location = new Point(157, 35)
             };
             Controls.Add(m_robotConnected);
+        }
+
+        CancellationTokenSource source = new CancellationTokenSource();
+
+        private int m_isUpdatingBypass = 0;
+
+        private async void BypassCheckedChanged(object sender, EventArgs e)
+        {
+            int result = Interlocked.Exchange(ref m_isUpdatingBypass, 1);
+            if (result == 0) return;
+
+            using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
+            {
+                var ds = scope.Resolve<DriverStationClient>();
+                var success = await ds.UpdateDriverStationBypass(Station, m_bypass.Checked, source.Token);
+                if (!success) m_bypass.Checked = true;
+            }
         }
 
         private void OnTextChanged(object sender, EventArgs e)
@@ -99,7 +122,7 @@ namespace SimpleFMS.WinForms.Panels
         {
             DriverStationConfiguration ds = new DriverStationConfiguration();
             ds.IsBypassed = m_bypass.Checked;
-            ds.Station = new AllianceStation(side, StationNumber);
+            ds.Station = Station;
 
             int teamNumber = 0;
             if (int.TryParse(m_teamNumber.Text, out teamNumber))

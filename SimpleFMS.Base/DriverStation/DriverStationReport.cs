@@ -64,6 +64,7 @@ namespace SimpleFMS.Base.DriverStation
         public bool IsReceivingEnabled { get; set; }
         public bool IsReceivingAutonomous { get; set; }
         public bool IsReceivingEStopped { get; set; }
+        public bool IsBypassed { get; set; }
         public double RobotBattery { get; set; }
     }
 }

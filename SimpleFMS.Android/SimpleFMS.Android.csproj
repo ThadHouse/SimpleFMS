@@ -47,9 +47,6 @@
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="NetworkTables">
-      <HintPath>..\SimpleFMS.Networking.Client\Output\NetworkTables.dll</HintPath>
-    </Reference>
     <Reference Include="SimpleFMS.Base">
       <HintPath>..\SimpleFMS.Networking.Client\Output\SimpleFMS.Base.dll</HintPath>
     </Reference>

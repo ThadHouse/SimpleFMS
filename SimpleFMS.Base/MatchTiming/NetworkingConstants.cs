@@ -3,8 +3,8 @@
     public static class NetworkingConstants
     {
         public const int NetworkTablesPort = 1735;
-        public const uint NetworkTablesVersion = 0x0300;
-        public const string ServerRemoteName = "SimpleFMS Server";
+        public const int NetworkTablesVersion = 0x0300;
+        public const string FmsServerRemoteName = "SimpleFMS Server";
         public const string PersistentFilename = "SimpleFMSPersistence.txt";
         public const string ListenAddress = "";
         public const string FmsIpAddress = "10.0.100.5";

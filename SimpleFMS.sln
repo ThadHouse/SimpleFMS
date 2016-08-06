@@ -28,6 +28,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.ConsoleHost", "SimpleFMS.ConsoleHost\SimpleFMS.ConsoleHost.csproj", "{3D0C84D9-D515-4B8C-9693-60A7B9351C27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFMS.Android", "SimpleFMS.Android\SimpleFMS.Android.csproj", "{6614DB06-69F5-48A4-8BCF-2B731788F960}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D398F615-0191-42F5-AE79-1EE464425DDD} = {D398F615-0191-42F5-AE79-1EE464425DDD}
+		{CBCE2F79-4A6F-410A-A5B9-32788D5918C0} = {CBCE2F79-4A6F-410A-A5B9-32788D5918C0}
+		{D0E39587-EA39-497E-B29E-994E30BC4AB8} = {D0E39587-EA39-497E-B29E-994E30BC4AB8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

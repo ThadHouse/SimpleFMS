@@ -27,7 +27,7 @@ namespace SimpleFMS.Networking.Server
         {
             m_ntCore = new StandaloneNtCore();
             m_ntCore.UpdateRate = 0.5;
-            m_ntCore.RemoteName = ServerRemoteName;
+            m_ntCore.RemoteName = FmsServerRemoteName;
             m_ntCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
             m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);
             m_networkTableRoot = new StandaloneNetworkTable(m_ntCore, RootTableName);
