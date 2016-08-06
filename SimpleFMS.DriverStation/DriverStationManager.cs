@@ -196,6 +196,10 @@ namespace SimpleFMS.DriverStation
                         return false;
                     }
                 }
+                foreach (var driverStation in m_driverStationsByAllianceStation)
+                {
+                    driverStation.Value.IsEStopped = false;
+                }
                 return true;
             }
         }

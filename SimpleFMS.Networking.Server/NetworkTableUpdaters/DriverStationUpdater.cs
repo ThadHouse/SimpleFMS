@@ -31,6 +31,10 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
             m_rpc.CreateRpc(DriverStationUpdateEStopRpcKey,
                 new RpcDefinition(DriverStationUpdateEStopRpcVersion, DriverStationUpdateEStopRpcKey),
                 DriverStationUpdateEStopRpcCallback);
+
+            m_rpc.CreateRpc(DriverStationGlobalEStopRpcKey,
+                new RpcDefinition(DriverStationGlobalEStopVersion, DriverStationGlobalEStopRpcKey),
+                DriverStationGlobalEStopRpcCallback);
         }
 
         private byte[] DriverStationUpdateBypassRpcCallback(string name, byte[] bytes)
@@ -63,6 +67,19 @@ namespace SimpleFMS.Networking.Server.NetworkTableUpdaters
             var configurations = bytes.GetDriverStationConfigurations(out matchNumber, out matchType);
             bool set = m_driverStationManager.InitializeMatch(configurations, matchNumber, matchType);
             return PackDriverStationSetConfigurationResponse(set);
+        }
+
+        private byte[] DriverStationGlobalEStopRpcCallback(string name, byte[] bytes)
+        {
+            bool valid = bytes.GetGlobalDriverStationEStop();
+            if (valid)
+            {
+                for (byte i = 0; i < 6; i++)
+                {
+                    m_driverStationManager.SetEStop(new AllianceStation(i), true);
+                }
+            }
+            return PackDriverStationGlobalEStopResponse();
         }
 
         public override void UpdateTable()

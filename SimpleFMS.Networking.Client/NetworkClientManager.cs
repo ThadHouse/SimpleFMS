@@ -15,6 +15,8 @@ namespace SimpleFMS.Networking.Client
         private readonly StandaloneNtCore m_ntCore;
         private readonly StandaloneRemoteProcedureCall m_rpc;
 
+        public bool FmsConnected => m_networkTableRoot.IsConnected;
+
         public NetworkClientManager(string clientName)
         {
             m_ntCore = new StandaloneNtCore();
@@ -35,6 +37,17 @@ namespace SimpleFMS.Networking.Client
         }
 
         private readonly List<Action<IRemote, ConnectionInfo, bool>> m_fmsConnectionListeners = new List<Action<IRemote, ConnectionInfo, bool>>();
+
+        public void SuspendNetworking()
+        {
+            m_ntCore.StopClient();
+        }
+
+        public void ResumeNetworking()
+        {
+            if (!m_ntCore.Running)
+                m_ntCore.StartClient(FmsIpAddress, NetworkTablesPort);
+        }
 
         public event Action<bool> OnFmsConnectionChanged;
 

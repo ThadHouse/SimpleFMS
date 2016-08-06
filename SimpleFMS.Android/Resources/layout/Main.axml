@@ -5,10 +5,20 @@
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
-    <TextView
-        android:text="@string/WaitingForFMSConnection"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/waitForFMSLabel" />
+        android:id="@+id/relativeLayout1">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/team" />
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/team"
+            android:id="@+id/checkBox1" />
+    </RelativeLayout>
 </LinearLayout>

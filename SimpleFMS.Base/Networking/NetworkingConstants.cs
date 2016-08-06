@@ -21,6 +21,8 @@
             public const int DriverStationUpdateBypassRpcVersion = 1;
             public const string DriverStationUpdateEStopRpcKey = "RpcDriverStationUpdateEStop";
             public const int DriverStationUpdateEStopRpcVersion = 1;
+            public const string DriverStationGlobalEStopRpcKey = "RpcDriverStationGlobalEStop";
+            public const int DriverStationGlobalEStopVersion = 1;
         }
 
         public static class MatchTimingConstants

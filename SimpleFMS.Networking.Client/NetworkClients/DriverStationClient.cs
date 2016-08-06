@@ -79,5 +79,14 @@ namespace SimpleFMS.Networking.Client.NetworkClients
             if (data == null) return false;
             return data.UnpackDriverStationSetConfigurationResponse();
         }
+
+        public async Task<bool> GlobalEStop(CancellationToken token)
+        {
+            long callId = m_rpc.CallRpc(DriverStationGlobalEStopRpcKey,
+                DriverStationEStopExtensions.PackDriverStationGlobalEStop());
+            byte[] data = await m_rpc.GetRpcResultAsync(callId, token);
+            if (data == null) return false;
+            return data.UnpackDriverStationGlobalEStopResponse();
+        }
     }
 }

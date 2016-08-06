@@ -6,6 +6,7 @@
         DriverStationConfiguration,
         DriverStationUpdateBypass,
         DriverStationUpdateEStop,
+        DriverStationGlobalEStop,
         
         MatchTimingReport,
         MatchTimingStartMatch,

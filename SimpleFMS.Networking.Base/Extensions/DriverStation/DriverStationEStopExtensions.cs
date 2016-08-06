@@ -41,5 +41,36 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
                 return false;
             return value[1] != 0;
         }
+
+
+        public static byte[] PackDriverStationGlobalEStop()
+        {
+            byte[] data = new byte[1];
+            data[0] = (byte)CustomNetworkTableType.DriverStationGlobalEStop;
+            return data;
+        }
+
+        public static bool GetGlobalDriverStationEStop(this byte[] value)
+        { 
+            if (value.Length < 1)
+                return false;
+
+            if (value[0] != (byte)CustomNetworkTableType.DriverStationGlobalEStop) return false;
+            return true;
+        }
+
+        public static byte[] PackDriverStationGlobalEStopResponse()
+        {
+            return new[] { (byte)CustomNetworkTableType.DriverStationGlobalEStop};
+        }
+
+        public static bool UnpackDriverStationGlobalEStopResponse(this byte[] value)
+        {
+            if (value.Length < 1)
+                return false;
+            if (value[0] != (byte)CustomNetworkTableType.DriverStationGlobalEStop)
+                return false;
+            return true;
+        }
     }
 }

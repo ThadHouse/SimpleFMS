@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -11,21 +12,23 @@ using static SimpleFMS.Android.AutoFacContainer;
 
 namespace SimpleFMS.Android
 {
-    public class FmsAllianceStation
+    public class FmsAllianceStation : IDisposable
     {
         private EditText m_teamNumberView;
         private CheckBox m_bypassView;
         private View m_dsCommView;
         private View m_rioCommView;
         private View m_eStoppedView;
-        private Activity m_parentActivity;
+        private BaseFMSLayout m_parentActivity;
 
         public AllianceStation Station { get; }
+
+        private RetaintedDeviceState m_retainedState;
 
         private int m_teamNumber;
         public int TeamNumber
         {
-            get  { return m_teamNumber; }
+            get { return m_teamNumber; }
             set
             {
                 int old = m_teamNumber;
@@ -55,8 +58,10 @@ namespace SimpleFMS.Android
         private int m_defaultTeamNumber = 0;
 
         public FmsAllianceStation(EditText teamNumberView, CheckBox bypassView, View dsCommView, View rioCommView,
-            View eStoppedView, Activity parent, AllianceStation station, int startingTeamNumber)
+            View eStoppedView, BaseFMSLayout parent, AllianceStation station, int startingTeamNumber, 
+            RetaintedDeviceState retainedState)
         {
+            m_retainedState = retainedState;
             m_defaultTeamNumber = startingTeamNumber;
             m_teamNumberView = teamNumberView;
             m_bypassView = bypassView;
@@ -71,6 +76,7 @@ namespace SimpleFMS.Android
             {
                 string newValue = args.Text.ToString();
                 int teamNumber = 0;
+                
                 if (int.TryParse(newValue, out teamNumber))
                 {
                     if (teamNumber < 0)
@@ -89,22 +95,58 @@ namespace SimpleFMS.Android
                     teamNumber = m_defaultTeamNumber;
                 }
                 m_teamNumber = teamNumber;
+                m_parentActivity.SetDirtySettings();
             };
 
-            m_bypassView.CheckedChange += async (sender, args) =>
+            m_bypassView.CheckedChange += (sender, args) =>
             {
+                m_parentActivity.SetDirtySettings();
+                /*
                 bool newValue = args.IsChecked;
                 m_bypassed = newValue;
-                bool success = await UpdateStationBypass(newValue);
+                //TODO: Add auto updating to bypass
+                //bool success = await UpdateStationBypass(newValue);
                 // TODO: Handle an unsuccessful set
+                */
             };
         }
+
+        public void Dispose()
+        {
+            source.Cancel();
+        }
+
+        public void UpdateMatchState(bool running)
+        {
+            if (running)
+            {
+                m_teamNumberView.Enabled = false;
+                m_bypassView.Enabled = false;
+            }
+            else
+            {
+                m_teamNumberView.Enabled = true;
+                m_bypassView.Enabled = true;
+            }
+        }
+
+
         private CancellationTokenSource source = new CancellationTokenSource();
+
+        internal void DriverStationDisconnect()
+        {
+            source.Cancel();
+        }
+
+        internal void DriverStationReconnect()
+        {
+            source = new CancellationTokenSource();
+        }
 
         private async Task<bool> UpdateStationBypass(bool newValue)
         {
 
-            using (var scope = GlobalContainer.BeginLifetimeScope())
+            using (var scope = m_retainedState.AutoFacContainer.BeginLifetimeScope())
             {
                 var client = scope.Resolve<DriverStationClient>();
                 bool success = await client.UpdateDriverStationBypass(Station, newValue, source.Token);
@@ -135,6 +177,16 @@ namespace SimpleFMS.Android
                 ds.TeamNumber = teamNumber;
             }
             return ds;
+        }
+
+        public void UpdateStationReport(IDriverStationReport report)
+        {
+            m_parentActivity.RunOnUiThread(() =>
+            {
+                TeamNumber = report.TeamNumber;
+                Bypass = report.IsBypassed;
+
+            });
         }
 
         public void UpdateStationConnection(bool dsConnection, bool roboRioConnection, bool eStopped)

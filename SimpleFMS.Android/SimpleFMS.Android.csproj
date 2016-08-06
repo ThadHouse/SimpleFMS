@@ -65,7 +65,7 @@
     <Compile Include="FmsAllianceStation.cs" />
     <Compile Include="BaseFMSLayout.cs" />
     <Compile Include="AutoFacContainer.cs" />
-    <Compile Include="MainActivity.cs" />
+    <Compile Include="MatchTiming.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

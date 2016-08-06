@@ -25,7 +25,7 @@ namespace SimpleFMS.Networking.Client.NetworkClients
 
         public event Action<IMatchTimingReport> OnMatchTimeReportChanged;
 
-        public void OnMatchTimeReportCallback(ITable table, string key, Value value, NotifyFlags flags)
+        private void OnMatchTimeReportCallback(ITable table, string key, Value value, NotifyFlags flags)
         {
             if (OnMatchTimeReportChanged == null) return;
             if (!value.IsRaw()) return;
