@@ -195,8 +195,11 @@ namespace SimpleFMS.Android
 
                 if (report.MatchState == MatchState.Stopped)
                 {
-                    m_matchRunningLayout.Visibility = ViewStates.Invisible;
-                    m_matchStoppedLayout.Visibility = ViewStates.Invisible;
+                    m_parentActivity.RunOnUiThread(() =>
+                    {
+                        m_matchRunningLayout.Visibility = ViewStates.Gone;
+                        m_matchStoppedLayout.Visibility = ViewStates.Gone;
+                    });
                 }
             }
         }
@@ -211,16 +214,19 @@ namespace SimpleFMS.Android
 
                 if (report == null) return;
 
-                if (report.MatchState == MatchState.Stopped)
+                m_parentActivity.RunOnUiThread(() =>
                 {
-                    m_matchRunningLayout.Visibility = ViewStates.Invisible;
-                    m_matchStoppedLayout.Visibility = ViewStates.Visible;
-                }
-                else
-                {
-                    m_matchRunningLayout.Visibility = ViewStates.Visible;
-                    m_matchStoppedLayout.Visibility = ViewStates.Invisible;
-                }
+                    if (report.MatchState == MatchState.Stopped)
+                    {
+                        m_matchRunningLayout.Visibility = ViewStates.Gone;
+                        m_matchStoppedLayout.Visibility = ViewStates.Visible;
+                    }
+                    else
+                    {
+                        m_matchRunningLayout.Visibility = ViewStates.Visible;
+                        m_matchStoppedLayout.Visibility = ViewStates.Gone;
+                    }
+                });
             }
         }
 
@@ -232,7 +238,7 @@ namespace SimpleFMS.Android
                 {
                     m_parentActivity.UpdateMatchState(true);
                     m_matchRunningLayout.Visibility = ViewStates.Visible;
-                    m_matchStoppedLayout.Visibility = ViewStates.Invisible;
+                    m_matchStoppedLayout.Visibility = ViewStates.Gone;
                     switch (state)
                     {
                         case MatchState.Autonomous:
@@ -249,7 +255,7 @@ namespace SimpleFMS.Android
                 else
                 {
                     m_parentActivity.UpdateMatchState(false);
-                    m_matchRunningLayout.Visibility = ViewStates.Invisible;
+                    m_matchRunningLayout.Visibility = ViewStates.Gone;
                     m_matchStoppedLayout.Visibility = ViewStates.Visible;
                     m_matchStateView.Text = "Waiting For Match";
                 }

@@ -143,20 +143,22 @@ namespace SimpleFMS.Android
 
             var idConstants = GetIdConstants();
 
-            for (int i = 1; i <= AllianceStationConstants.MaxNumDriverStations; i++)
+            for (int i = 0; i < AllianceStationConstants.MaxNumDriverStations; i++)
             {
-                EditText teamNumber = FindViewById<EditText>(idConstants[$"Station{i}TeamNumber"]);
-                CheckBox bypass = FindViewById<CheckBox>(idConstants[$"Station{i}Bypass"]);
-                View dsComm = FindViewById<View>(idConstants[$"Station{i}DSComm"]);
-                View rioComm = FindViewById<View>(idConstants[$"Station{i}RioComm"]);
-                View eStop = FindViewById<View>(idConstants[$"Station{i}EStop"]);
+                /*
+                EditText teamNumber = FindViewById<EditText>(idConstants[$"teamNumberStation{i}"]);
+                CheckBox bypass = FindViewById<CheckBox>(idConstants[$"bypassCheckStation{i}"]);
+                View dsComm = FindViewById<View>(idConstants[$"dsCommStation{i}"]);
+                View rioComm = FindViewById<View>(idConstants[$"rioCommStation{i}"]);
+                View eStop = FindViewById<View>(idConstants[$"eStopStation{i}"]);
+                TextView battery = FindViewById<TextView>(idConstants[$"batteryStation{i}"]);
 
                 AllianceStation station = new AllianceStation((byte)(i - 1));
                 int defaultTeamNumber = i * -1;
-
-                FmsAllianceStation fmsStation = new FmsAllianceStation(teamNumber, bypass, dsComm, rioComm, eStop, this,
-                    station, defaultTeamNumber, m_retainedState);
-                m_fmsAllianceStations.Add(station, fmsStation);
+                */
+                FmsAllianceStation fmsStation = new FmsAllianceStation(this, i,
+                    idConstants, m_retainedState);
+                m_fmsAllianceStations.Add(new AllianceStation((byte)i), fmsStation);
             }
 
             m_initializeMatchButton = FindViewById<Button>(Resource.Id.initializeMatchButton);
@@ -216,11 +218,7 @@ namespace SimpleFMS.Android
                     if (m_fmsAllianceStations.TryGetValue(s.Key, out station))
                     {
                         // Station exists.
-                        // TODO: Fix Team Number Setting
-                        station.TeamNumber = s.Value.TeamNumber;
-                        station.Bypass = s.Value.IsBypassed;
-                        station.UpdateStationConnection(s.Value.DriverStationConnected, s.Value.RoboRioConnected,
-                            s.Value.IsBeingSentEStopped || s.Value.IsReceivingEStopped);
+                        station.UpdateStationReport(s.Value);
                     }
 
                 }
@@ -298,9 +296,7 @@ namespace SimpleFMS.Android
                 foreach (var s in report)
                 {
                     var station = m_fmsAllianceStations[s.Key];
-                    station.TeamNumber = s.Value.TeamNumber;
-                    station.UpdateStationConnection(s.Value.DriverStationConnected, s.Value.RoboRioConnected,
-                        s.Value.IsBeingSentEStopped || s.Value.IsReceivingEStopped);
+                    station.UpdateStationReport(s.Value);
                 }
                 source = new CancellationTokenSource();
                 foreach (var fmsAllianceStation in m_fmsAllianceStations)
@@ -308,6 +304,18 @@ namespace SimpleFMS.Android
                     fmsAllianceStation.Value.DriverStationReconnect();
                 }
                 m_matchTiming.DriverStationReconnect();
+
+                bool foundValidTeamNumber = false;
+                foreach (var fmsAllianceStation in m_fmsAllianceStations)
+                {
+                    if (fmsAllianceStation.Value.TeamNumber >= 0)
+                    {
+                        foundValidTeamNumber = true;
+                        break;
+                    }
+                }
+                if (!foundValidTeamNumber)
+                    SetDirtySettings();
             }
         }
 

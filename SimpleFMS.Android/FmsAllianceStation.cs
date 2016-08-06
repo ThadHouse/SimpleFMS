@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -19,6 +20,7 @@ namespace SimpleFMS.Android
         private View m_dsCommView;
         private View m_rioCommView;
         private View m_eStoppedView;
+        private TextView m_batteryView;
         private BaseFMSLayout m_parentActivity;
 
         public AllianceStation Station { get; }
@@ -57,20 +59,21 @@ namespace SimpleFMS.Android
 
         private int m_defaultTeamNumber = 0;
 
-        public FmsAllianceStation(EditText teamNumberView, CheckBox bypassView, View dsCommView, View rioCommView,
-            View eStoppedView, BaseFMSLayout parent, AllianceStation station, int startingTeamNumber, 
+        public FmsAllianceStation( BaseFMSLayout parent, int index, IReadOnlyDictionary<string, int> idConstants,
             RetaintedDeviceState retainedState)
         {
             m_retainedState = retainedState;
-            m_defaultTeamNumber = startingTeamNumber;
-            m_teamNumberView = teamNumberView;
-            m_bypassView = bypassView;
-            m_dsCommView = dsCommView;
-            m_rioCommView = rioCommView;
-            m_eStoppedView = eStoppedView;
+            m_teamNumberView = parent.FindViewById<EditText>(idConstants[$"teamNumberStation{index + 1}"]);
+            m_bypassView = parent.FindViewById<CheckBox>(idConstants[$"bypassCheckStation{index + 1}"]);
+            m_dsCommView = parent.FindViewById<View>(idConstants[$"dsCommStation{index + 1}"]);
+            m_rioCommView = parent.FindViewById<View>(idConstants[$"rioCommStation{index + 1}"]);
+            m_eStoppedView = parent.FindViewById<View>(idConstants[$"eStopStation{index + 1}"]);
+            m_batteryView = parent.FindViewById<TextView>(idConstants[$"batteryStation{index + 1}"]);
+
+            m_defaultTeamNumber = (index + 1) * -1;
             m_parentActivity = parent;
-            Station = station;
-            TeamNumber = startingTeamNumber;
+            Station = new AllianceStation((byte)index);
+            TeamNumber = m_defaultTeamNumber;
 
             m_teamNumberView.TextChanged += (sender, args) =>
             {
@@ -186,9 +189,20 @@ namespace SimpleFMS.Android
                 TeamNumber = report.TeamNumber;
                 Bypass = report.IsBypassed;
 
+                m_dsCommView.SetBackgroundColor(report.DriverStationConnected ? Color.Green : Color.Red);
+
+                m_rioCommView.SetBackgroundColor(report.RoboRioConnected ? Color.Green : Color.Red);
+
+                bool eStopped = report.IsBeingSentEStopped || report.IsReceivingEStopped;
+                m_eStoppedView.SetBackgroundColor(eStopped ? Color.Red : Color.Green);
+
+                double battery = Math.Round(report.RobotBattery, 2, MidpointRounding.ToEven);
+                if (battery < 0) battery *= -1;
+                m_batteryView.Text = battery.ToString();
             });
         }
 
+        /*
         public void UpdateStationConnection(bool dsConnection, bool roboRioConnection, bool eStopped)
         {
             m_parentActivity.RunOnUiThread(() =>
@@ -200,6 +214,7 @@ namespace SimpleFMS.Android
                 m_eStoppedView.SetBackgroundColor(eStopped ? Color.Red : Color.GreenYellow);
             });
         }
+        */
 
         public void SetFMSDisconnected()
         {
