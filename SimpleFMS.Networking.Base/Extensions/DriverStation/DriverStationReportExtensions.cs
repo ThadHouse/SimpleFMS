@@ -78,23 +78,6 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             return controlByte;
         }
 
-        internal static void ReadControlByte2(this byte controlByte, ref DriverStationReport report)
-        {
-            report.IsBypassed = (controlByte & 0x01) == 0x01;
-        }
-
-        internal static void ReadControlByte1(this byte controlByte, ref DriverStationReport report)
-        {
-            report.DriverStationConnected = (controlByte & 0x01) == 0x01;
-            report.RoboRioConnected = (controlByte & 0x02) == 0x02;
-            report.IsBeingSentEnabled = (controlByte & 0x04) == 0x04;
-            report.IsBeingSentAutonomous = (controlByte & 0x08) == 0x08;
-            report.IsBeingSentEStopped = (controlByte & 0x10) == 0x10;
-            report.IsReceivingEnabled = (controlByte & 0x20) == 0x20;
-            report.IsReceivingAutonomous = (controlByte & 0x40) == 0x40;
-            report.IsReceivingEStopped = (controlByte & 0x80) == 0x80;
-        }
-
         public static IReadOnlyDictionary<AllianceStation, IDriverStationReport> GetDriverStationReports(this byte[] value)
         {
             MemoryStream stream = new MemoryStream(value);
@@ -137,24 +120,28 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             decoder.Read16(ref teamNumber);
             byte station = 0;
             decoder.Read8(ref station);
-            byte control = 0;
-            decoder.Read8(ref control);
-            byte control2 = 0;
-            decoder.Read8(ref control2);
+            byte controlByte = 0;
+            decoder.Read8(ref controlByte);
+            byte controlByte2 = 0;
+            decoder.Read8(ref controlByte2);
             double battery = 0;
             decoder.ReadDouble(ref battery);
 
             AllianceStation sta = new AllianceStation(station);
 
-            DriverStationReport report = new DriverStationReport
-            {
-                TeamNumber = (short)teamNumber,
-                Station = sta,
-                RobotBattery = battery
-            };
+            bool driverStationConnected = (controlByte & 0x01) == 0x01;
+            bool roboRioConnected = (controlByte & 0x02) == 0x02;
+            bool isBeingSentEnabled = (controlByte & 0x04) == 0x04;
+            bool isBeingSentAutonomous = (controlByte & 0x08) == 0x08;
+            bool isBeingSentEStopped = (controlByte & 0x10) == 0x10;
+            bool isReceivingEnabled = (controlByte & 0x20) == 0x20;
+            bool isReceivingAutonomous = (controlByte & 0x40) == 0x40;
+            bool isReceivingEStopped = (controlByte & 0x80) == 0x80;
+            bool isBypassed = (controlByte2 & 0x01) == 0x01;
 
-            control.ReadControlByte1(ref report);
-            control2.ReadControlByte2(ref report);
+            DriverStationReport report = new DriverStationReport(teamNumber, sta, driverStationConnected,
+                roboRioConnected, isBeingSentEnabled, isBeingSentAutonomous, isBeingSentEStopped, isReceivingEnabled,
+                isReceivingAutonomous, isReceivingEStopped, isBypassed, battery);
 
             reports.Add(sta, report);
         }

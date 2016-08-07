@@ -120,20 +120,17 @@ namespace SimpleFMS.WinForms.Panels
 
         public IDriverStationConfiguration GetState(AllianceStationSide side, int teamNumberToSet)
         {
-            DriverStationConfiguration ds = new DriverStationConfiguration();
-            ds.IsBypassed = m_bypass.Checked;
-            ds.Station = Station;
+            DriverStationConfiguration ds;
 
             int teamNumber = 0;
             if (int.TryParse(m_teamNumber.Text, out teamNumber))
             {
-                ds.TeamNumber = teamNumber;
+                ds = new DriverStationConfiguration(teamNumber, Station, m_bypass.Checked);
             }
             else
             {
                 // Failed to parse. Set team number and bypassed
-                ds.IsBypassed = true;
-                ds.TeamNumber = teamNumberToSet;
+                ds = new DriverStationConfiguration(teamNumberToSet, Station, true);
                 Invoke((MethodInvoker) delegate
                 {
                     m_teamNumber.Text = teamNumberToSet.ToString();

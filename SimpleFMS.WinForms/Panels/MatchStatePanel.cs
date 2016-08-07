@@ -126,7 +126,7 @@ namespace SimpleFMS.WinForms.Panels
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                var report = client.GetMatchTimingReport();
+                var report = client.GetMatchStateReport();
                 if (report == null) return;
 
                 TimeSpan time = report.RemainingPeriodTime;
@@ -144,7 +144,7 @@ namespace SimpleFMS.WinForms.Panels
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report.MatchState != MatchState.Stopped)
                 {
@@ -180,10 +180,8 @@ namespace SimpleFMS.WinForms.Panels
                 switch (m_currentState)
                 {
                     case CurrentState.MatchSimulation:
-                        MatchTimes times = new MatchTimes();
-                        times.AutonomousTime = autoTimeSpan;
-                        times.TeleoperatedTime = teleopTimeSpan;
-                        times.DelayTime = delayTimeSpan;
+                        MatchTimeReport times = new MatchTimeReport(teleopTimeSpan, delayTimeSpan, autoTimeSpan);
+                        
                         await client.SetMatchPeriodTimes(times, source.Token);
                         await client.StartMatch(source.Token);
                         m_matchStateButton.Text = "Stop Autonomous";
@@ -215,13 +213,13 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_teleopTime_DoubleClick(object sender, EventArgs e)
         {
-            IMatchTimingReport report;
+            IMatchStateReport report;
 
             using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                report = client.GetMatchTimingReport();
+                report = client.GetMatchStateReport();
             }
 
             if (report.MatchState != MatchState.Stopped) return;
@@ -236,13 +234,13 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_autonTime_DoubleClick(object sender, EventArgs e)
         {
-            IMatchTimingReport report;
+            IMatchStateReport report;
 
             using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                report = client.GetMatchTimingReport();
+                report = client.GetMatchStateReport();
             }
 
             if (report.MatchState != MatchState.Stopped) return;
@@ -257,13 +255,13 @@ namespace SimpleFMS.WinForms.Panels
 
         private void M_matchTimer_DoubleClick(object sender, EventArgs e)
         {
-            IMatchTimingReport report;
+            IMatchStateReport report;
 
             using (var scope = MainWindow.AutoFacContainer.BeginLifetimeScope())
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                report = client.GetMatchTimingReport();
+                report = client.GetMatchStateReport();
             }
 
             if (report.MatchState != MatchState.Stopped) return;

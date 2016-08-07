@@ -158,15 +158,13 @@ namespace SimpleFMS.Android
 
         public IDriverStationConfiguration GetCurrentState(int teamNumberToSetIfInvalid)
         {
-            DriverStationConfiguration ds = new DriverStationConfiguration();
-            ds.IsBypassed = m_bypassView.Checked;
-            ds.Station = Station;
+            DriverStationConfiguration ds;
+
 
             int teamNumber = 0;
             if (!int.TryParse(m_teamNumberView.Text, out teamNumber))
             {
-                ds.IsBypassed = true;
-                ds.TeamNumber = teamNumberToSetIfInvalid;
+                ds = new DriverStationConfiguration(teamNumberToSetIfInvalid, Station, true);
                 m_parentActivity.RunOnUiThread(() =>
                 {
                     m_teamNumberView.Text = teamNumberToSetIfInvalid.ToString();
@@ -176,7 +174,7 @@ namespace SimpleFMS.Android
             }
             else
             {
-                ds.TeamNumber = teamNumber;
+                ds = new DriverStationConfiguration(teamNumber, Station, m_bypassView.Checked);
             }
             return ds;
         }

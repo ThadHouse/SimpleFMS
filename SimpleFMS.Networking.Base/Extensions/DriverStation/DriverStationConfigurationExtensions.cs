@@ -31,7 +31,7 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
         {
             if (configurations.Count > 6)
                 throw new ArgumentOutOfRangeException(nameof(configurations),
-                    $"Only a maximum of {AllianceStationConstants.MaxNumDriverStations}");
+                    $"Only a maximum of {AllianceStation.MaxNumAllianceStations}");
 
             WireEncoder encoder = new WireEncoder(NetworkingConstants.NetworkTablesVersion);
 
@@ -118,12 +118,8 @@ namespace SimpleFMS.Networking.Base.Extensions.DriverStation
             byte bypass = 0;
             decoder.Read8(ref bypass);
 
-            DriverStationConfiguration config = new DriverStationConfiguration
-            {
-                Station = new AllianceStation(station),
-                TeamNumber = (short)teamNumber,
-                IsBypassed = bypass != 0
-            };
+            DriverStationConfiguration config = new DriverStationConfiguration((short)teamNumber, new AllianceStation(station),
+                bypass != 0);
 
             configurations.Add(config);
         }

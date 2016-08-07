@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>Output\SimpleFMS.Base.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,15 +53,12 @@
     <Compile Include="DriverStation\IDriverStationManager.cs" />
     <Compile Include="DriverStation\IDriverStationReport.cs" />
     <Compile Include="Exceptions\MatchEnabledException.cs" />
-    <Compile Include="MatchTiming\IMatchTimes.cs" />
+    <Compile Include="MatchTiming\IMatchTimeReport.cs" />
     <Compile Include="MatchTiming\IMatchTimingManager.cs" />
-    <Compile Include="MatchTiming\IMatchTimingReport.cs" />
-    <Compile Include="MatchTiming\MatchTimes.cs" />
+    <Compile Include="MatchTiming\IMatchStateReport.cs" />
+    <Compile Include="MatchTiming\MatchTimeReport.cs" />
     <Compile Include="MatchTiming\MatchTimingConstants.cs" />
-    <Compile Include="MatchTiming\MatchTimingReport.cs" />
-    <Compile Include="Networking\INetworkServerManager.cs" />
-    <Compile Include="Networking\NetworkingConstants.cs" />
-    <Compile Include="Tuples\ValueTuple.cs" />
+    <Compile Include="MatchTiming\MatchStateReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

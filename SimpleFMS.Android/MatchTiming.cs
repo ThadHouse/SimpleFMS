@@ -96,7 +96,7 @@ namespace SimpleFMS.Android
             m_tokenSource = new CancellationTokenSource();
         }
 
-        private void OnMatchTimingReportChanged(IMatchTimingReport report)
+        private void OnMatchTimingReportChanged(IMatchStateReport report)
         {
             if (report == null) return;
 
@@ -131,7 +131,7 @@ namespace SimpleFMS.Android
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report.MatchState != MatchState.Stopped)
                 {
@@ -161,17 +161,12 @@ namespace SimpleFMS.Android
                     delayTimeSpan = delayTime > 0 ? TimeSpan.FromSeconds(delayTime) : DefaultDelayTime;
                 }
 
-                MatchTimes times = new MatchTimes
-                {
-                    AutonomousTime = autoTimeSpan,
-                    TeleoperatedTime = teleopTimeSpan,
-                    DelayTime = delayTimeSpan
-                };
+                MatchTimeReport times = new MatchTimeReport(teleopTimeSpan, delayTimeSpan, autoTimeSpan);
 
                 await client.SetMatchPeriodTimes(times, m_tokenSource.Token);
                 await client.StartMatch(m_tokenSource.Token);
 
-                SetMatchRunningLayout(client.GetMatchTimingReport().MatchState);
+                SetMatchRunningLayout(client.GetMatchStateReport().MatchState);
             }
         }
 
@@ -181,7 +176,7 @@ namespace SimpleFMS.Android
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report == null) return;
 
@@ -202,7 +197,7 @@ namespace SimpleFMS.Android
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report == null) return;
 
@@ -260,7 +255,7 @@ namespace SimpleFMS.Android
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report.MatchState != MatchState.Stopped)
                 {
@@ -290,17 +285,12 @@ namespace SimpleFMS.Android
                     delayTimeSpan = delayTime > 0 ? TimeSpan.FromSeconds(delayTime) : DefaultDelayTime;
                 }
 
-                MatchTimes times = new MatchTimes
-                {
-                    AutonomousTime = autoTimeSpan,
-                    TeleoperatedTime = teleopTimeSpan,
-                    DelayTime = delayTimeSpan
-                };
+                MatchTimeReport times = new MatchTimeReport(teleopTimeSpan, delayTimeSpan, autoTimeSpan);
 
                 await client.SetMatchPeriodTimes(times, m_tokenSource.Token);
                 await client.StartAutonomous(m_tokenSource.Token);
 
-                SetMatchRunningLayout(client.GetMatchTimingReport().MatchState);
+                SetMatchRunningLayout(client.GetMatchStateReport().MatchState);
             }
         }
 
@@ -310,7 +300,7 @@ namespace SimpleFMS.Android
             {
                 var client = scope.Resolve<MatchTimingClient>();
 
-                IMatchTimingReport report = client.GetMatchTimingReport();
+                IMatchStateReport report = client.GetMatchStateReport();
 
                 if (report.MatchState != MatchState.Stopped)
                 {
@@ -340,17 +330,12 @@ namespace SimpleFMS.Android
                     delayTimeSpan = delayTime > 0 ? TimeSpan.FromSeconds(delayTime) : DefaultDelayTime;
                 }
 
-                MatchTimes times = new MatchTimes
-                {
-                    AutonomousTime = autoTimeSpan,
-                    TeleoperatedTime = teleopTimeSpan,
-                    DelayTime = delayTimeSpan
-                };
+                MatchTimeReport times = new MatchTimeReport(teleopTimeSpan, delayTimeSpan, autoTimeSpan);
 
                 await client.SetMatchPeriodTimes(times, m_tokenSource.Token);
                 await client.StartTeleoperated(m_tokenSource.Token);
 
-                SetMatchRunningLayout(client.GetMatchTimingReport().MatchState);
+                SetMatchRunningLayout(client.GetMatchStateReport().MatchState);
             }
         }
 
@@ -362,7 +347,7 @@ namespace SimpleFMS.Android
 
                 await client.StopPeriod(m_tokenSource.Token);
 
-                SetMatchRunningLayout(client.GetMatchTimingReport().MatchState);
+                SetMatchRunningLayout(client.GetMatchStateReport().MatchState);
             }
         }
 

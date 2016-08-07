@@ -17,22 +17,8 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
         {
             var station = new AllianceStation(AllianceStationSide.Red, AllianceStationNumber.Station3);
 
-            DriverStationReport report = new DriverStationReport
-            {
-                Station = station,
-                DriverStationConnected = true,
-                IsBeingSentEStopped = false,
-                IsReceivingEStopped = true,
-                IsBeingSentEnabled = true,
-                IsReceivingAutonomous = false,
-                IsReceivingEnabled = false,
-                IsBeingSentAutonomous = true,
-                TeamNumber = 4488,
-                RobotBattery = 7.58,
-                RoboRioConnected = false
-            };
-
-
+            DriverStationReport report = new DriverStationReport(4488, station, true, false, false, true, false, false,
+                true, false, true, 7.59);
 
             var pair = new KeyValuePair<AllianceStation, IDriverStationReport>(station, report);
 

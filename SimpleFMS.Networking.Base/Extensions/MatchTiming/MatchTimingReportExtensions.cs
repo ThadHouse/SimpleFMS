@@ -23,7 +23,7 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
             return TimeSpan.FromSeconds(seconds);
         }
 
-        public static byte[] PackMatchTimingReport(this IMatchTimingReport report)
+        public static byte[] PackMatchTimingReport(this IMatchStateReport report)
         {
             List<byte> data = new List<byte>();
             data.Add((byte)CustomNetworkTableType.MatchTimingReport);
@@ -35,23 +35,22 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
             return data.ToArray();
         }
 
-        public static IMatchTimingReport GetMatchTimingReport(this byte[] bytes)
+        public static IMatchStateReport GetMatchTimingReport(this byte[] bytes)
         {
             if (bytes.Length < 34)
                 return null;
 
             if (bytes[0] != (byte) CustomNetworkTableType.MatchTimingReport)
                 return null;
-
-            MatchTimingReport report = new MatchTimingReport
-            {
-                MatchState = (MatchState) bytes[1]
-            };
             int index = 2;
-            report.RemainingPeriodTime = GetTimeSpanFromReport(bytes, ref index);
-            report.AutonomousTime = GetTimeSpanFromReport(bytes, ref index);
-            report.DelayTime = GetTimeSpanFromReport(bytes, ref index);
-            report.TeleoperatedTime = GetTimeSpanFromReport(bytes, ref index);
+            var RemainingPeriodTime = GetTimeSpanFromReport(bytes, ref index);
+            var AutonomousTime = GetTimeSpanFromReport(bytes, ref index);
+            var DelayTime = GetTimeSpanFromReport(bytes, ref index);
+            var TeleoperatedTime = GetTimeSpanFromReport(bytes, ref index);
+            var MatchState = (MatchState) bytes[1];
+            MatchStateReport report = new MatchStateReport(MatchState, RemainingPeriodTime, TeleoperatedTime, DelayTime,
+                AutonomousTime);
+            
             return report;
         }
     }

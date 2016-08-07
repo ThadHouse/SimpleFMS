@@ -67,6 +67,10 @@
       <Project>{a17e1f9d-37aa-4f10-b2c5-1dbf4a02adc4}</Project>
       <Name>SimpleFMS.MatchTiming</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimpleFMS.Networking.Base\SimpleFMS.Networking.Base.csproj">
+      <Project>{D398F615-0191-42F5-AE79-1EE464425DDD}</Project>
+      <Name>SimpleFMS.Networking.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimpleFMS.Networking.Server\SimpleFMS.Networking.Server.csproj">
       <Project>{4ef10924-f589-4cca-8fe1-6381a3b7b82d}</Project>
       <Name>SimpleFMS.Networking.Server</Name>

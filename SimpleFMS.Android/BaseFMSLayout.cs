@@ -100,7 +100,7 @@ namespace SimpleFMS.Android
     public class BaseFMSLayout : Activity
     {
         private readonly Dictionary<AllianceStation, FmsAllianceStation> m_fmsAllianceStations =
-            new Dictionary<AllianceStation, FmsAllianceStation>(AllianceStationConstants.MaxNumDriverStations);
+            new Dictionary<AllianceStation, FmsAllianceStation>(AllianceStation.MaxNumAllianceStations);
 
         private MatchTiming m_matchTiming;
         private Button m_initializeMatchButton;
@@ -152,7 +152,7 @@ namespace SimpleFMS.Android
 
             var idConstants = GetIdConstants();
 
-            for (int i = 0; i < AllianceStationConstants.MaxNumDriverStations; i++)
+            for (int i = 0; i < AllianceStation.MaxNumAllianceStations; i++)
             {
                 FmsAllianceStation fmsStation = new FmsAllianceStation(this, i,
                     idConstants, m_retainedState);

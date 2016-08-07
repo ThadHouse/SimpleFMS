@@ -17,20 +17,25 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
 
             for (int i = 0; i < count; i++)
             {
-                byte randomControlByte = (byte)random.Next();
-                byte randomControlByte2 = (byte)random.Next();
+                byte controlByte = (byte)random.Next();
+                byte controlByte2 = (byte)random.Next();
                 ushort randomTeamNumber = (ushort)random.Next();
                 double randomBattery = random.NextDouble();
                 var randomStation = new AllianceStation((byte)i);
 
-                DriverStationReport report = new DriverStationReport
-                {
-                    TeamNumber = randomTeamNumber,
-                    RobotBattery = randomBattery,
-                    Station = randomStation
-                };
-                randomControlByte.ReadControlByte1(ref report);
-                randomControlByte2.ReadControlByte2(ref report);
+                bool driverStationConnected = (controlByte & 0x01) == 0x01;
+                bool roboRioConnected = (controlByte & 0x02) == 0x02;
+                bool isBeingSentEnabled = (controlByte & 0x04) == 0x04;
+                bool isBeingSentAutonomous = (controlByte & 0x08) == 0x08;
+                bool isBeingSentEStopped = (controlByte & 0x10) == 0x10;
+                bool isReceivingEnabled = (controlByte & 0x20) == 0x20;
+                bool isReceivingAutonomous = (controlByte & 0x40) == 0x40;
+                bool isReceivingEStopped = (controlByte & 0x80) == 0x80;
+                bool isBypassed = (controlByte2 & 0x01) == 0x01;
+
+                DriverStationReport report = new DriverStationReport(randomTeamNumber, randomStation, driverStationConnected,
+                    roboRioConnected, isBeingSentEnabled, isBeingSentAutonomous, isBeingSentEStopped, isReceivingEnabled,
+                    isReceivingAutonomous, isReceivingEStopped, isBypassed, randomBattery);
 
                 reports.Add(randomStation, report);
             }
@@ -49,16 +54,12 @@ namespace SimpleFMS.Networking.Base.Test.Extensions
 
             for (int i = 0; i < count; i++)
             {
-                ushort randomTeamNumber = (ushort)random.Next();
+                short randomTeamNumber = (short)random.Next(0, short.MaxValue);
                 var randomStation = new AllianceStation((byte)i);
                 bool randomBypass = random.Next(0, 1) != 0;
 
-                DriverStationConfiguration config = new DriverStationConfiguration
-                {
-                    TeamNumber = randomTeamNumber,
-                    Station = randomStation,
-                    IsBypassed = randomBypass
-                };
+                DriverStationConfiguration config = new DriverStationConfiguration(randomTeamNumber, randomStation,
+                    randomBypass);
 
                 configurations.Add(config);
             }

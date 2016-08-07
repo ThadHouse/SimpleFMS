@@ -1,31 +1,32 @@
 ﻿using System;
 
-namespace SimpleFMS.Base.DriverStation
+namespace SimpleFMS.Base.MatchTiming
 {
     /// <summary>
-    /// A class used to set configuration data for driver stations
+    /// Structure containing the match times
     /// </summary>
-    public struct DriverStationConfiguration : IDriverStationConfiguration, IEquatable<DriverStationConfiguration>
+    public struct MatchTimeReport : IMatchTimeReport, IEquatable<MatchTimeReport>
     {
         /// <summary>
-        /// Creates a new <see cref="DriverStationConfiguration"/>
+        /// Create a new Match Time Report
         /// </summary>
-        /// <param name="teamNumber">The team number</param>
-        /// <param name="station">The alliance station</param>
-        /// <param name="isBypassed">True if the station should be bypassed</param>
-        public DriverStationConfiguration(int teamNumber, AllianceStation station, bool isBypassed)
+        /// <param name="teleoperatedTime">The teleoperated period time</param>
+        /// <param name="delayTime">The delay time between autonomous and teleoperated</param>
+        /// <param name="autonomousTime">The autonomous period time</param>
+        public MatchTimeReport(TimeSpan teleoperatedTime, TimeSpan delayTime, TimeSpan autonomousTime)
         {
-            TeamNumber = teamNumber;
-            Station = station;
-            IsBypassed = isBypassed;
+            TeleoperatedTime = teleoperatedTime;
+            DelayTime = delayTime;
+            AutonomousTime = autonomousTime;
         }
 
         /// <inheritdoc/>
-        public bool Equals(DriverStationConfiguration other)
+        public bool Equals(MatchTimeReport other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return TeamNumber == other.TeamNumber && Station.Equals(other.Station) && IsBypassed == other.IsBypassed;
+            return TeleoperatedTime.Equals(other.TeleoperatedTime) && DelayTime.Equals(other.DelayTime) &&
+                   AutonomousTime.Equals(other.AutonomousTime);
         }
 
         /// <inheritdoc/>
@@ -34,7 +35,7 @@ namespace SimpleFMS.Base.DriverStation
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((DriverStationConfiguration) obj);
+            return Equals((MatchTimeReport) obj);
         }
 
         /// <inheritdoc/>
@@ -42,9 +43,9 @@ namespace SimpleFMS.Base.DriverStation
         {
             unchecked
             {
-                int hashCode = TeamNumber;
-                hashCode = (hashCode*397) ^ Station.GetHashCode();
-                hashCode = (hashCode*397) ^ IsBypassed.GetHashCode();
+                var hashCode = TeleoperatedTime.GetHashCode();
+                hashCode = (hashCode*397) ^ DelayTime.GetHashCode();
+                hashCode = (hashCode*397) ^ AutonomousTime.GetHashCode();
                 return hashCode;
             }
         }
@@ -55,7 +56,7 @@ namespace SimpleFMS.Base.DriverStation
         /// <param name="left">The left operator</param>
         /// <param name="right">The right operator</param>
         /// <returns>True if the values are equal</returns>
-        public static bool operator ==(DriverStationConfiguration left, DriverStationConfiguration right)
+        public static bool operator ==(MatchTimeReport left, MatchTimeReport right)
         {
             return Equals(left, right);
         }
@@ -66,16 +67,16 @@ namespace SimpleFMS.Base.DriverStation
         /// <param name="left">The left operator</param>
         /// <param name="right">The right operator</param>
         /// <returns>True if the values are not equal</returns>
-        public static bool operator !=(DriverStationConfiguration left, DriverStationConfiguration right)
+        public static bool operator !=(MatchTimeReport left, MatchTimeReport right)
         {
             return !Equals(left, right);
         }
 
         /// <inheritdoc/>
-        public int TeamNumber { get; }
+        public TimeSpan TeleoperatedTime { get; }
         /// <inheritdoc/>
-        public AllianceStation Station { get; }
+        public TimeSpan DelayTime { get; }
         /// <inheritdoc/>
-        public bool IsBypassed { get; }
+        public TimeSpan AutonomousTime { get; }
     }
 }

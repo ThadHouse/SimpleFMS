@@ -15,7 +15,7 @@ namespace SimpleFMS.MatchTiming
         private TimeSpan m_autonomousTime = MatchTimingConstants.DefaultAutonomousTime;
         private TimeSpan m_delayTime = MatchTimingConstants.DefaultDelayTime;
 
-        public bool SetMatchTimes(IMatchTimes times)
+        public bool SetMatchTimes(IMatchTimeReport times)
         {
             lock (m_lockObject)
             {
@@ -34,7 +34,8 @@ namespace SimpleFMS.MatchTiming
             }
         }
 
-        public TimeSpan TeleoperatedTime
+        
+        private TimeSpan TeleoperatedTime
         {
             get
             {
@@ -50,7 +51,7 @@ namespace SimpleFMS.MatchTiming
             }
         }
 
-        public TimeSpan AutonomousTime
+        private TimeSpan AutonomousTime
         {
             get
             {
@@ -66,7 +67,7 @@ namespace SimpleFMS.MatchTiming
             }
         }
 
-        public TimeSpan DelayTime
+        private TimeSpan DelayTime
         {
             get
             {
@@ -82,18 +83,12 @@ namespace SimpleFMS.MatchTiming
             }
         }
 
-        public IMatchTimingReport GetMatchTimingReport()
+        public IMatchStateReport GetMatchTimingReport()
         {
             lock (m_lockObject)
             {
-                MatchTimingReport report = new MatchTimingReport
-                {
-                    MatchState = m_matchState,
-                    AutonomousTime = m_autonomousTime,
-                    DelayTime = m_delayTime,
-                    TeleoperatedTime = m_teleoperatedTime,
-                    RemainingPeriodTime = GetRemainingPeriodTime()
-                };
+                MatchStateReport report = new MatchStateReport(m_matchState, GetRemainingPeriodTime(),
+                    m_teleoperatedTime, m_delayTime, m_autonomousTime);
                 return report;
             }
         }

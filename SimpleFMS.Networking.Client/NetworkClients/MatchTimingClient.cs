@@ -23,7 +23,7 @@ namespace SimpleFMS.Networking.Client.NetworkClients
             AddTableListener(MatchStatusReportKey, OnMatchTimeReportCallback);
         }
 
-        public event Action<IMatchTimingReport> OnMatchTimeReportChanged;
+        public event Action<IMatchStateReport> OnMatchTimeReportChanged;
 
         private void OnMatchTimeReportCallback(ITable table, string key, Value value, NotifyFlags flags)
         {
@@ -35,7 +35,7 @@ namespace SimpleFMS.Networking.Client.NetworkClients
             OnMatchTimeReportChanged?.Invoke(data);
         }
 
-        public IMatchTimingReport GetMatchTimingReport()
+        public IMatchStateReport GetMatchStateReport()
         {
             var value = NetworkTable.GetRaw(MatchStatusReportKey, null);
             return value?.GetMatchTimingReport();
@@ -77,7 +77,7 @@ namespace SimpleFMS.Networking.Client.NetworkClients
             return data.UnpackStartTeleoperatedResponse();
         }
 
-        public async Task<bool> SetMatchPeriodTimes(IMatchTimes times, CancellationToken token)
+        public async Task<bool> SetMatchPeriodTimes(IMatchTimeReport times, CancellationToken token)
         {
             long callId = m_rpc.CallRpc(SetMatchPeriodTimeRpcKey, times.PackMatchTimes());
 

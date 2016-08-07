@@ -53,6 +53,8 @@
     <Compile Include="Extensions\MatchTiming\MatchTimingReportExtensions.cs" />
     <Compile Include="INetworkClient.cs" />
     <Compile Include="INetworkClientManager.cs" />
+    <Compile Include="INetworkServerManager.cs" />
+    <Compile Include="NetworkingConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

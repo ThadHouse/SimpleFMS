@@ -16,27 +16,22 @@ namespace SimpleFMS.DriverStation
         {
             List<IDriverStationConfiguration> configs =
                 new List<IDriverStationConfiguration>(
-                    AllianceStationConstants.MaxNumDriverStations);
-            for (int i = 0; i < AllianceStationConstants.MaxNumDriverStations; i++)
+                    AllianceStation.MaxNumAllianceStations);
+            for (short i = 0; i < AllianceStation.MaxNumAllianceStations; i++)
             {
                 AllianceStation station = new AllianceStation((byte)i);
-                DriverStationConfiguration config = new DriverStationConfiguration
-                {
-                    Station = station,
-                    IsBypassed = true,
-                    TeamNumber = i
-                };
+                DriverStationConfiguration config = new DriverStationConfiguration(i, station, true);
                 configs.Add(config);
             }
             return configs;
         }
 
         private readonly Dictionary<AllianceStation, DriverStation> m_driverStationsByAllianceStation =
-            new Dictionary<AllianceStation, DriverStation>(AllianceStationConstants.MaxNumDriverStations);
+            new Dictionary<AllianceStation, DriverStation>(AllianceStation.MaxNumAllianceStations);
 
 
         private readonly Dictionary<int, DriverStation> m_driverStationsByTeam =
-            new Dictionary<int, DriverStation>(AllianceStationConstants.MaxNumDriverStations);
+            new Dictionary<int, DriverStation>(AllianceStation.MaxNumAllianceStations);
 
 
         public event Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> OnDriverStationStatusChanged;
@@ -168,7 +163,7 @@ namespace SimpleFMS.DriverStation
                 m_connectionListener.Restart();
 
                 // Only allow a max of 6 driver stations
-                if (driverStationConfigurations.Count > AllianceStationConstants.MaxNumDriverStations) return false;
+                if (driverStationConfigurations.Count > AllianceStation.MaxNumAllianceStations) return false;
                 GlobalDriverStationControlData.MatchNumber = matchNumber;
                 GlobalDriverStationControlData.MatchType = matchType;
 

@@ -122,7 +122,7 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
         }
 
         // Set Match Times
-        public static byte[] PackMatchTimes(this IMatchTimes times)
+        public static byte[] PackMatchTimes(this IMatchTimeReport times)
         {
             List<byte> data = new List<byte>();
             data.Add((byte)CustomNetworkTableType.MatchTimingSetPeriodTimes);
@@ -132,16 +132,17 @@ namespace SimpleFMS.Networking.Base.Extensions.MatchTiming
             return data.ToArray();
         }
 
-        public static IMatchTimes UnpackMatchTimes(this byte[] data)
+        public static IMatchTimeReport UnpackMatchTimes(this byte[] data)
         {
             if (data.Length < 25) return null;
             if (data[0] != (byte) CustomNetworkTableType.MatchTimingSetPeriodTimes)
                 return null;
             int index = 1;
-            MatchTimes times = new MatchTimes();
-            times.AutonomousTime = data.GetTimeSpanFromReport(ref index);
-            times.DelayTime = data.GetTimeSpanFromReport(ref index);
-            times.TeleoperatedTime = data.GetTimeSpanFromReport(ref index);
+            var autonomousTime = data.GetTimeSpanFromReport(ref index);
+            var delayTime = data.GetTimeSpanFromReport(ref index);
+            var teleoperatedTime = data.GetTimeSpanFromReport(ref index);
+            MatchTimeReport times = new MatchTimeReport(teleoperatedTime, delayTime, autonomousTime);
+            
             return times;
         }
 

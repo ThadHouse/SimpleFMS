@@ -10,8 +10,14 @@ namespace SimpleFMS.Base.DriverStation
     /// </summary>
     public interface IDriverStationManager : IDisposable
     {
+        /// <summary>
+        /// Occurs when any driver stations status is updated
+        /// </summary>
         event Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> OnDriverStationStatusChanged;
 
+        /// <summary>
+        /// Gets a dictionary containing all drivers stations and their current status
+        /// </summary>
         IReadOnlyDictionary<AllianceStation, IDriverStationReport> DriverStations { get; }
 
         /// <summary>
@@ -35,6 +41,10 @@ namespace SimpleFMS.Base.DriverStation
         /// </summary>
         void StopMatchPeriod();
 
+        /// <summary>
+        /// Sets the time remaining in the current match period
+        /// </summary>
+        /// <param name="remainingTime">The time in seconds</param>
         void SetRemainingMatchTime(int remainingTime);
 
         /// <summary>

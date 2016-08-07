@@ -79,22 +79,9 @@ namespace SimpleFMS.DriverStation
 
         internal IDriverStationReport GenerateDriverStationReport()
         {
-            var dsReport = new DriverStationReport()
-            {
-                TeamNumber = TeamNumber,
-                Station = Station,
-                IsBeingSentAutonomous = GlobalDriverStationControlData.IsAutonomous,
-                IsBeingSentEStopped = IsEStopped,
-                IsBeingSentEnabled = ControlData.IsEnabled,
-                DriverStationConnected = DriverStationConnected,
-                // TODO: Add These
-                IsReceivingAutonomous = IsReceivingAutonomous,
-                IsReceivingEStopped = IsReceivingEStopped,
-                IsReceivingEnabled = IsReceivingEnabled,
-                RoboRioConnected = IsRoboRioConnected,
-                RobotBattery = RobotBattery,
-                IsBypassed = IsBypassed
-            };
+            var dsReport = new DriverStationReport(TeamNumber, Station, DriverStationConnected, IsRoboRioConnected,
+                ControlData.IsEnabled, GlobalDriverStationControlData.IsAutonomous, IsEStopped, IsReceivingEnabled,
+                IsReceivingAutonomous, IsReceivingEStopped, IsBypassed, RobotBattery);
            
             return dsReport;
         }
