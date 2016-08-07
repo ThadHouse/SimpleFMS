@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.App;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using Autofac;
 using SimpleFMS.Base.DriverStation;
 using SimpleFMS.Networking.Client.NetworkClients;
-using static SimpleFMS.Android.AutoFacContainer;
 
 namespace SimpleFMS.Android
 {
@@ -70,9 +68,10 @@ namespace SimpleFMS.Android
             m_eStoppedView = parent.FindViewById<View>(idConstants[$"eStopStation{index + 1}"]);
             m_batteryView = parent.FindViewById<TextView>(idConstants[$"batteryStation{index + 1}"]);
 
-            m_defaultTeamNumber = (index + 1) * -1;
+            m_defaultTeamNumber = index;
             m_parentActivity = parent;
             Station = new AllianceStation((byte)index);
+            m_teamNumber = index;
             TeamNumber = m_defaultTeamNumber;
 
             m_teamNumberView.TextChanged += (sender, args) =>

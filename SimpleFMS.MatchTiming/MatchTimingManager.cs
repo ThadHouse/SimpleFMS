@@ -151,7 +151,7 @@ namespace SimpleFMS.MatchTiming
                 }
                 else
                 {
-                    m_driverStationManager.SetRemainingMatchTime(remaining.Seconds);
+                    m_driverStationManager.SetRemainingMatchTime((int)remaining.TotalSeconds);
                 }
             }
         }

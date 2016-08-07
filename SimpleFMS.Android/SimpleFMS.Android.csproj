@@ -47,10 +47,6 @@
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="NetworkTables.Managed, Version=2017.0.1.9, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RobotDotNet\NetworkTables\NetworkTables\Output\NetworkTables.Managed.dll</HintPath>
-    </Reference>
     <Reference Include="SimpleFMS.Base">
       <HintPath>..\SimpleFMS.Networking.Client\Output\SimpleFMS.Base.dll</HintPath>
     </Reference>
@@ -68,7 +64,6 @@
   <ItemGroup>
     <Compile Include="FmsAllianceStation.cs" />
     <Compile Include="BaseFMSLayout.cs" />
-    <Compile Include="AutoFacContainer.cs" />
     <Compile Include="MatchTiming.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

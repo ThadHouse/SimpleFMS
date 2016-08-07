@@ -24,7 +24,7 @@ namespace SimpleFMS.DriverStation
                 {
                     Station = station,
                     IsBypassed = true,
-                    TeamNumber = (i + 1)*-1
+                    TeamNumber = i
                 };
                 configs.Add(config);
             }

@@ -1,25 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Autofac;
-using Javax.Security.Auth;
 using SimpleFMS.Base.DriverStation;
-using SimpleFMS.Base.Networking;
 using SimpleFMS.Networking.Base;
 using SimpleFMS.Networking.Client;
 using SimpleFMS.Networking.Client.NetworkClients;
-using static SimpleFMS.Android.AutoFacContainer;
 
 namespace SimpleFMS.Android
 {
@@ -60,22 +51,7 @@ namespace SimpleFMS.Android
             RetainInstance = true;
         }
 
-        public void Setup(Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> dsAction, Action<bool> fmsAction)
-        {
-            using (var scope = AutoFacContainer.BeginLifetimeScope())
-            {
-                var dsClient = scope.Resolve<DriverStationClient>();
-                var netManager = scope.Resolve<INetworkClientManager>();
-
-                m_fmsConnectionAction = fmsAction;
-                m_dsReportAction = dsAction;
-                netManager.ResumeNetworking();
-                netManager.OnFmsConnectionChanged += m_fmsConnectionAction;
-                dsClient.OnDriverStationReportsChanged += m_dsReportAction;
-            }
-        }
-
-        public void Cleanup()
+        public void StopApplication()
         {
             using (var scope = AutoFacContainer.BeginLifetimeScope())
             {
@@ -88,6 +64,25 @@ namespace SimpleFMS.Android
 
                 netManager.SuspendNetworking();
             }
+        }
+
+        public void StartApplication()
+        {
+            using (var scope = AutoFacContainer.BeginLifetimeScope())
+            {
+                var dsClient = scope.Resolve<DriverStationClient>();
+                var netManager = scope.Resolve<INetworkClientManager>();
+
+                netManager.ResumeNetworking();
+                netManager.OnFmsConnectionChanged += m_fmsConnectionAction;
+                dsClient.OnDriverStationReportsChanged += m_dsReportAction;
+            }
+        }
+
+        public void CreateApplication(Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> dsAction, Action<bool> fmsAction)
+        {
+                m_fmsConnectionAction = fmsAction;
+                m_dsReportAction = dsAction;
         }
 
         private Action<IReadOnlyDictionary<AllianceStation, IDriverStationReport>> m_dsReportAction;
@@ -120,6 +115,20 @@ namespace SimpleFMS.Android
             set { m_retainedState.State = value; }
         }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            m_retainedState.StartApplication();
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+
+            m_retainedState.StopApplication();
+        }
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -139,23 +148,12 @@ namespace SimpleFMS.Android
                 fm.BeginTransaction().Add(m_retainedState, "data").Commit();
             }
 
-            m_retainedState.Setup(OnDriverStationReportsChanged, OnFmsConnectionChanged);
+            m_retainedState.CreateApplication(OnDriverStationReportsChanged, OnFmsConnectionChanged);
 
             var idConstants = GetIdConstants();
 
             for (int i = 0; i < AllianceStationConstants.MaxNumDriverStations; i++)
             {
-                /*
-                EditText teamNumber = FindViewById<EditText>(idConstants[$"teamNumberStation{i}"]);
-                CheckBox bypass = FindViewById<CheckBox>(idConstants[$"bypassCheckStation{i}"]);
-                View dsComm = FindViewById<View>(idConstants[$"dsCommStation{i}"]);
-                View rioComm = FindViewById<View>(idConstants[$"rioCommStation{i}"]);
-                View eStop = FindViewById<View>(idConstants[$"eStopStation{i}"]);
-                TextView battery = FindViewById<TextView>(idConstants[$"batteryStation{i}"]);
-
-                AllianceStation station = new AllianceStation((byte)(i - 1));
-                int defaultTeamNumber = i * -1;
-                */
                 FmsAllianceStation fmsStation = new FmsAllianceStation(this, i,
                     idConstants, m_retainedState);
                 m_fmsAllianceStations.Add(new AllianceStation((byte)i), fmsStation);
@@ -201,7 +199,7 @@ namespace SimpleFMS.Android
             }
             m_matchTiming.Dispose();
 
-            m_retainedState.Cleanup();
+            //m_retainedState.DestroyApplication();
 
             m_retainedState.State = oldState;
         }

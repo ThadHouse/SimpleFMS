@@ -1,12 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Autofac;
@@ -14,7 +7,6 @@ using SimpleFMS.Base.Enums;
 using SimpleFMS.Base.MatchTiming;
 using SimpleFMS.Networking.Client.NetworkClients;
 using static SimpleFMS.Base.MatchTiming.MatchTimingConstants;
-using static SimpleFMS.Android.AutoFacContainer;
 
 namespace SimpleFMS.Android
 {

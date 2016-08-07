@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using NetworkTables;
 using SimpleFMS.Base.DriverStation;
@@ -15,7 +16,7 @@ namespace SimpleFMS.Networking.Server
 
         private readonly object m_lockObject = new object();
 
-        private const int TableUpdatePeriod = 100;
+        private const int TableUpdatePeriod = 102;
 
         private readonly StandaloneNetworkTable m_networkTableRoot;
         private readonly StandaloneNtCore m_ntCore;
@@ -28,7 +29,7 @@ namespace SimpleFMS.Networking.Server
             m_ntCore = new StandaloneNtCore();
             m_ntCore.UpdateRate = 0.5;
             m_ntCore.RemoteName = FmsServerRemoteName;
-            m_ntCore.StartServer(PersistentFilename, "", StandaloneNtCore.DefaultPort);
+            m_ntCore.StartServer(PersistentFilename, "", NetworkTablesPort);
             m_rpc = new StandaloneRemoteProcedureCall(m_ntCore);
             m_networkTableRoot = new StandaloneNetworkTable(m_ntCore, RootTableName);
 
@@ -37,6 +38,11 @@ namespace SimpleFMS.Networking.Server
 
             m_updateTimer = new Timer(OnTimerUpdate);
             m_updateTimer.Change(TableUpdatePeriod, TableUpdatePeriod);
+
+            m_networkTableRoot.AddConnectionListener((remote, info, conn) =>
+            {
+                OnClientChanged?.Invoke(info.RemoteId, info.RemoteIp, conn);
+            }, true);
         }
 
         public void Dispose()
@@ -65,5 +71,7 @@ namespace SimpleFMS.Networking.Server
             }
             NetworkTable.Flush();
         }
+
+        public event Action<string, string, bool> OnClientChanged;
     }
 }

@@ -32,6 +32,18 @@ namespace SimpleFMS.ConsoleHost
             {
                 var manager = scope.Resolve<INetworkServerManager>();
 
+                manager.OnClientChanged += (id, ip, conn) =>
+                {
+                    if (conn)
+                    {
+                        Console.WriteLine($"Client connected: {id} at {ip}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Client disconnected: {id} at {ip}");
+                    }
+                };
+
                 Thread.Sleep(Timeout.Infinite);
 
                 GC.KeepAlive(manager);
